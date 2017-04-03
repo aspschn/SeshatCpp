@@ -19,6 +19,9 @@ namespace seshat {
 CodePoint::CodePoint(uint32_t code)
     : _code(code)
 {
+    if (code > 0x10FFFF) {
+        throw IllegalCodePoint();
+    }
 }
 
 CodePoint::~CodePoint()

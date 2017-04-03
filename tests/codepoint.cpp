@@ -47,6 +47,15 @@ int main()
         << (cp_2 == CodePoint(0xAC00)) << std::endl;
     std::cout << std::endl;
 
+    std::cout << "--- exceptions ---" << std::endl;
+    std::cout << "try CodePoint(0x110000) ..." << std::endl;
+    try {
+        CodePoint cp_except = CodePoint(0x110000);
+    } catch (const seshat::IllegalCodePoint& e) {
+        std::cout << e.what() << std::endl;
+    }
+    std::cout << std::endl;
+
     std::cout << "CodePoint test end" << std::endl;
 
     return 0;

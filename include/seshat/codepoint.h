@@ -13,6 +13,7 @@
 #include <seshat/gc.h>
 
 #include <cstdint>
+#include <exception>
 #include <string>
 
 namespace seshat {
@@ -33,6 +34,14 @@ public:
 
     bool operator==(const CodePoint& other);
     bool operator!=(const CodePoint& other);
+};
+
+class IllegalCodePoint : public std::exception {
+public:
+    const char* what() const noexcept
+    {
+        return "IllegalCodePoint: Code point cannot be over U+10FFFF.";
+    }
 };
 
 }
