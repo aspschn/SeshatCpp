@@ -101,6 +101,53 @@ class UnicodeData:
         self.simple_lowercase_mapping = li[13]
         self.simple_titlecase_mapping = li[14]
 
+# Ranged data. Some large data area are omitted such as Hangul Syllable,
+# CJK Ideograph etc.
+#
+# 3400-4DB5: CJK Ideograph Extension A (Lo)
+CJK_Ideograph_Ext_A_First = '<CJK Ideograph Extension A, First>'
+CJK_Ideograph_Ext_A_Last = '<CJK Ideograph Extension A, Last>'
+# 4E00-9FD5: CJK Ideograph (Lo)
+CJK_Ideograph_First = '<CJK Ideograph, First>'
+CJK_Ideograph_Last = '<CJK Ideograph, Last>'
+# AC00-D7A3: Hangul Syllable (Lo)
+Hangul_Syllable_First = '<Hangul Syllable, First>'
+Hangul_Syllable_Last = '<Hangul Syllable, Last>'
+# D800-DB7F: Non Private Use High Surrogate (Cs)
+Non_PU_High_Srg_First = '<Non Private Use High Surrogate, First>'
+Non_PU_High_Srg_Last = '<Non Private Use High Surrogate, Last>'
+# DB80-DBFF: Private Use High Surrogate (Cs)
+PU_High_Srg_First = '<Private Use High Surrogate, First>'
+PU_High_Srg_Last = '<Private Use High Surrogate, Last>'
+# DC00-DFFF: Low Surrogate (Cs)
+Low_Srg_First = '<Low Surrogate, First>'
+Low_Srg_Last = '<Low Surrogate, Last>'
+# E000-F8FF: Private Use (Co)
+PU_First = '<Private Use, First>'
+PU_Last = '<Private Use, Last>'
+# 17000-187EC: Tangut Ideograph (Lo)
+Tangut_Ideograph_First = '<Tangut Ideograph, First>'
+Tangut_Ideograph_Last = '<Tangut Ideograph, Last>'
+# 20000-2A6D6: CJK Ideograph Extension B (Lo)
+CJK_Ideograph_Ext_B_First = '<CJK Ideograph Extension B, First>'
+CJK_Ideograph_Ext_B_Last = '<CJK Ideograph Extension B, Last>'
+# 2A700-2B734: CJK Ideograph Extension C (Lo)
+CJK_Ideograph_Ext_C_First = '<CJK Ideograph Extension C, First>'
+CJK_Ideograph_Ext_C_Last = '<CJK Ideograph Extension C, Last>'
+# 2B740-2B81D: CJK Ideograph Extension D (Lo)
+CJK_Ideograph_Ext_D_First = '<CJK Ideograph Extension D, First>'
+CJK_Ideograph_Ext_D_Last = '<CJK Ideograph Extension D, Last>'
+# 2B820-2CEA1: CJK Ideograph Extension E (Lo)
+CJK_Ideograph_Ext_E_First = '<CJK Ideograph Extension E, First>'
+CJK_Ideograph_Ext_E_Last = '<CJK Ideograph Extension E, Last>'
+# F0000-FFFFD: Plane 15 Private Use (Co)
+Plane_15_PU_First = '<Plane 15 Private Use, First>'
+Plane_15_PU_Last = '<Plane 15 Private Use, Last>'
+# 100000-10FFFD: Plane 16 Private Use (Co)
+Plane_16_PU_First = '<Plane 16 Private Use, First>'
+Plane_16_PU_Last = '<Plane 16 Private Use, Last>'
+
+# Text data for making auto generated source files
 comment = '''//  This file generated automatically using 'ucd-tool.py'.
 //  You can find the author and the copyright in file 'tools/ucd-tool.py'.
 '''
@@ -121,6 +168,20 @@ boilerplate_gc_cpp_2 = '''
 } // namespace seshat
 '''
         
+def download_data():
+    if 'UnicodeData.txt' not in os.listdir('./data'):
+        os.system('wget http://www.unicode.org/Public/UNIDATA/UnicodeData.txt -O data/UnicodeData.txt')
+
+def parse_unicode_data():
+    unicode_data_list = []
+    f = open('data/UnicodeData.txt', 'r')
+    for l in f.readlines():
+        udata = UnicodeData()
+        udata.parse(l)
+        unicode_data_list.append(udata)
+    f.close()
+
+    return unicode_data_list
 
 if __name__ == '__main__':
     if len(sys.argv) > 1:
@@ -135,17 +196,11 @@ if __name__ == '__main__':
             print('  --help   print this help')
             exit()
 
-    if 'UnicodeData.txt' not in os.listdir('./data'):
-        os.system('wget http://www.unicode.org/Public/UNIDATA/UnicodeData.txt -O data/UnicodeData.txt')
+    download_data()
 
-    unicode_data_list = []
-    f = open('data/UnicodeData.txt', 'r')
-    for l in f.readlines():
-        udata = UnicodeData()
-        udata.parse(l)
-        unicode_data_list.append(udata)
+    unicode_data_list = parse_unicode_data()
 
-    # Make gc.h
+    # Make gc.cpp
     gc_cpp_table_size = int(unicode_data_list[-1].code, base=16)
     gc_cpp_table = '''
 const std::map<uint32_t, Gc> gc_table = {
