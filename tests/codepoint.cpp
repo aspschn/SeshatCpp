@@ -9,6 +9,7 @@
 */
 #include <seshat/codepoint.h>
 
+#include <cassert>
 #include <iostream>
 
 int main()
@@ -33,6 +34,8 @@ int main()
         std::cout << "wrong!" << std::endl;
     if (cp_3.gc() != Gc::Lo)
         std::cout << "wrong!" << std::endl;
+    assert(CodePoint(0xAC10).gc() == Gc::Lo);   // Hangul 감 (Lo)
+    assert(CodePoint(0x10FFFA).gc() == Gc::Co); // Plane 16 Private Use (Co)
     std::cout << std::endl;
 
     std::cout << "--- to_string() ---" << std::endl;

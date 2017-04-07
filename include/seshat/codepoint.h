@@ -10,7 +10,7 @@
 #ifndef _CODEPOINT_H
 #define _CODEPOINT_H
 
-#include <seshat/gc.h>
+#include <seshat/unicodedata.h>
 
 #include <cstdint>
 #include <exception>

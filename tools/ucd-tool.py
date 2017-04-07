@@ -147,6 +147,21 @@ Plane_15_PU_Last = '<Plane 15 Private Use, Last>'
 Plane_16_PU_First = '<Plane 16 Private Use, First>'
 Plane_16_PU_Last = '<Plane 16 Private Use, Last>'
 
+ranged_list = (
+    CJK_Ideograph_Ext_A_First, CJK_Ideograph_Ext_A_Last,
+    CJK_Ideograph_First, CJK_Ideograph_Last,
+    Hangul_Syllable_First, Hangul_Syllable_Last,
+    Non_PU_High_Srg_First, Non_PU_High_Srg_Last,
+    PU_High_Srg_First, PU_High_Srg_Last, Low_Srg_First, Low_Srg_Last,
+    PU_First, PU_Last,
+    Tangut_Ideograph_First, Tangut_Ideograph_Last,
+    CJK_Ideograph_Ext_B_First, CJK_Ideograph_Ext_B_Last,
+    CJK_Ideograph_Ext_C_First, CJK_Ideograph_Ext_C_Last,
+    CJK_Ideograph_Ext_D_First, CJK_Ideograph_Ext_D_Last,
+    CJK_Ideograph_Ext_E_First, CJK_Ideograph_Ext_E_Last,
+    Plane_15_PU_First, Plane_15_PU_Last, Plane_16_PU_First, Plane_16_PU_Last
+)
+
 # Text data for making auto generated source files
 comment = '''//  This file generated automatically using 'ucd-tool.py'.
 //  You can find the author and the copyright in file 'tools/ucd-tool.py'.
@@ -154,7 +169,7 @@ comment = '''//  This file generated automatically using 'ucd-tool.py'.
 
 boilerplate_gc_cpp_1 = comment + '''//
 //  General category(gc) of Unicode code points.
-#include <seshat/gc.h>
+#include <seshat/unicodedata.h>
 
 #include <cstdint>
 #include <map>
@@ -207,6 +222,8 @@ const std::map<uint32_t, Gc> gc_table = {
     '''
 
     for udata in unicode_data_list:
+        if udata.name in ranged_list:
+            continue
         cp = '0x' + udata.code
         gc_cpp_table += ('{ ' + cp + ', Gc::' + udata.general_category + ' },')
         gc_cpp_table += '\n    '

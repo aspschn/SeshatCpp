@@ -2,7 +2,7 @@
 //  You can find the author and the copyright in file 'tools/ucd-tool.py'.
 //
 //  General category(gc) of Unicode code points.
-#include <seshat/gc.h>
+#include <seshat/unicodedata.h>
 
 #include <cstdint>
 #include <map>
@@ -11962,8 +11962,6 @@ const std::map<uint32_t, Gc> gc_table = {
     { 0x33FD, Gc::So },
     { 0x33FE, Gc::So },
     { 0x33FF, Gc::So },
-    { 0x3400, Gc::Lo },
-    { 0x4DB5, Gc::Lo },
     { 0x4DC0, Gc::So },
     { 0x4DC1, Gc::So },
     { 0x4DC2, Gc::So },
@@ -12028,8 +12026,6 @@ const std::map<uint32_t, Gc> gc_table = {
     { 0x4DFD, Gc::So },
     { 0x4DFE, Gc::So },
     { 0x4DFF, Gc::So },
-    { 0x4E00, Gc::Lo },
-    { 0x9FD5, Gc::Lo },
     { 0xA000, Gc::Lo },
     { 0xA001, Gc::Lo },
     { 0xA002, Gc::Lo },
@@ -14864,8 +14860,6 @@ const std::map<uint32_t, Gc> gc_table = {
     { 0xABF7, Gc::Nd },
     { 0xABF8, Gc::Nd },
     { 0xABF9, Gc::Nd },
-    { 0xAC00, Gc::Lo },
-    { 0xD7A3, Gc::Lo },
     { 0xD7B0, Gc::Lo },
     { 0xD7B1, Gc::Lo },
     { 0xD7B2, Gc::Lo },
@@ -14938,14 +14932,6 @@ const std::map<uint32_t, Gc> gc_table = {
     { 0xD7F9, Gc::Lo },
     { 0xD7FA, Gc::Lo },
     { 0xD7FB, Gc::Lo },
-    { 0xD800, Gc::Cs },
-    { 0xDB7F, Gc::Cs },
-    { 0xDB80, Gc::Cs },
-    { 0xDBFF, Gc::Cs },
-    { 0xDC00, Gc::Cs },
-    { 0xDFFF, Gc::Cs },
-    { 0xE000, Gc::Co },
-    { 0xF8FF, Gc::Co },
     { 0xF900, Gc::Lo },
     { 0xF901, Gc::Lo },
     { 0xF902, Gc::Lo },
@@ -24100,8 +24086,6 @@ const std::map<uint32_t, Gc> gc_table = {
     { 0x16F9E, Gc::Lm },
     { 0x16F9F, Gc::Lm },
     { 0x16FE0, Gc::Lm },
-    { 0x17000, Gc::Lo },
-    { 0x187EC, Gc::Lo },
     { 0x18800, Gc::Lo },
     { 0x18801, Gc::Lo },
     { 0x18802, Gc::Lo },
@@ -29712,14 +29696,6 @@ const std::map<uint32_t, Gc> gc_table = {
     { 0x1F990, Gc::So },
     { 0x1F991, Gc::So },
     { 0x1F9C0, Gc::So },
-    { 0x20000, Gc::Lo },
-    { 0x2A6D6, Gc::Lo },
-    { 0x2A700, Gc::Lo },
-    { 0x2B734, Gc::Lo },
-    { 0x2B740, Gc::Lo },
-    { 0x2B81D, Gc::Lo },
-    { 0x2B820, Gc::Lo },
-    { 0x2CEA1, Gc::Lo },
     { 0x2F800, Gc::Lo },
     { 0x2F801, Gc::Lo },
     { 0x2F802, Gc::Lo },
@@ -30598,11 +30574,7 @@ const std::map<uint32_t, Gc> gc_table = {
     { 0xE01EC, Gc::Mn },
     { 0xE01ED, Gc::Mn },
     { 0xE01EE, Gc::Mn },
-    { 0xE01EF, Gc::Mn },
-    { 0xF0000, Gc::Co },
-    { 0xFFFFD, Gc::Co },
-    { 0x100000, Gc::Co },
-    { 0x10FFFD, Gc::Co }
+    { 0xE01EF, Gc::Mn }
 };
 
 } // namespace seshat
