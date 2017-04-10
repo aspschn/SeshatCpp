@@ -17,18 +17,20 @@ namespace seshat {
 
 // Gc: General_Category enum
 enum class Gc {
-    C,
+    // C - Other
     Cc, Cf, Cn, Co, Cs,
-    L,
-    LC, Ll, Lm, Lo, Lt, Lu,
-    M,
+    // L - Letter
+    // LC - Cased_Letter (Ll | Lt | Lu)
+    Ll, Lm, Lo, Lt, Lu,
+    // M - Mark
     Mc, Me, Mn,
-    N,
+    // N - Number
     Nd, Nl, No,
-    P, Pc, Pd, Pe, Pf, Pi, Po, Ps,
-    S,
+    // P - Punctuation
+    Pc, Pd, Pe, Pf, Pi, Po, Ps,
+    // S - Symbol
     Sc, Sk, Sm, So,
-    Z,
+    // Z - Separator
     Zl, Zp, Zs,
 };
 

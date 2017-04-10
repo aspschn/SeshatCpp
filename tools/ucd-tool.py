@@ -6,32 +6,28 @@ import os
 
 class Gc:
     '''General_Category'''
-    C = 'Other'
+    # C = 'Other'
     Cc = 'Control' # 'cntrl'
     Cf = 'Format'
     Cn = 'Unassigned'
     Co = 'Private_Use'
     Cs = 'Surrogate'
-
-    L = 'Letter'
-    LC = 'Cased_Letter' # Ll | Lt | Lu
+    # L = 'Letter'
+    # LC = 'Cased_Letter' # Ll | Lt | Lu
     Ll = 'Lowercase_Letter'
     Lm = 'Modifier_Letter'
     Lo = 'Other_Letter'
     Lt = 'Titlecase_Letter'
     Lu = 'Uppercase_Letter'
-
-    M = 'Mark' # 'Combining_Mark' # Mc | Me | Mn
+    # M = 'Mark' # 'Combining_Mark' # Mc | Me | Mn
     Mc = 'Spacing_Mark'
     Me = 'Enclosing_Mark'
     Mn = 'Nonspacing_Mark'
-
-    N = 'Number' # Nd | Nl | No
+    # N = 'Number' # Nd | Nl | No
     Nd = 'Decimal_Number' # 'digit'
     Nl = 'Letter_Number'
     No = 'Other_Number'
-
-    P = 'Punctuation' # 'punct' # Pc | Pd | Pe | Pf | Pi | Po | Ps
+    # P = 'Punctuation' # 'punct' # Pc | Pd | Pe | Pf | Pi | Po | Ps
     Pc = 'Connector_Punctuation'
     Pd = 'Dash_Punctuation'
     Pe = 'Close_Punctuation'
@@ -39,14 +35,12 @@ class Gc:
     Pi = 'Initial_Punctuation'
     Po = 'Other_Punctuation'
     Ps = 'Open_Punctuation'
-
-    S = 'Symbol' # Sc | Sk | Sm | So
+    # S = 'Symbol' # Sc | Sk | Sm | So
     Sc = 'Currency_Symbol'
     Sk = 'Modifier_Symbol'
     Sm = 'Math_Symbol'
     So = 'Other_Symbol'
-
-    Z = 'Separator' # Zl | Zp | Zs
+    # Z = 'Separator' # Zl | Zp | Zs
     Zl = 'Line_Separator'
     Zp = 'Paragraph_Separator'
     Zs = 'Space_Separator'
