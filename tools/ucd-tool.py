@@ -156,6 +156,57 @@ ranged_list = (
     Plane_15_PU_First, Plane_15_PU_Last, Plane_16_PU_First, Plane_16_PU_Last
 )
 
+# Prefix strings. To prevent duplication of same text.
+#
+Prefix_Yi_Syllable = 'YI SYLLABLE' # A000-A48C
+Prefix_Egyptian_Hieroglyph = 'EGYPTIAN_HIEROGLYPH' # 13000-1342E
+Prefix_Tangut_Component = 'TANGUT COMPONENT' # 18800-18AF2
+Prefix_Canadian_Syllabics = 'CANADIAN SYLLABICS' # 1400-167F, 18B0-18F5
+# Prefix_CJK_Compatibility_Ideograph = 'CJK_COMPATIBILITY_IDEOGRAPH' # F900-FAD9, 2F800-2FA1D
+Prefix_Bamum_Letter_Phase_A = 'BAMUM LETTER PHASE-A' # 16800-16856
+Prefix_Bamum_Letter_Phase_B = 'BAMUM LETTER PHASE-B' # 16857-1688E
+Prefix_Bamum_Letter_Phase_C = 'BAMUM LETTER PHASE-C' # 1688F-168F0
+Prefix_Bamum_Letter_Phase_D = 'BAMUM LETTER PHASE-D' # 168F1-16965
+Prefix_Bamum_Letter_Phase_E = 'BAMUM LETTER PHASE-E' # 16966-16A02
+Prefix_Bamum_Letter_Phase_F = 'BAMUM LETTER PHASE-F' # 16A03-16A38
+
+# Prefix select
+def search_prefix(code_point):
+    if 0xA000 <= code_point and code_point <= 0xA48C:
+        return Prefix_Yi_Syllable
+    elif 0x13000 <= code_point and code_point <= 0x1342E:
+        return Prefix_Egyptian_Hieroglyph
+    elif 0x18800 <= code_point and code_point <= 0x18AF2:
+        return Prefix_Tangut_Component
+    elif (0x1400 <= code_point and code_point <= 0x167F) or \
+        (0x18B0 <= code_point and code_point <= 0x18F5):
+        return Prefix_Canadian_Syllabics
+    elif 0x16800 <= code_point and code_point <= 0x16856:
+        return Prefix_Bamum_Letter_Phase_A
+    elif 0x16857 <= code_point and code_point <= 0x1688E:
+        return Prefix_Bamum_Letter_Phase_B
+    elif 0x1688F <= code_point and code_point <= 0x168F0:
+        return Prefix_Bamum_Letter_Phase_C
+    elif 0x168F1 <= code_point and code_point <= 0x16965:
+        return Prefix_Bamum_Letter_Phase_D
+    elif 0x16966 <= code_point and code_point <= 0x16A02:
+        return Prefix_Bamum_Letter_Phase_E
+    elif 0x16A03 <= code_point and code_point <= 0x16A38:
+        return Prefix_Bamum_Letter_Phase_F
+    else:
+        return None
+
+# CJK Compatibility Ideograph skip function.
+# CJK Compatibility Ideograph name always followed by code point.
+# So, there's no reason to write the names in database.
+#
+def is_cjk_compat(code_point):
+    if (0xF900 <= code_point and code_point <= 0xFAD9) or \
+        (0x2F800 <= code_point and code_point <= 0x2FA1D):
+        return True
+    else:
+        return False
+
 # Text data for making auto generated source files
 comment = '''//  This file generated automatically using 'ucd-tool.py'.
 //  You can find the author and the copyright in file 'tools/ucd-tool.py'.
@@ -176,7 +227,21 @@ boilerplate_gc_cpp_2 = '''
 
 } // namespace seshat
 '''
-        
+
+boilerplate_name_cpp_1 = comment + '''//
+//  Name for individual code points.
+#include <seshat/unicodedata.h>
+
+#include <cstdint>
+#include <map>
+
+namespace seshat {
+'''
+boilerplate_name_cpp_2 = '''
+
+} // namespace seshat
+'''
+
 def download_data():
     if 'UnicodeData.txt' not in os.listdir('./data'):
         os.system('wget http://www.unicode.org/Public/UNIDATA/UnicodeData.txt -O data/UnicodeData.txt')
@@ -226,4 +291,28 @@ const std::map<uint32_t, Gc> gc_table = {
 
     f = open('../src/gc.cpp', 'w')
     f.write(boilerplate_gc_cpp_1 + gc_cpp_table + boilerplate_gc_cpp_2)
+    f.close()
+
+    # Make name.cpp
+    name_cpp_table = '''
+const std::map<uint32_t, const char*> name_table = {
+    '''
+
+    for udata in unicode_data_list:
+        if udata.name in ranged_list or udata.name == '<control>':
+            continue
+        cp = '0x' + udata.code
+        if is_cjk_compat(int(cp, base=16)) == True:
+            continue
+        name = udata.name
+        prefix = search_prefix(int(cp, base=16))
+        if prefix != None:
+            name = name[len(prefix):].lstrip()
+        name_cpp_table += '{ ' + cp + ', "' + name + '" },'
+        name_cpp_table += '\n    '
+    name_cpp_table = name_cpp_table.rstrip().rstrip(',')
+    name_cpp_table += '\n};'
+
+    f = open('../src/name.cpp', 'w')
+    f.write(boilerplate_name_cpp_1 + name_cpp_table + boilerplate_name_cpp_2)
     f.close()
