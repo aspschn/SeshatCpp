@@ -85,6 +85,17 @@ Gc CodePoint::gc() const
     }
 }
 
+std::string CodePoint::name() const
+{
+    std::string unicode_name;
+    try {
+        unicode_name = name_table.at(_code);
+    } catch (...) {
+        throw NoName();
+    }
+    return unicode_name;
+}
+
 std::string CodePoint::to_string() const
 {
     std::string code_str = std::string("0000");

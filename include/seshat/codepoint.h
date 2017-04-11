@@ -30,6 +30,7 @@ public:
 
     uint32_t code() const;
     Gc gc() const;
+    std::string name() const;
     std::string to_string() const;
 
     bool operator==(const CodePoint& other);
@@ -41,6 +42,14 @@ public:
     const char* what() const noexcept
     {
         return "IllegalCodePoint: Code point cannot be over U+10FFFF.";
+    }
+};
+
+class NoName : public std::exception {
+public:
+    const char* what() const noexcept
+    {
+        return "NoName: No such name for the code point.";
     }
 };
 

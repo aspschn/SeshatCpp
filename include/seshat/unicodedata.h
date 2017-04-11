@@ -35,6 +35,7 @@ enum class Gc {
 };
 
 extern const std::map<uint32_t, Gc> gc_table;
+extern const std::map<uint32_t, const char*> name_table;
 
 // 3400-4DB5: CJK Ideograph Extension A (Lo)
 #define CJK_IDEO_EXT_A_FRST 0x3400 // '<CJK Ideograph Extension A, First>'
@@ -79,6 +80,21 @@ extern const std::map<uint32_t, Gc> gc_table;
 #define PLANE_16_PU_FRST    0x100000 // '<Plane 16 Private Use, First>'
 #define PLANE_16_PU_LAST    0x10FFFD // '<Plane 16 Private Use, Last>'
 
+// Unicode name prefix
+#define PREFIX_YI_SYLLABLE      "YI SYLLABLE"       // A000-A48C
+
+// Unicode naming rules
+class UnicodeNamingRule {
+};
+
+class PrefixSpaceUniqueName : public UnicodeNamingRule {
+};
+
+class PrefixDashUniqueName : public UnicodeNamingRule {
+};
+
+class PrefixDashCodePoint : public UnicodeNamingRule {
+};
 
 } // namespace seshat
 
