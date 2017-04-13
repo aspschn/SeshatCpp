@@ -127,6 +127,10 @@ void unicode_name_check()
         // py_uni_name = python_inline(i);
         py_uni_name = call_python(i);
         if (seshat_name != py_uni_name) {
+            // in Python 3.6.1, TANGUT IDEOGRAPH names are omitted
+            if (0x17000 <= i && i <= 0x187EC) {
+                continue;
+            }
             if (first_diff == 0) {
                 first_diff = i;
             }
