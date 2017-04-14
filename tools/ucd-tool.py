@@ -206,6 +206,13 @@ def is_cjk_compat(code_point):
         return True
     else:
         return False
+def is_skip(code_point):
+    # Tangut Component 18800-18AF2
+    if (0x18800 <= code_point and code_point <= 0x18AF2) or \
+        (is_cjk_compat(code_point)):
+        return True
+    else:
+        return False
 
 # Text data for making auto generated source files
 comment = '''//  This file generated automatically using 'ucd-tool.py'.
@@ -302,7 +309,7 @@ const std::map<uint32_t, const char*> name_table = {
         if udata.name in ranged_list or udata.name == '<control>':
             continue
         cp = '0x' + udata.code
-        if is_cjk_compat(int(cp, base=16)) == True:
+        if is_skip(int(cp, base=16)) == True:
             continue
         name = udata.name
         prefix = search_prefix(int(cp, base=16))
