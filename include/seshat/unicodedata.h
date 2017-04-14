@@ -91,6 +91,12 @@ extern const std::map<uint32_t, const char*> name_table;
 #define PREFIX_TANGUT_COMPONENT "TANGUT COMPONENT" // 18800-18AF2
 #define PREFIX_CJK_COMPATIBILITY_IDEOGRAPH "CJK COMPATIBILITY IDEOGRAPH"
 #define PREFIX_CJK_UNIFIED_IDEOGRAPH "CJK UNIFIED IDEOGRAPH"
+#define PREFIX_BAMUM_LETTER_PHASE_A "BAMUM LETTER PHASE-A"
+#define PREFIX_BAMUM_LETTER_PHASE_B "BAMUM LETTER PHASE-B"
+#define PREFIX_BAMUM_LETTER_PHASE_C "BAMUM LETTER PHASE-C"
+#define PREFIX_BAMUM_LETTER_PHASE_D "BAMUM LETTER PHASE-D"
+#define PREFIX_BAMUM_LETTER_PHASE_E "BAMUM LETTER PHASE-E"
+#define PREFIX_BAMUM_LETTER_PHASE_F "BAMUM LETTER PHASE-F"
 
 // Unicode naming rules
 class UnicodeNamingRule {
@@ -147,6 +153,12 @@ enum class UnicodeArea {
     CanadianSyllabics,
     YiSyllable,
     EgyptianHieroglyph,
+    BamumLetterPhaseA,
+    BamumLetterPhaseB,
+    BamumLetterPhaseC,
+    BamumLetterPhaseD,
+    BamumLetterPhaseE,
+    BamumLetterPhaseF,
     TangutIdeograph,
     TangutComponent,
     CjkCompatibilityIdeograph,
@@ -169,6 +181,12 @@ const std::map<CodePointRange, UnicodeArea> range_table {
     { std::make_pair(0xF900, 0xFA6D), UnicodeArea::CjkCompatibilityIdeograph },
     { std::make_pair(0xFA70, 0xFAD9), UnicodeArea::CjkCompatibilityIdeograph },
     { std::make_pair(0x13000, 0x1342E), UnicodeArea::EgyptianHieroglyph },
+    { std::make_pair(0x16800, 0x16856), UnicodeArea::BamumLetterPhaseA },
+    { std::make_pair(0x16857, 0x1688E), UnicodeArea::BamumLetterPhaseB },
+    { std::make_pair(0x1688F, 0x168F0), UnicodeArea::BamumLetterPhaseC },
+    { std::make_pair(0x168F1, 0x16965), UnicodeArea::BamumLetterPhaseD },
+    { std::make_pair(0x16966, 0x16A02), UnicodeArea::BamumLetterPhaseE },
+    { std::make_pair(0x16A03, 0x16A38), UnicodeArea::BamumLetterPhaseF },
     { std::make_pair(0x17000, 0x187EC), UnicodeArea::TangutIdeograph },
     { std::make_pair(0x18800, 0x18AF2), UnicodeArea::TangutComponent },
     { std::make_pair(0x2F800, 0x2FA1D), UnicodeArea::CjkCompatibilityIdeograph }

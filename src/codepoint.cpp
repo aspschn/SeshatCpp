@@ -266,6 +266,30 @@ UnicodeNamingRulePtr naming_rule(UnicodeArea area)
         return UnicodeNamingRulePtr(
             new PrefixSpaceUniqueName(PREFIX_EGYPTIAN_HIEROGLYPH)
         );
+    case UnicodeArea::BamumLetterPhaseA:
+        return UnicodeNamingRulePtr(
+            new PrefixSpaceUniqueName(PREFIX_BAMUM_LETTER_PHASE_A)
+        );
+    case UnicodeArea::BamumLetterPhaseB:
+        return UnicodeNamingRulePtr(
+            new PrefixSpaceUniqueName(PREFIX_BAMUM_LETTER_PHASE_B)
+        );
+    case UnicodeArea::BamumLetterPhaseC:
+        return UnicodeNamingRulePtr(
+            new PrefixSpaceUniqueName(PREFIX_BAMUM_LETTER_PHASE_C)
+        );
+    case UnicodeArea::BamumLetterPhaseD:
+        return UnicodeNamingRulePtr(
+            new PrefixSpaceUniqueName(PREFIX_BAMUM_LETTER_PHASE_D)
+        );
+    case UnicodeArea::BamumLetterPhaseE:
+        return UnicodeNamingRulePtr(
+            new PrefixSpaceUniqueName(PREFIX_BAMUM_LETTER_PHASE_E)
+        );
+    case UnicodeArea::BamumLetterPhaseF:
+        return UnicodeNamingRulePtr(
+            new PrefixSpaceUniqueName(PREFIX_BAMUM_LETTER_PHASE_F)
+        );
     case UnicodeArea::TangutComponent:
         return UnicodeNamingRulePtr(
             new PrefixDashSequentialNumber(PREFIX_TANGUT_COMPONENT, 100351)
