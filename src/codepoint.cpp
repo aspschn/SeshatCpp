@@ -9,12 +9,9 @@
 */
 #include <seshat/codepoint.h>
 
-#include <algorithm>
+#include <seshat/utils.h>
 
-static const char HEX_CHAR[16] = {
-    '0', '1', '2', '3', '4', '5', '6', '7',
-    '8', '9', 'A', 'B', 'C', 'D', 'E', 'F'
-};
+#include <algorithm>
 
 namespace seshat {
 
@@ -120,32 +117,7 @@ std::string CodePoint::name() const
 
 std::string CodePoint::to_string() const
 {
-    std::string code_str = std::string("0000");
-    code_str[3] = HEX_CHAR[AT_DIGIT_32(_code, 1)];
-    code_str[2] = HEX_CHAR[AT_DIGIT_32(_code, 2)];
-    code_str[1] = HEX_CHAR[AT_DIGIT_32(_code, 3)];
-    code_str[0] = HEX_CHAR[AT_DIGIT_32(_code, 4)];
-
-    // For code over U+FFFF
-    if ((_code >> 16) != 0) {
-        // Get maximum digit
-        int max_digit = 8;
-        while (max_digit > 5) {
-            if ((AT_DIGIT_32(_code, max_digit)) == 0) {
-                --max_digit;
-            } else {
-                break;
-            }
-        }
-        // Append to code_str
-        for (int digit = 5; digit <= max_digit; ++digit) {
-            code_str.insert(0, 1, HEX_CHAR[AT_DIGIT_32(_code, digit)]);
-        }
-    }
-
-    // Append "U+" to code_str
-    code_str.insert(0, "U+");
-    return code_str;
+    return code_point_to_string(_code);
 }
 
 bool CodePoint::operator==(const CodePoint& other)
@@ -159,149 +131,5 @@ bool CodePoint::operator!=(const CodePoint& other)
 }
 
 // Misc
-
-// Unicode naming rules.
-// TODO: MOVE THIS OTHER IMPLEMENTATION FILE LATER!
-UnicodeNamingRule::UnicodeNamingRule(const char *pre, char sep)
-    : prefix(pre), separator(sep), unique(nullptr), code(0)
-{
-}
-
-void UnicodeNamingRule::set(const char *unq, uint32_t code)
-{
-    this->unique = unq;
-    this->code = code;
-}
-
-UniqueName::UniqueName(const char *pre)
-    : UnicodeNamingRule(pre, '\0')
-{
-}
-/*
-void UniqueName::set(const char *unq, uint32_t code)
-{
-    unique = unq;
-    code = code;
-}
-*/
-std::string UniqueName::name() const
-{
-    return std::string(unique);
-}
-
-PrefixSpaceUniqueName::PrefixSpaceUniqueName(const char *pre)
-    : UnicodeNamingRule(pre, ' ')
-{
-}
-
-std::string PrefixSpaceUniqueName::name() const
-{
-    std::string n = std::string(prefix) + separator + unique;
-    return n;
-}
-
-PrefixDashUniqueName::PrefixDashUniqueName(const char *pre)
-    : UnicodeNamingRule(pre, '-')
-{
-}
-
-std::string PrefixDashUniqueName::name() const
-{
-    std::string n = std::string(prefix) + separator + unique;
-    return n;
-}
-
-PrefixDashCodePoint::PrefixDashCodePoint(const char *pre)
-    : UnicodeNamingRule(pre, '-')
-{
-}
-
-std::string PrefixDashCodePoint::name() const
-{
-    std::string n = std::string(prefix) + separator;
-    std::string cp_str = CodePoint(this->code).to_string();
-    cp_str = cp_str.erase(0, 2);
-    n += cp_str;
-    return n;
-}
-
-PrefixDashSequentialNumber::PrefixDashSequentialNumber(const char *pre,
-    int32_t diff)
-    : UnicodeNamingRule(pre, '-')
-{
-    this->diff = diff;
-}
-
-std::string PrefixDashSequentialNumber::name() const
-{
-    std::string n = std::string(prefix) + separator;
-    std::string num_str = std::to_string(code - diff);
-    while (num_str.length() < 3) {
-        num_str.insert(num_str.begin(), '0');
-    }
-    n += num_str;
-    return n;
-}
-
-UnicodeNamingRulePtr naming_rule(UnicodeArea area)
-{
-    switch (area) {
-    case UnicodeArea::CanadianSyllabics:
-        return UnicodeNamingRulePtr(
-            new PrefixSpaceUniqueName(PREFIX_CANADIAN_SYLLABICS)
-        );
-    case UnicodeArea::YiSyllable:
-        return UnicodeNamingRulePtr(
-            new PrefixSpaceUniqueName(PREFIX_YI_SYLLABLE)
-        );
-    case UnicodeArea::CjkCompatibilityIdeograph:
-        return UnicodeNamingRulePtr(
-            new PrefixDashCodePoint(PREFIX_CJK_COMPATIBILITY_IDEOGRAPH)
-        );
-    case UnicodeArea::CjkUnifiedIdeograph:
-        return UnicodeNamingRulePtr(
-            new PrefixDashCodePoint(PREFIX_CJK_UNIFIED_IDEOGRAPH)
-        );
-    case UnicodeArea::EgyptianHieroglyph:
-        return UnicodeNamingRulePtr(
-            new PrefixSpaceUniqueName(PREFIX_EGYPTIAN_HIEROGLYPH)
-        );
-    case UnicodeArea::BamumLetterPhaseA:
-        return UnicodeNamingRulePtr(
-            new PrefixSpaceUniqueName(PREFIX_BAMUM_LETTER_PHASE_A)
-        );
-    case UnicodeArea::BamumLetterPhaseB:
-        return UnicodeNamingRulePtr(
-            new PrefixSpaceUniqueName(PREFIX_BAMUM_LETTER_PHASE_B)
-        );
-    case UnicodeArea::BamumLetterPhaseC:
-        return UnicodeNamingRulePtr(
-            new PrefixSpaceUniqueName(PREFIX_BAMUM_LETTER_PHASE_C)
-        );
-    case UnicodeArea::BamumLetterPhaseD:
-        return UnicodeNamingRulePtr(
-            new PrefixSpaceUniqueName(PREFIX_BAMUM_LETTER_PHASE_D)
-        );
-    case UnicodeArea::BamumLetterPhaseE:
-        return UnicodeNamingRulePtr(
-            new PrefixSpaceUniqueName(PREFIX_BAMUM_LETTER_PHASE_E)
-        );
-    case UnicodeArea::BamumLetterPhaseF:
-        return UnicodeNamingRulePtr(
-            new PrefixSpaceUniqueName(PREFIX_BAMUM_LETTER_PHASE_F)
-        );
-    case UnicodeArea::TangutComponent:
-        return UnicodeNamingRulePtr(
-            new PrefixDashSequentialNumber(PREFIX_TANGUT_COMPONENT, 100351)
-        );
-    case UnicodeArea::TangutIdeograph:
-        return UnicodeNamingRulePtr(
-            new PrefixDashCodePoint(PREFIX_TANGUT_IDEOGRAPH)
-        );
-    default:
-        break;
-    }
-    return UnicodeNamingRulePtr(new UniqueName());
-}
 
 } // namespace seshat

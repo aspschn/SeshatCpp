@@ -18,9 +18,6 @@
 
 namespace seshat {
 
-#define AT_DIGIT_32(code, digit) \
-    ((code & (0x0000000F << ((digit - 1) * 4))) >> ((digit - 1) * 4))
-
 class CodePoint {
 private:
     uint32_t _code;
