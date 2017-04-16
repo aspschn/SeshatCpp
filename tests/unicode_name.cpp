@@ -33,8 +33,6 @@ std::string call_python(uint32_t code)
     PyObject *res;
     int err;
 
-    Py_Initialize();
-
     // __main__ = PyImport_ImportModule((char*)"__main__");
     builtins = PyImport_ImportModule((char*)"builtins");
     unicodedata = PyImport_ImportModule((char*)"unicodedata");
@@ -145,8 +143,12 @@ void unicode_name_check()
 
 int main()
 {
+    Py_Initialize();
+
     //
     unicode_name_check();
+
+    Py_Finalize();
 
     return 0;
 }
