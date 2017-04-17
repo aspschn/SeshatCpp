@@ -9,6 +9,7 @@
 */
 #include <seshat/unicodedata/naming_rule.h>
 
+#include <seshat/unicodedata/hangul.h>
 #include <seshat/utils.h>
 
 namespace seshat {
@@ -90,6 +91,19 @@ std::string PrefixDashSequentialNumber::name() const
     return n;
 }
 
+HangulSyllableName::HangulSyllableName()
+    : UnicodeNamingRule(PREFIX_HANGUL_SYLLABLE, ' ')
+{
+}
+
+std::string HangulSyllableName::name() const
+{
+    std::string n = std::string(prefix) + separator
+        + hangul::syllable_name(code);
+
+    return n;
+}
+
 UnicodeNamingRulePtr naming_rule(UnicodeArea area)
 {
     switch (area) {
@@ -100,6 +114,10 @@ UnicodeNamingRulePtr naming_rule(UnicodeArea area)
     case UnicodeArea::YiSyllable:
         return UnicodeNamingRulePtr(
             new PrefixSpaceUniqueName(PREFIX_YI_SYLLABLE)
+        );
+    case UnicodeArea::HangulSyllable:
+        return UnicodeNamingRulePtr(
+            new HangulSyllableName()
         );
     case UnicodeArea::CjkCompatibilityIdeograph:
         return UnicodeNamingRulePtr(

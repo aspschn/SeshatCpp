@@ -32,11 +32,13 @@ namespace seshat {
 #define PREFIX_BAMUM_LETTER_PHASE_D "BAMUM LETTER PHASE-D"
 #define PREFIX_BAMUM_LETTER_PHASE_E "BAMUM LETTER PHASE-E"
 #define PREFIX_BAMUM_LETTER_PHASE_F "BAMUM LETTER PHASE-F"
+#define PREFIX_HANGUL_SYLLABLE "HANGUL SYLLABLE"
 
 // Unicode Area
 enum class UnicodeArea {
     CanadianSyllabics,
     YiSyllable,
+    HangulSyllable,
     EgyptianHieroglyph,
     BamumLetterPhaseA,
     BamumLetterPhaseB,
@@ -63,6 +65,7 @@ const std::map<CodePointRange, UnicodeArea> range_table {
     { std::make_pair(0x1400, 0x167F), UnicodeArea::CanadianSyllabics },
     { std::make_pair(0x18B0, 0x18F5), UnicodeArea::CanadianSyllabics },
     { std::make_pair(0xA000, 0xA48C), UnicodeArea::YiSyllable },
+    { std::make_pair(0xAC00, 0xD7A3), UnicodeArea::HangulSyllable },
     { std::make_pair(0xF900, 0xFA6D), UnicodeArea::CjkCompatibilityIdeograph },
     { std::make_pair(0xFA70, 0xFAD9), UnicodeArea::CjkCompatibilityIdeograph },
     { std::make_pair(0x13000, 0x1342E), UnicodeArea::EgyptianHieroglyph },
@@ -124,6 +127,12 @@ private:
 public:
     PrefixDashSequentialNumber(const char *pre, int32_t diff);
     // void set(const char *unq, uint32_t code);
+    std::string name() const;
+};
+
+class HangulSyllableName : public UnicodeNamingRule {
+public:
+    HangulSyllableName();
     std::string name() const;
 };
 
