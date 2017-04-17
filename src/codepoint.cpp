@@ -34,10 +34,10 @@ uint32_t CodePoint::code() const
 
 Gc CodePoint::gc() const
 {
-    try {
-        return gc_table.at(_code);
-    } catch (...) {
-        // TODO: std::map::at will throw out_of_range exception
+    auto category = gc_table.find(_code);
+    if (category != gc_table.end()) {
+        return category->second;
+    } else {
         if (CJK_IDEO_EXT_A_FRST <= _code && _code <= CJK_IDEO_EXT_A_LAST) {
             return Gc::Lo;
         }
@@ -96,18 +96,19 @@ std::string CodePoint::name() const
         }
     );
 
+    auto name_pair = name_table.find(_code);
     if (range != range_table.end()) {
         UnicodeNamingRulePtr rule = naming_rule(range->second);
-        try {
-            rule->set(name_table.at(_code), _code);
-        } catch (...) {
+        if (name_pair != name_table.end()) {
+            rule->set(name_pair->second, _code);
+        } else {
             rule->set(nullptr, _code);
         }
         unicode_name = rule->name();
     } else {
-        try {
-            unicode_name = name_table.at(_code);
-        } catch (...) {
+        if (name_pair != name_table.end()) {
+            unicode_name = name_pair->second;
+        } else {
             throw NoName();
         }
     }
