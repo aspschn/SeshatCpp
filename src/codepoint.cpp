@@ -131,6 +131,136 @@ bool CodePoint::operator!=(const CodePoint& other)
     return _code != other._code;
 }
 
+// class CodePointSequence
+CodePointSequence::CodePointSequence()
+    : _codes(std::vector<CodePoint>())
+{
+}
+
+CodePointSequence::CodePointSequence(const CodePointSequence& origin)
+    : _codes(std::vector<CodePoint>(origin._codes))
+{
+}
+
+CodePointSequence::CodePointSequence(iterator first, iterator last)
+    : _codes(std::vector<CodePoint>())
+{
+    for (auto it = first; it != last; it++) {
+        this->_codes.push_back(*it);
+    }
+}
+
+CodePointSequence::~CodePointSequence()
+{
+}
+
+size_t CodePointSequence::length() const
+{
+    return this->_codes.size();
+}
+
+void CodePointSequence::append(const CodePoint& cp)
+{
+    this->_codes.push_back(cp);
+}
+
+CodePointSequence::iterator CodePointSequence::begin()
+{
+    iterator it = iterator(&*(_codes.begin()));
+    return it;
+}
+
+CodePointSequence::const_iterator CodePointSequence::begin() const
+{
+    const_iterator it = const_iterator(&*(_codes.cbegin()));
+    return it;
+}
+
+CodePointSequence::iterator CodePointSequence::end()
+{
+    iterator it = iterator(&*(_codes.end()));
+    return it;
+}
+
+CodePointSequence::const_iterator CodePointSequence::end() const
+{
+    const_iterator it = const_iterator(&*(_codes.cend()));
+    return it;
+}
+
+// class CodePointSequenceIter
+CodePointSequenceIter::CodePointSequenceIter(pointer ptr)
+    : _ptr(ptr)
+{
+}
+
+bool
+CodePointSequenceIter::operator==(const CodePointSequenceIter& other) const
+{
+    return this->_ptr == other._ptr;
+}
+
+bool
+CodePointSequenceIter::operator!=(const CodePointSequenceIter& other) const
+{
+    return this->_ptr != other._ptr;
+}
+
+CodePointSequenceIter& CodePointSequenceIter::operator++()
+{
+    this->_ptr++;
+    return *this;
+}
+
+CodePointSequenceIter CodePointSequenceIter::operator++(int)
+{
+    CodePointSequenceIter ret = *this;
+    this->_ptr++;
+    return ret;
+}
+
+CodePoint& CodePointSequenceIter::operator*()
+{
+    return *_ptr;
+}
+
+// class CodePointSequenceConstIter
+CodePointSequenceConstIter::CodePointSequenceConstIter(pointer ptr)
+    : _ptr(ptr)
+{}
+
+bool
+CodePointSequenceConstIter::operator==(
+        const CodePointSequenceConstIter& other) const
+{
+    return this->_ptr == other._ptr;
+}
+
+bool
+CodePointSequenceConstIter::operator!=(
+        const CodePointSequenceConstIter& other) const
+{
+    return this->_ptr != other._ptr;
+}
+
+CodePointSequenceConstIter& CodePointSequenceConstIter::operator++()
+{
+    this->_ptr++;
+    return *this;
+}
+
+CodePointSequenceConstIter CodePointSequenceConstIter::operator++(int)
+{
+    CodePointSequenceConstIter ret = *this;
+    this->_ptr++;
+    return ret;
+}
+
+const CodePoint& CodePointSequenceConstIter::operator*() const
+{
+    return *_ptr;
+}
+
 // Misc
 
 } // namespace seshat

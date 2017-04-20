@@ -16,6 +16,7 @@ int main()
 {
     using seshat::CodePoint;
     using seshat::Gc;
+    using seshat::CodePointSequence;
 
     CodePoint cp_1 = CodePoint('c');
     CodePoint cp_2 = CodePoint(0xAC00);  // '가'
@@ -58,6 +59,17 @@ int main()
         std::cout << e.what() << std::endl;
     }
     std::cout << std::endl;
+
+    std::cout << "--- sequence ---" << std::endl;
+    CodePointSequence seq = CodePointSequence();
+    // Test append
+    seq.append(cp_1);
+    seq.append(cp_2);
+    seq.append(cp_3);
+    // Test length
+    std::cout << "length(3): " << seq.length() << std::endl;
+    // Test constructor with iterator
+    CodePointSequence seq2 = CodePointSequence(seq.begin(), seq.end());
 
     std::cout << "CodePoint test end" << std::endl;
 

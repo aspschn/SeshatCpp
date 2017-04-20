@@ -18,17 +18,18 @@ namespace seshat {
 
 class Character {
 private:
-    std::vector<CodePoint> _code_points;
+    CodePointSequence _code_points;
 public:
     Character(char a_char); // an ascii character
-    Character(uint32_t code_point);
+    // Character(uint32_t code_point);
     Character(const CodePoint& code_point);
-    Character(const uint32_t *code_points);
+    // Character(const uint32_t *code_points);
     // Character(const CodePoint *code_points);
+    Character(const CodePointSequence& sequence);
     ~Character();
 
-    int length() const; // length of code point
-    const std::vector<CodePoint>& code_points() const; // TODO: using iterator rather
+    size_t size() const; // length of code point
+    const CodePointSequence& sequence() const;
     std::string to_utf8() const;
 };
 

@@ -16,43 +16,53 @@
 namespace seshat {
 
 Character::Character(char a_char)
-    : _code_points(std::vector<CodePoint>())
+    : _code_points(decltype(_code_points)())
 {
     CodePoint cp = CodePoint(static_cast<uint32_t>(a_char));
-    _code_points.push_back(cp);
+    _code_points.append(cp);
 }
 
+/*
 Character::Character(uint32_t code_point)
-    : _code_points(std::vector<CodePoint>())
+    : _code_points(decltype(_code_points)())
 {
     CodePoint cp = CodePoint(code_point);
     _code_points.push_back(cp);
 }
+*/
 
 Character::Character(const CodePoint& code_point)
-    : _code_points(std::vector<CodePoint>{code_point})
+    : _code_points(decltype(_code_points)())
 {
+    _code_points.append(code_point);
 }
 
+/*
 Character::Character(const uint32_t *code_points)
-    : _code_points(std::vector<CodePoint>())
+    : _code_points(decltype(_code_points)())
 {
     std::vector<CodePoint> cps;
     for (auto it = code_points; *it != 0; ++it) {
         cps.push_back(CodePoint(*it));
     }
 }
+*/
+
+Character::Character(const CodePointSequence &sequence)
+    : _code_points(decltype(_code_points)(sequence))
+{
+}
 
 Character::~Character()
 {
 }
 
-int Character::length() const
+size_t Character::size() const
 {
-    return _code_points.size();
+    return _code_points.length();
 }
 
-const std::vector<CodePoint>& Character::code_points() const
+const CodePointSequence& Character::sequence() const
 {
     return _code_points;
 }
