@@ -11,8 +11,11 @@
 #define _SESHAT_UTILS_H
 
 #include <string>
+#include <utility>
 
 namespace seshat {
+
+using CodePointRange = std::pair<uint32_t, uint32_t>;
 
 // AT_DIGIT_32(uint32_t, int) - select a hexademical digit from given number
 // e.g. AT_DIGIT_32(0x1a3f, 3) == 10(0xa)

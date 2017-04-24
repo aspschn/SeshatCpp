@@ -10,6 +10,8 @@
 #ifndef _UNICODEDATA_NAMING_RULE_H
 #define _UNICODEDATA_NAMING_RULE_H
 
+#include <seshat/utils.h>
+
 #include <cstdint>
 #include <map>
 #include <memory>
@@ -54,7 +56,6 @@ enum class UnicodeArea {
 
 // Some prefix ranges from <Table 4-13> in 'The Unicode Standard'
 // 4.8 Name, but not identical.
-using CodePointRange = std::pair<uint32_t, uint32_t>;
 const std::map<CodePointRange, UnicodeArea> range_table {
     { std::make_pair(0x3400, 0x4DB5), UnicodeArea::CjkUnifiedIdeograph },
     { std::make_pair(0x4E00, 0x9FD5), UnicodeArea::CjkUnifiedIdeograph },
