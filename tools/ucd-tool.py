@@ -95,6 +95,40 @@ class UnicodeData:
         self.simple_lowercase_mapping = li[13]
         self.simple_titlecase_mapping = li[14]
 
+class CodePointRange:
+    def __init__(self, arg1, arg2=None):
+        self._from = 0
+        self._to = 0
+
+        if arg2 != None: # from 2 integers
+            (self._from, self._to) = (arg1, arg2)
+        else:
+            if type(arg1) == tuple: # from tuple
+                (self._from, self._to) = arg1
+            elif type(arg1) == str: # from ucd text
+                r = arg1.split('..')
+                if len(r) < 2:
+                    self._from = int(r[0], base=16)
+                    self._to = int(r[0], base=16)
+                elif len(r) == 2:
+                    self._from = int(r[0], base=16)
+                    self._to = int(r[1], base=16)
+    def __lt__(self, other):
+        if (self._from < other._from) and (self._to < other._from):
+            return True
+        else:
+            return False
+    def __gt__(self, other):
+        if (self._from > other._from) and (self._from > other._to):
+            return True
+        else:
+            return False
+    def __eq__(self, other):
+        return (self._from == other._from) and (self._to == other._to)
+    def to_make_pair(self):
+        txt = 'std::make_pair(0x{:04X}, 0x{:04X})'.format(self._from, self._to)
+        return txt
+
 # Ranged data. Some large data area are omitted such as Hangul Syllable,
 # CJK Ideograph etc.
 #
@@ -249,9 +283,20 @@ boilerplate_name_cpp_2 = '''
 } // namespace seshat
 '''
 
+boilerplate_normalization_props_cpp_1 = comment + '''//
+//  Normalization properties.
+#include <seshat/normalization_props.h>
+
+namespace seshat {
+'''
+
+boilerplate_normalization_props_cpp_2 = boilerplate_name_cpp_2
+
 def download_data():
     if 'UnicodeData.txt' not in os.listdir('./data'):
         os.system('wget http://www.unicode.org/Public/UNIDATA/UnicodeData.txt -O data/UnicodeData.txt')
+    if 'DerivedNormalizationProps.txt' not in os.listdir('./data'):
+        os.system('wget http://www.unicode.org/Public/UNIDATA/DerivedNormalizationProps.txt -O data/DerivedNormalizationProps.txt')
 
 def parse_unicode_data():
     unicode_data_list = []
@@ -264,23 +309,38 @@ def parse_unicode_data():
 
     return unicode_data_list
 
-if __name__ == '__main__':
-    if len(sys.argv) > 1:
-        if sys.argv[1] == 'clean':
-            os.system('rm -v data/UnicodeData.txt')
-            exit()
-        elif sys.argv[1] == '--help':
-            print('Usage: ./ucd-tool.py [--help] <command>')
-            print('Commands')
-            print('  clean    remove all downloaded data')
-            print('Arguments')
-            print('  --help   print this help')
-            exit()
+# Parsing utility functions
+#
+# remove_ucd_comment(str):
+#   accept a line, then strip characters after '#'
+# ucd_range_to_std_make_pair(str):
+#   if str like FF00..FFFF, then return 'std::make_pair(0xFF00, 0xFFFF)'.
+#   if str like FFEE, then return 'std::make_pair(0xFFEE, 0xFFEE)'.
+def remove_ucd_comment(a_line):
+    a_line = a_line.split('#')[0].rstrip()
+    return a_line
 
-    download_data()
+def ucd_range_to_std_make_pair(ucd_range):
+    r = ucd_range.split('..')
+    if len(r) == 1:
+        return 'std::make_pair({}, {})'.format('0x'+r[0], '0x'+r[0])
+    else:
+        return 'std::make_pair({}, {})'.format('0x'+r[0], '0x'+r[1])
 
-    unicode_data_list = parse_unicode_data()
+def print_help():
+    print('Usage: ./ucd-tool.py [--help] <command>')
+    print('Commands')
+    print('  clean    remove all downloaded data')
+    print('  gen      generate source files')
+    print('      * all   - generate all source files')
+    print('      * gc    - gc.cpp')
+    print('      * name  - name.cpp')
+    print('      * normalization_props - normalization_props.cpp')
+    print('Arguments')
+    print('  --help   print this help')
+    exit()
 
+def make_gc_cpp():
     # Make gc.cpp
     gc_cpp_table_size = int(unicode_data_list[-1].code, base=16)
     gc_cpp_table = '''
@@ -300,6 +360,7 @@ const std::map<uint32_t, Gc> gc_table = {
     f.write(boilerplate_gc_cpp_1 + gc_cpp_table + boilerplate_gc_cpp_2)
     f.close()
 
+def make_name_cpp():
     # Make name.cpp
     name_cpp_table = '''
 const std::map<uint32_t, const char*> name_table = {
@@ -323,3 +384,100 @@ const std::map<uint32_t, const char*> name_table = {
     f = open('../src/name.cpp', 'w')
     f.write(boilerplate_name_cpp_1 + name_cpp_table + boilerplate_name_cpp_2)
     f.close()
+
+def make_normalization_props_cpp():
+    def empty_or_comment(a_line):
+        if a_line[0] == '#' or a_line.strip() == '':
+            return True
+        else:
+            return False
+
+    db_dict = {'Full_Composition_Exclusion': [],
+        'NFD_QC': [], 'NFC_QC': [],
+        'NFKD_QC': [], 'NFKC_QC': []}
+
+    f = open('data/DerivedNormalizationProps.txt', 'r')
+    props_txt = f.readlines()
+    f.close()
+    for line in props_txt:
+        if empty_or_comment(line) == True:
+            continue
+        line = remove_ucd_comment(line)
+        fields = [itm.strip() for itm in line.split(';')]
+        fields[0] = CodePointRange(fields[0])
+        if fields[1] in db_dict.keys():
+            db_dict[fields[1]].append(fields)
+    db_dict['NFC_QC'].sort(key=lambda fields: fields[0])
+    db_dict['NFKC_QC'].sort(key=lambda fields: fields[0])
+
+    def make_table(name, val_type, val_handler, li):
+        table = '''
+const std::map<CodePointRange, {}> {} = '''.format(val_type, name)
+        table += '{\n    '
+        for item in li:
+            table += '{ ' + item[0].to_make_pair() + ', '
+            table += val_handler(item) + ' },\n    '
+        table = table.rstrip().rstrip(',')
+        table += '\n};'
+        return table
+    # build comp_ex_table
+    comp_ex_handler = lambda arg: 'true'
+    comp_ex_table = make_table('comp_ex_table', 'bool', comp_ex_handler,
+        db_dict['Full_Composition_Exclusion'])
+    # build nfd_qc_table
+    def qc_handler(arg):
+        d = {'N': 'QcValue::No', 'M': 'QcValue::Maybe'}
+        return d[arg[2]]
+    nfd_qc_table = make_table('nfd_qc_table', 'QcValue', qc_handler,
+        db_dict['NFD_QC'])
+    # build nfc_qc_table
+    nfc_qc_table = make_table('nfc_qc_table', 'QcValue', qc_handler,
+        db_dict['NFC_QC'])
+    # build nfkd_qc_table
+    nfkd_qc_table = make_table('nfkd_qc_table', 'QcValue', qc_handler,
+        db_dict['NFKD_QC'])
+    # build nfkc_qc_table
+    nfkc_qc_table = make_table('nfkc_qc_table', 'QcValue', qc_handler,
+        db_dict['NFKC_QC'])
+
+    f = open('../src/normalization_props.cpp', 'w')
+    f.write(boilerplate_normalization_props_cpp_1)
+    f.write(comp_ex_table + '\n')
+    f.write(nfd_qc_table + '\n')
+    f.write(nfc_qc_table + '\n')
+    f.write(nfkd_qc_table + '\n')
+    f.write(nfkc_qc_table + '\n')
+    f.write(boilerplate_normalization_props_cpp_2)
+    f.close()
+
+if __name__ == '__main__':
+    if len(sys.argv) > 1:
+        if sys.argv[1] == 'clean':
+            os.system('rm -v data/UnicodeData.txt')
+            exit()
+        elif sys.argv[1] == '--help':
+            print_help()
+        elif sys.argv[1] == 'gen':
+            download_data()
+            unicode_data_list = parse_unicode_data()
+            if len(sys.argv) < 2:
+                print_help()
+            else:
+                gen = sys.argv[2]
+                gen_list = ('all', 'gc', 'name', 'normalization_props')
+                if gen not in gen_list:
+                    print("invalid argument: {}".format(gen))
+                    exit(1)
+                if gen == 'gc':
+                    make_gc_cpp()
+                    exit()
+                elif gen == 'name':
+                    make_name_cpp()
+                    exit()
+                elif gen == 'normalization_props':
+                    make_normalization_props_cpp()
+                    exit()
+                elif gen == 'all':
+                    make_gc_cpp()
+                    make_name_cpp()
+                    exit()
