@@ -131,6 +131,10 @@ UnicodeNamingRulePtr naming_rule(UnicodeArea area)
         return UnicodeNamingRulePtr(
             new PrefixSpaceUniqueName(PREFIX_EGYPTIAN_HIEROGLYPH)
         );
+    case UnicodeArea::AnatolianHieroglyph:
+        return UnicodeNamingRulePtr(
+            new PrefixSpaceUniqueName(PREFIX_ANATOLIAN_HIEROGLYPH)
+        );
     case UnicodeArea::BamumLetterPhaseA:
         return UnicodeNamingRulePtr(
             new PrefixSpaceUniqueName(PREFIX_BAMUM_LETTER_PHASE_A)
@@ -162,6 +166,10 @@ UnicodeNamingRulePtr naming_rule(UnicodeArea area)
     case UnicodeArea::TangutIdeograph:
         return UnicodeNamingRulePtr(
             new PrefixDashCodePoint(PREFIX_TANGUT_IDEOGRAPH)
+        );
+    case UnicodeArea::MusicalSymbol:
+        return UnicodeNamingRulePtr(
+            new PrefixSpaceUniqueName(PREFIX_MUSICAL_SYMBOL)
         );
     default:
         break;

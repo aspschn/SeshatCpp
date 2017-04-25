@@ -125,6 +125,8 @@ class CodePointRange:
             return False
     def __eq__(self, other):
         return (self._from == other._from) and (self._to == other._to)
+    def contains(self, cp):
+        return (self._from <= cp and cp <= self._to)
     def to_make_pair(self):
         txt = 'std::make_pair(0x{:04X}, 0x{:04X})'.format(self._from, self._to)
         return txt
@@ -197,36 +199,43 @@ Prefix_Egyptian_Hieroglyph = 'EGYPTIAN_HIEROGLYPH' # 13000-1342E
 Prefix_Tangut_Component = 'TANGUT COMPONENT' # 18800-18AF2
 Prefix_Canadian_Syllabics = 'CANADIAN SYLLABICS' # 1400-167F, 18B0-18F5
 # Prefix_CJK_Compatibility_Ideograph = 'CJK_COMPATIBILITY_IDEOGRAPH' # F900-FAD9, 2F800-2FA1D
+Prefix_Anatolian_Hieroglyph = 'ANATOLIAN HIEROGLYPH' # 14400-14646
 Prefix_Bamum_Letter_Phase_A = 'BAMUM LETTER PHASE-A' # 16800-16856
 Prefix_Bamum_Letter_Phase_B = 'BAMUM LETTER PHASE-B' # 16857-1688E
 Prefix_Bamum_Letter_Phase_C = 'BAMUM LETTER PHASE-C' # 1688F-168F0
 Prefix_Bamum_Letter_Phase_D = 'BAMUM LETTER PHASE-D' # 168F1-16965
 Prefix_Bamum_Letter_Phase_E = 'BAMUM LETTER PHASE-E' # 16966-16A02
 Prefix_Bamum_Letter_Phase_F = 'BAMUM LETTER PHASE-F' # 16A03-16A38
+Prefix_Musical_Symbol = 'MUSICAL SYMBOL' # 1D100-1D126, 1D129-1D1E8
 
 # Prefix select
 def search_prefix(code_point):
-    if 0xA000 <= code_point and code_point <= 0xA48C:
+    if CodePointRange(0xA000, 0xA48C).contains(code_point):
         return Prefix_Yi_Syllable
-    elif 0x13000 <= code_point and code_point <= 0x1342E:
+    elif CodePointRange(0x13000, 0x1342E).contains(code_point):
         return Prefix_Egyptian_Hieroglyph
-    elif 0x18800 <= code_point and code_point <= 0x18AF2:
+    elif CodePointRange(0x18800, 0x18AF2).contains(code_point):
         return Prefix_Tangut_Component
-    elif (0x1400 <= code_point and code_point <= 0x167F) or \
-        (0x18B0 <= code_point and code_point <= 0x18F5):
+    elif CodePointRange(0x1400, 0x167F).contains(code_point) or \
+        CodePointRange(0x18B0, 0x18F5).contains(code_point):
         return Prefix_Canadian_Syllabics
-    elif 0x16800 <= code_point and code_point <= 0x16856:
+    elif CodePointRange(0x14400, 0x14646).contains(code_point):
+        return Prefix_Anatolian_Hieroglyph
+    elif CodePointRange(0x16800, 0x16856).contains(code_point):
         return Prefix_Bamum_Letter_Phase_A
-    elif 0x16857 <= code_point and code_point <= 0x1688E:
+    elif CodePointRange(0x16857, 0x1688E).contains(code_point):
         return Prefix_Bamum_Letter_Phase_B
-    elif 0x1688F <= code_point and code_point <= 0x168F0:
+    elif CodePointRange(0x1688F, 0x168F0).contains(code_point):
         return Prefix_Bamum_Letter_Phase_C
-    elif 0x168F1 <= code_point and code_point <= 0x16965:
+    elif CodePointRange(0x168F1, 0x16965).contains(code_point):
         return Prefix_Bamum_Letter_Phase_D
-    elif 0x16966 <= code_point and code_point <= 0x16A02:
+    elif CodePointRange(0x16966, 0x16A02).contains(code_point):
         return Prefix_Bamum_Letter_Phase_E
-    elif 0x16A03 <= code_point and code_point <= 0x16A38:
+    elif CodePointRange(0x16A03, 0x16A38).contains(code_point):
         return Prefix_Bamum_Letter_Phase_F
+    elif CodePointRange(0x1D100, 0x1D126).contains(code_point) or \
+        CodePointRange(0x1D129, 0x1D1E8).contains(code_point):
+        return Prefix_Musical_Symbol
     else:
         return None
 

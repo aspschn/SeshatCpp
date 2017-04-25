@@ -35,6 +35,8 @@ namespace seshat {
 #define PREFIX_BAMUM_LETTER_PHASE_E "BAMUM LETTER PHASE-E"
 #define PREFIX_BAMUM_LETTER_PHASE_F "BAMUM LETTER PHASE-F"
 #define PREFIX_HANGUL_SYLLABLE "HANGUL SYLLABLE"
+#define PREFIX_ANATOLIAN_HIEROGLYPH "ANATOLIAN HIEROGLYPH"
+#define PREFIX_MUSICAL_SYMBOL "MUSICAL SYMBOL"
 
 // Unicode Area
 enum class UnicodeArea {
@@ -42,6 +44,7 @@ enum class UnicodeArea {
     YiSyllable,
     HangulSyllable,
     EgyptianHieroglyph,
+    AnatolianHieroglyph,
     BamumLetterPhaseA,
     BamumLetterPhaseB,
     BamumLetterPhaseC,
@@ -50,6 +53,7 @@ enum class UnicodeArea {
     BamumLetterPhaseF,
     TangutIdeograph,
     TangutComponent,
+    MusicalSymbol,
     CjkCompatibilityIdeograph,
     CjkUnifiedIdeograph
 };
@@ -70,6 +74,7 @@ const std::map<CodePointRange, UnicodeArea> range_table {
     { std::make_pair(0xF900, 0xFA6D), UnicodeArea::CjkCompatibilityIdeograph },
     { std::make_pair(0xFA70, 0xFAD9), UnicodeArea::CjkCompatibilityIdeograph },
     { std::make_pair(0x13000, 0x1342E), UnicodeArea::EgyptianHieroglyph },
+    { std::make_pair(0x14400, 0x14646), UnicodeArea::AnatolianHieroglyph },
     { std::make_pair(0x16800, 0x16856), UnicodeArea::BamumLetterPhaseA },
     { std::make_pair(0x16857, 0x1688E), UnicodeArea::BamumLetterPhaseB },
     { std::make_pair(0x1688F, 0x168F0), UnicodeArea::BamumLetterPhaseC },
@@ -78,6 +83,8 @@ const std::map<CodePointRange, UnicodeArea> range_table {
     { std::make_pair(0x16A03, 0x16A38), UnicodeArea::BamumLetterPhaseF },
     { std::make_pair(0x17000, 0x187EC), UnicodeArea::TangutIdeograph },
     { std::make_pair(0x18800, 0x18AF2), UnicodeArea::TangutComponent },
+    { std::make_pair(0x1D100, 0x1D126), UnicodeArea::MusicalSymbol },
+    { std::make_pair(0x1D129, 0x1D1E8), UnicodeArea::MusicalSymbol },
     { std::make_pair(0x2F800, 0x2FA1D), UnicodeArea::CjkCompatibilityIdeograph }
 };
 
