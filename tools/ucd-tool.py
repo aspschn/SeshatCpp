@@ -263,32 +263,40 @@ comment = '''//  This file generated automatically using 'ucd-tool.py'.
 '''
 
 boilerplate_gc_cpp_1 = comment + '''//
-//  General category(gc) of Unicode code points.
-#include <seshat/unicodedata.h>
+//  General_Category(gc) data table.
+#include "gc.h"
 
 #include <cstdint>
 #include <map>
 
 namespace seshat {
+namespace unicode {
+namespace ucd {
 
 '''
 
 boilerplate_gc_cpp_2 = '''
 
+} // namespace ucd
+} // namespace unicode
 } // namespace seshat
 '''
 
 boilerplate_name_cpp_1 = comment + '''//
 //  Name for individual code points.
-#include <seshat/unicodedata.h>
+#include "name.h"
 
 #include <cstdint>
 #include <map>
 
 namespace seshat {
+namespace unicode {
+namespace ucd {
 '''
 boilerplate_name_cpp_2 = '''
 
+} // namespace ucd
+} // namespace unicode
 } // namespace seshat
 '''
 
@@ -365,7 +373,7 @@ const std::map<uint32_t, Gc> gc_table = {
     gc_cpp_table = gc_cpp_table.rstrip().rstrip(',')
     gc_cpp_table += '\n};'
 
-    f = open('../src/gc.cpp', 'w')
+    f = open('../src/ucd/gc.cpp', 'w')
     f.write(boilerplate_gc_cpp_1 + gc_cpp_table + boilerplate_gc_cpp_2)
     f.close()
 
@@ -390,7 +398,7 @@ const std::map<uint32_t, const char*> name_table = {
     name_cpp_table = name_cpp_table.rstrip().rstrip(',')
     name_cpp_table += '\n};'
 
-    f = open('../src/name.cpp', 'w')
+    f = open('../src/ucd/name.cpp', 'w')
     f.write(boilerplate_name_cpp_1 + name_cpp_table + boilerplate_name_cpp_2)
     f.close()
 

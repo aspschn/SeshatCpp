@@ -32,6 +32,7 @@ uint32_t CodePoint::code() const
     return _code;
 }
 
+/*
 Gc CodePoint::gc() const
 {
     auto category = gc_table.find(_code);
@@ -83,7 +84,9 @@ Gc CodePoint::gc() const
         return Gc::Cn;
     }
 }
+*/
 
+/*
 std::string CodePoint::name() const
 {
     std::string unicode_name;
@@ -115,6 +118,7 @@ std::string CodePoint::name() const
 
     return unicode_name;
 }
+*/
 
 std::string CodePoint::to_string() const
 {

@@ -1,10 +1,13 @@
-OBJ = src/utils.o src/codepoint.o src/character.o src/naming_rule.o src/gc.cpp src/name.cpp
+OBJ = src/utils.o src/codepoint.o src/character.o src/naming_rule.o src/gc.o src/name.o src/hangul.o src/ucd/gc.o src/ucd/name.o
 default: $(OBJ)
 	mkdir -p lib
 	g++ -std=c++11 -shared -o lib/libseshat.so $^ -Iinclude
+src/ucd/%.o: src/ucd/%.cpp
+	g++ -std=c++11 -Wall -c -fPIC -Iinclude -o $@ $<
 src/%.o: src/%.cpp
 	g++ -std=c++11 -Wall -c -fPIC -Iinclude -o $@ $<
 
 clean:
 	rm src/*.o
+	rm src/ucd/*.o
 	rm -r lib
