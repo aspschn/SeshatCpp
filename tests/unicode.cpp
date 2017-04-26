@@ -9,7 +9,7 @@
 //  Character total can get from extracted/DerivedGeneralCategory.txt
 */
 #include <seshat/codepoint.h>
-#include <seshat/unicodedata.h>
+#include <seshat/unicode/gc.h>
 
 #include <cassert>
 #include <cstdint>
@@ -55,10 +55,11 @@ static_assert(
     == UNICODE_MAX,
     "Total error.");
 
+#include <cstdio>
 void unicode_count_total()
 {
     using seshat::CodePoint;
-    using seshat::Gc;
+    using seshat::unicode::Gc;
 
     uint32_t cn_count = 0;
     uint32_t lu_count = 0;
@@ -93,7 +94,9 @@ void unicode_count_total()
 
     for (uint32_t i = 0; i < UNICODE_MAX; ++i) {
         CodePoint cp = CodePoint(i);
-        switch (cp.gc()) {
+        if (cp.code() % 100 == 0)
+            printf("%d\n", cp.code());
+        switch (seshat::unicode::gc(cp.code())) {
         case Gc::Cn:
             cn_count++;
             break;

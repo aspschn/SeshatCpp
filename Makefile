@@ -2,6 +2,9 @@ OBJ = src/utils.o src/codepoint.o src/character.o src/naming_rule.o src/gc.o src
 default: $(OBJ)
 	mkdir -p lib
 	g++ -std=c++11 -shared -o lib/libseshat.so $^ -Iinclude
+static: $(OBJ)
+	mkdir -p lib
+	ar rcs lib/libseshat.a $^
 src/ucd/%.o: src/ucd/%.cpp
 	g++ -std=c++11 -Wall -c -fPIC -Iinclude -o $@ $<
 src/%.o: src/%.cpp
