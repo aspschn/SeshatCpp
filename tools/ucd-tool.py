@@ -4,6 +4,16 @@
 import sys
 import os
 
+UNICODE_VERSION_MAJOR = 9
+UNICODE_VERSION_MINOR = 0
+UNICODE_VERSION_UPDATE = 0
+
+UCD_URL = "http://www.unicode.org/Public/{}.{}.{}/ucd".format(
+    UNICODE_VERSION_MAJOR,
+    UNICODE_VERSION_MINOR,
+    UNICODE_VERSION_UPDATE
+)
+
 class Gc:
     '''General_Category'''
     # C = 'Other'
@@ -129,6 +139,9 @@ class CodePointRange:
         return (self._from <= cp and cp <= self._to)
     def to_make_pair(self):
         txt = 'std::make_pair(0x{:04X}, 0x{:04X})'.format(self._from, self._to)
+        return txt
+    def to_seshat(self):
+        txt = 'CodePointRange(0x{:04X}, 0x{:04X})'.format(self._from, self._to)
         return txt
 
 # Ranged data. Some large data area are omitted such as Hangul Syllable,
@@ -311,9 +324,11 @@ boilerplate_normalization_props_cpp_2 = boilerplate_name_cpp_2
 
 def download_data():
     if 'UnicodeData.txt' not in os.listdir('./data'):
-        os.system('wget http://www.unicode.org/Public/UNIDATA/UnicodeData.txt -O data/UnicodeData.txt')
+        os.system('wget ' + UCD_URL + '/UnicodeData.txt -O data/UnicodeData.txt')
     if 'DerivedNormalizationProps.txt' not in os.listdir('./data'):
-        os.system('wget http://www.unicode.org/Public/UNIDATA/DerivedNormalizationProps.txt -O data/DerivedNormalizationProps.txt')
+        os.system('wget ' + UCD_URL + '/DerivedNormalizationProps.txt -O data/DerivedNormalizationProps.txt')
+    if 'DerivedGeneralCategory.txt' not in os.listdir('./data'):
+        os.system('wget ' + UCD_URL + '/extracted/DerivedGeneralCategory.txt -O data/DerivedGeneralCategory.txt')
 
 def parse_unicode_data():
     unicode_data_list = []
@@ -343,6 +358,32 @@ def ucd_range_to_std_make_pair(ucd_range):
         return 'std::make_pair({}, {})'.format('0x'+r[0], '0x'+r[0])
     else:
         return 'std::make_pair({}, {})'.format('0x'+r[0], '0x'+r[1])
+def ucd_range_to_code_point_range(ucd_range):
+    r = ucd_range.split('..')
+    if len(r) == 1:
+        return 'CodePointRange({}, {})'.format('0x'+r[0], '0x'+r[0])
+    else:
+        return 'CodePointRange({}, {})'.format('0x'+r[0], '0x'+r[1])
+
+class DerivedParser:
+    def __init__(self):
+        self.range = None
+        self.first = ''
+        self.second = ''
+        self._empty = False
+    def empty(self):
+        return self._empty
+    def parse_line(self, line):
+        line = remove_ucd_comment(line)
+        if line == '':
+            self._empty = True
+            return None
+        fields = [itm.strip() for itm in line.split(';')]
+        self.range = CodePointRange(fields[0])
+        self.first = fields[1]
+        if len(fields) > 2:
+            self.second = fields[2]
+        self._empty = False
 
 def print_help():
     print('Usage: ./ucd-tool.py [--help] <command>')
@@ -359,16 +400,23 @@ def print_help():
 
 def make_gc_cpp():
     # Make gc.cpp
-    gc_cpp_table_size = int(unicode_data_list[-1].code, base=16)
+    f = open('data/DerivedGeneralCategory.txt', 'r')
+    gc_txt = f.readlines()
+    f.close()
+
     gc_cpp_table = '''
-const std::map<uint32_t, Gc> gc_table = {
+const std::map<CodePointRange, Gc> gc_table = {
     '''
 
-    for udata in unicode_data_list:
-        if udata.name in ranged_list:
+    parser = DerivedParser()
+    for line in gc_txt:
+        parser.parse_line(line)
+        if parser.empty():
             continue
-        cp = '0x' + udata.code
-        gc_cpp_table += ('{ ' + cp + ', Gc::' + udata.general_category + ' },')
+        if parser.first == 'Cn': # Unassigned
+            continue
+        pair = parser.range.to_seshat()
+        gc_cpp_table += ('{ ' + pair + ', Gc::' + parser.first + ' },')
         gc_cpp_table += '\n    '
     gc_cpp_table = gc_cpp_table.rstrip().rstrip(',')
     gc_cpp_table += '\n};'
@@ -432,7 +480,7 @@ def make_normalization_props_cpp():
 const std::map<CodePointRange, {}> {} = '''.format(val_type, name)
         table += '{\n    '
         for item in li:
-            table += '{ ' + item[0].to_make_pair() + ', '
+            table += '{ ' + item[0].to_seshat() + ', '
             table += val_handler(item) + ' },\n    '
         table = table.rstrip().rstrip(',')
         table += '\n};'
@@ -470,7 +518,7 @@ const std::map<CodePointRange, {}> {} = '''.format(val_type, name)
 if __name__ == '__main__':
     if len(sys.argv) > 1:
         if sys.argv[1] == 'clean':
-            os.system('rm -v data/UnicodeData.txt')
+            os.system('rm -v data/*.txt')
             exit()
         elif sys.argv[1] == '--help':
             print_help()

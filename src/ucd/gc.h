@@ -10,7 +10,8 @@
 #ifndef _UCD_GC_H
 #define _UCD_GC_H
 
-#include <seshat/unicode/gc.h>
+#include <seshat/utils.h> // CodePointRange
+#include <seshat/unicode/gc.h> // enum class Gc
 
 #include <cstdint>
 #include <map>
@@ -19,7 +20,7 @@ namespace seshat {
 namespace unicode {
 namespace ucd {
 
-extern const std::map<uint32_t, Gc> gc_table;
+extern const std::map<CodePointRange, Gc> gc_table;
 
 } // namespace ucd
 } // namespace unicode

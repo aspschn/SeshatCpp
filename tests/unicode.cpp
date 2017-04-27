@@ -55,6 +55,7 @@ static_assert(
     == UNICODE_MAX,
     "Total error.");
 
+#include <cstdio>
 void unicode_count_total()
 {
     using seshat::CodePoint;
