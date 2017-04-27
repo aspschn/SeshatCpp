@@ -94,8 +94,6 @@ void unicode_count_total()
 
     for (uint32_t i = 0; i < UNICODE_MAX; ++i) {
         CodePoint cp = CodePoint(i);
-        if (cp.code() % 100 == 0)
-            printf("%d\n", cp.code());
         switch (seshat::unicode::gc(cp.code())) {
         case Gc::Cn:
             cn_count++;

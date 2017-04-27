@@ -23,11 +23,7 @@ const std::string name(uint32_t cp)
 
     // Find which area the code point belongs to
     uint32_t code = cp;
-    auto range = std::find_if(range_table.begin(), range_table.end(),
-        [code](const std::pair<CodePointRange, UnicodeArea>& p)->bool {
-            return (p.first.first <= code && code <= p.first.second);
-        }
-    );
+    auto range = range_table.find(CodePointRange(code, code));
 
     auto name_pair = ucd::name_table.find(cp);
     if (range != range_table.end()) {

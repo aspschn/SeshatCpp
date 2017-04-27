@@ -20,14 +20,17 @@ Gc gc(uint32_t cp)
 {
     // Find the gc matching the range that code point belongs
     uint32_t code = cp;
+    auto found = ucd::gc_table.find(CodeRange(code, code));
+    /*
     auto gc_pair = std::find_if(ucd::gc_table.begin(), ucd::gc_table.end(),
         [code](const std::pair<CodePointRange, Gc>& p)->bool {
             return (p.first.first <= code && code <= p.first.second);
         }
     );
+    */
 
-    if (gc_pair != ucd::gc_table.end()) {
-        return gc_pair->second;
+    if (found != ucd::gc_table.end()) {
+        return found->second;
     } else {
         return Gc::Cn;
     }

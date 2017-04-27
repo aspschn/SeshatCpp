@@ -140,6 +140,9 @@ class CodePointRange:
     def to_make_pair(self):
         txt = 'std::make_pair(0x{:04X}, 0x{:04X})'.format(self._from, self._to)
         return txt
+    def to_seshat(self):
+        txt = 'CodePointRange(0x{:04X}, 0x{:04X})'.format(self._from, self._to)
+        return txt
 
 # Ranged data. Some large data area are omitted such as Hangul Syllable,
 # CJK Ideograph etc.
@@ -355,6 +358,12 @@ def ucd_range_to_std_make_pair(ucd_range):
         return 'std::make_pair({}, {})'.format('0x'+r[0], '0x'+r[0])
     else:
         return 'std::make_pair({}, {})'.format('0x'+r[0], '0x'+r[1])
+def ucd_range_to_code_point_range(ucd_range):
+    r = ucd_range.split('..')
+    if len(r) == 1:
+        return 'CodePointRange({}, {})'.format('0x'+r[0], '0x'+r[0])
+    else:
+        return 'CodePointRange({}, {})'.format('0x'+r[0], '0x'+r[1])
 
 class DerivedParser:
     def __init__(self):
@@ -406,7 +415,7 @@ const std::map<CodePointRange, Gc> gc_table = {
             continue
         if parser.first == 'Cn': # Unassigned
             continue
-        pair = parser.range.to_make_pair()
+        pair = parser.range.to_seshat()
         gc_cpp_table += ('{ ' + pair + ', Gc::' + parser.first + ' },')
         gc_cpp_table += '\n    '
     gc_cpp_table = gc_cpp_table.rstrip().rstrip(',')
@@ -471,7 +480,7 @@ def make_normalization_props_cpp():
 const std::map<CodePointRange, {}> {} = '''.format(val_type, name)
         table += '{\n    '
         for item in li:
-            table += '{ ' + item[0].to_make_pair() + ', '
+            table += '{ ' + item[0].to_seshat() + ', '
             table += val_handler(item) + ' },\n    '
         table = table.rstrip().rstrip(',')
         table += '\n};'
