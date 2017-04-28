@@ -10,8 +10,6 @@
 #ifndef _CODEPOINT_H
 #define _CODEPOINT_H
 
-// #include <seshat/unicodedata.h>
-
 #include <cstdint>
 #include <exception>
 #include <iterator>
@@ -28,12 +26,12 @@ public:
     ~CodePoint();
 
     uint32_t code() const;
-    // Gc gc() const;
-    // std::string name() const;
     std::string to_string() const;
 
-    bool operator==(const CodePoint& other);
-    bool operator!=(const CodePoint& other);
+    CodePoint& operator=(const CodePoint& origin);
+    CodePoint& operator=(uint32_t code);
+    bool operator==(const CodePoint& other) const;
+    bool operator!=(const CodePoint& other) const;
 };
 
 class IllegalCodePoint : public std::exception {
@@ -105,6 +103,6 @@ private:
     pointer _ptr;
 };
 
-}
+} // namespace seshat
 
 #endif /* _CODEPOINT_H */

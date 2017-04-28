@@ -86,51 +86,29 @@ Gc CodePoint::gc() const
 }
 */
 
-/*
-std::string CodePoint::name() const
-{
-    std::string unicode_name;
-
-    // Find which area the code point belongs to
-    uint32_t code = _code;
-    auto range = std::find_if(range_table.begin(), range_table.end(),
-        [code](const std::pair<CodePointRange, UnicodeArea>& p)->bool {
-            return (p.first.first <= code && code <= p.first.second);
-        }
-    );
-
-    auto name_pair = name_table.find(_code);
-    if (range != range_table.end()) {
-        UnicodeNamingRulePtr rule = naming_rule(range->second);
-        if (name_pair != name_table.end()) {
-            rule->set(name_pair->second, _code);
-        } else {
-            rule->set(nullptr, _code);
-        }
-        unicode_name = rule->name();
-    } else {
-        if (name_pair != name_table.end()) {
-            unicode_name = name_pair->second;
-        } else {
-            throw NoName();
-        }
-    }
-
-    return unicode_name;
-}
-*/
-
 std::string CodePoint::to_string() const
 {
     return code_point_to_string(_code);
 }
 
-bool CodePoint::operator==(const CodePoint& other)
+CodePoint& CodePoint::operator=(const CodePoint& origin)
+{
+    _code = origin._code;
+    return *this;
+}
+
+CodePoint& CodePoint::operator=(uint32_t code)
+{
+    _code = code;
+    return *this;
+}
+
+bool CodePoint::operator==(const CodePoint& other) const
 {
     return _code == other._code;
 }
 
-bool CodePoint::operator!=(const CodePoint& other)
+bool CodePoint::operator!=(const CodePoint& other) const
 {
     return _code != other._code;
 }
