@@ -78,8 +78,20 @@ public:
     CodePointSequenceIter(pointer ptr);
     bool operator==(const CodePointSequenceIter& other) const;
     bool operator!=(const CodePointSequenceIter& other) const;
+    bool operator<(const CodePointSequenceIter& other) const;
+    bool operator>(const CodePointSequenceIter& other) const;
+    bool operator<=(const CodePointSequenceIter& other) const;
+    bool operator>=(const CodePointSequenceIter& other) const;
     CodePointSequenceIter& operator++(); // ++it
     CodePointSequenceIter operator++(int); // it++
+    CodePointSequenceIter& operator--(); // --it
+    CodePointSequenceIter operator--(int); // it--
+    CodePointSequenceIter& operator+=(difference_type n);
+    CodePointSequenceIter& operator-=(difference_type n);
+    CodePointSequenceIter operator+(difference_type n) const;
+    CodePointSequenceIter operator-(difference_type n) const;
+    difference_type operator-(const CodePointSequenceIter& other) const;
+    reference operator[](difference_type n);
     reference operator*();
 private:
     pointer _ptr;

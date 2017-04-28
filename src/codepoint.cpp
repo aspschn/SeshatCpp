@@ -188,6 +188,30 @@ CodePointSequenceIter::operator!=(const CodePointSequenceIter& other) const
     return this->_ptr != other._ptr;
 }
 
+bool
+CodePointSequenceIter::operator<(const CodePointSequenceIter& other) const
+{
+    return this->_ptr < other._ptr;
+}
+
+bool
+CodePointSequenceIter::operator>(const CodePointSequenceIter& other) const
+{
+    return this->_ptr > other._ptr;
+}
+
+bool
+CodePointSequenceIter::operator<=(const CodePointSequenceIter& other) const
+{
+    return this->_ptr <= other._ptr;
+}
+
+bool
+CodePointSequenceIter::operator>=(const CodePointSequenceIter& other) const
+{
+    return this->_ptr >= other._ptr;
+}
+
 CodePointSequenceIter& CodePointSequenceIter::operator++()
 {
     this->_ptr++;
@@ -199,6 +223,76 @@ CodePointSequenceIter CodePointSequenceIter::operator++(int)
     CodePointSequenceIter ret = *this;
     this->_ptr++;
     return ret;
+}
+
+CodePointSequenceIter& CodePointSequenceIter::operator--()
+{
+    this->_ptr--;
+    return *this;
+}
+
+CodePointSequenceIter CodePointSequenceIter::operator--(int)
+{
+    CodePointSequenceIter ret = *this;
+    this->_ptr--;
+    return ret;
+}
+
+CodePointSequenceIter&
+CodePointSequenceIter::operator+=(CodePointSequenceIter::difference_type n)
+{
+    auto m = n;
+    if (m >= 0) {
+        while (m--) ++(*this);
+    } else {
+        while (m++) --(*this);
+    }
+    return *this;
+}
+
+CodePointSequenceIter&
+CodePointSequenceIter::operator-=(CodePointSequenceIter::difference_type n)
+{
+    return *this += -n;
+}
+
+CodePointSequenceIter CodePointSequenceIter::operator+(
+        CodePointSequenceIter::difference_type n) const
+{
+    auto ret = *this;
+    return ret += n;
+}
+
+CodePointSequenceIter CodePointSequenceIter::operator-(
+        CodePointSequenceIter::difference_type n) const
+{
+    auto ret = *this;
+    return ret -= n;
+}
+
+CodePointSequenceIter::difference_type
+CodePointSequenceIter::operator-(const CodePointSequenceIter& other) const
+{
+    difference_type n = 0;
+    auto temp = *this;
+    if (*this > other) {
+        while (temp != other) {
+            --temp;
+            ++n;
+        }
+    } else {
+        while (temp != other) {
+            ++temp;
+            --n;
+        }
+    }
+    return n;
+}
+
+CodePointSequenceIter::reference
+CodePointSequenceIter::operator[](CodePointSequenceIter::difference_type n)
+{
+    return *(this->_ptr + n);
 }
 
 CodePoint& CodePointSequenceIter::operator*()
