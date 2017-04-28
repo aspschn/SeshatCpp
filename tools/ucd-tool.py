@@ -322,6 +322,21 @@ namespace seshat {
 
 boilerplate_normalization_props_cpp_2 = boilerplate_name_cpp_2
 
+boilerplate_ccc_cpp_1 = comment + '''//
+//  Canonical_Combining_Class(ccc) property table.
+//  ccc=0 omitted in this table.
+#include "ccc.h"
+
+namespace seshat {
+namespace unicode {
+namespace ucd {
+'''
+boilerplate_ccc_cpp_2 = '''
+} // namespace ucd
+} // namespace unicode
+} // namespace seshat
+'''
+
 def download_data():
     if 'UnicodeData.txt' not in os.listdir('./data'):
         os.system('wget ' + UCD_URL + '/UnicodeData.txt -O data/UnicodeData.txt')
@@ -329,6 +344,8 @@ def download_data():
         os.system('wget ' + UCD_URL + '/DerivedNormalizationProps.txt -O data/DerivedNormalizationProps.txt')
     if 'DerivedGeneralCategory.txt' not in os.listdir('./data'):
         os.system('wget ' + UCD_URL + '/extracted/DerivedGeneralCategory.txt -O data/DerivedGeneralCategory.txt')
+    if 'DerivedCombiningClass.txt' not in os.listdir('./data'):
+        os.system('wget ' + UCD_URL + '/extracted/DerivedCombiningClass.txt -O data/DerivedCombiningClass.txt')
 
 def parse_unicode_data():
     unicode_data_list = []
@@ -394,6 +411,7 @@ def print_help():
     print('      * gc    - gc.cpp')
     print('      * name  - name.cpp')
     print('      * normalization_props - normalization_props.cpp')
+    print('      * ccc   - ccc.cpp')
     print('Arguments')
     print('  --help   print this help')
     exit()
@@ -423,6 +441,30 @@ const std::map<CodePointRange, Gc> gc_table = {
 
     f = open('../src/ucd/gc.cpp', 'w')
     f.write(boilerplate_gc_cpp_1 + gc_cpp_table + boilerplate_gc_cpp_2)
+    f.close()
+
+def make_ccc_cpp():
+    f = open('data/DerivedCombiningClass.txt', 'r')
+    txt = f.readlines()
+    f.close()
+
+    table = '''
+const std::map<CodePointRange, uint8_t> ccc_table = {
+    '''
+
+    parser = DerivedParser()
+    for line in txt:
+        parser.parse_line(line)
+        if parser.empty():
+            continue
+        if parser.first == '0': # Not_Reordered
+            continue
+        table += ('{ ' + parser.range.to_seshat() + ', ' + parser.first + ' },')
+        table += '\n    '
+    table = table.rstrip().rstrip(',') + '\n};'
+
+    f = open('../src/ucd/ccc.cpp', 'w')
+    f.write(boilerplate_ccc_cpp_1 + table + boilerplate_ccc_cpp_2)
     f.close()
 
 def make_name_cpp():
@@ -529,7 +571,7 @@ if __name__ == '__main__':
                 print_help()
             else:
                 gen = sys.argv[2]
-                gen_list = ('all', 'gc', 'name', 'normalization_props')
+                gen_list = ('all', 'gc', 'name', 'normalization_props', 'ccc')
                 if gen not in gen_list:
                     print("invalid argument: {}".format(gen))
                     exit(1)
@@ -541,6 +583,9 @@ if __name__ == '__main__':
                     exit()
                 elif gen == 'normalization_props':
                     make_normalization_props_cpp()
+                    exit()
+                elif gen == 'ccc':
+                    make_ccc_cpp()
                     exit()
                 elif gen == 'all':
                     make_gc_cpp()

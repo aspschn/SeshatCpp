@@ -13,6 +13,7 @@
 namespace seshat {
 namespace unicode {
 
+uint8_t ccc(uint32_t cp);
 
 } // namespace unicode
 } // namespace seshat
