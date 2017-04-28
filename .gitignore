@@ -1,2 +1,5 @@
 tools/__pycache__
 tools/data/*.txt
+src/*.o
+src/ucd/*.o
+lib/
