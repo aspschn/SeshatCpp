@@ -3,7 +3,7 @@ CXX_FILES = ../src/codepoint.cpp ../src/gc.cpp ../src/name.cpp ../src/utils.cpp 
 default:
 	echo "codepoint, unicode unicode_name"
 codepoint:
-	g++ -std=c++11 -o codepoint codepoint.cpp $(CXX_FILES) -I../include
+	g++ -std=c++11 -o codepoint codepoint.cpp ../lib/libseshat.a -I../include
 unicode:
 	g++ -std=c++11 -o unicode unicode.cpp ../lib/libseshat.a -I../include
 unicode_name:

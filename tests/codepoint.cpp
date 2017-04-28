@@ -15,7 +15,7 @@
 int main()
 {
     using seshat::CodePoint;
-    using seshat::Gc;
+    // using seshat::Gc;
     using seshat::CodePointSequence;
 
     CodePoint cp_1 = CodePoint('c');
@@ -28,6 +28,7 @@ int main()
     std::cout << "cp_3(66371):  " << cp_3.code() << std::endl;
     std::cout << std::endl;
 
+    /*
     std::cout << "--- gc() - General_Category ---" << std::endl;
     if (cp_1.gc() != Gc::Ll)
         std::cout << "wrong!" << std::endl;
@@ -38,6 +39,7 @@ int main()
     assert(CodePoint(0xAC10).gc() == Gc::Lo);   // Hangul 감 (Lo)
     assert(CodePoint(0x10FFFA).gc() == Gc::Co); // Plane 16 Private Use (Co)
     std::cout << std::endl;
+    */
 
     std::cout << "--- to_string() ---" << std::endl;
     std::cout << "cp_1(\"U+0063\"):  " << cp_1.to_string() << std::endl;
@@ -49,6 +51,9 @@ int main()
     std::cout << "cp_1('c') != cp_2('가'): " << (cp_1 != cp_2) << std::endl;
     std::cout << "cp_2('가') == CodePoint(0xAC00): "
         << (cp_2 == CodePoint(0xAC00)) << std::endl;
+    std::cout << "cp_1('c') = 0x64('d')" << std::endl;
+    cp_1 = 0x64;
+    std::cout << "cp_1('d'): " << char(cp_1.code()) << std::endl;
     std::cout << std::endl;
 
     std::cout << "--- exceptions ---" << std::endl;
