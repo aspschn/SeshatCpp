@@ -10,6 +10,8 @@
 #ifndef _UNICODE_CCC_H
 #define _UNICODE_CCC_H
 
+#include <cstdint>
+
 namespace seshat {
 namespace unicode {
 

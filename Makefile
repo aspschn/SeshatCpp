@@ -1,4 +1,4 @@
-OBJ = src/utils.o src/codepoint.o src/character.o src/naming_rule.o src/gc.o src/name.o src/hangul.o src/ucd/gc.o src/ucd/name.o
+OBJ = src/utils.o src/codepoint.o src/character.o src/naming_rule.o src/gc.o src/name.o src/ccc.o src/hangul.o src/ucd/gc.o src/ucd/name.o src/ucd/ccc.o src/normalize.o
 default: $(OBJ)
 	mkdir -p lib
 	g++ -std=c++11 -shared -o lib/libseshat.so $^ -Iinclude
