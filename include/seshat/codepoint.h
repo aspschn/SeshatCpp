@@ -12,6 +12,7 @@
 
 #include <cstdint>
 #include <exception>
+#include <initializer_list>
 #include <iterator>
 #include <string>
 #include <vector>
@@ -55,6 +56,7 @@ public:
     CodePointSequence();
     CodePointSequence(const CodePointSequence& origin);
     CodePointSequence(iterator first, iterator last);
+    CodePointSequence(std::initializer_list<CodePoint> init);
     ~CodePointSequence();
 
     size_t length() const;

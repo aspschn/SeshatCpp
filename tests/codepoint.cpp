@@ -75,6 +75,8 @@ int main()
     std::cout << "length(3): " << seq.length() << std::endl;
     // Test constructor with iterator
     CodePointSequence seq2 = CodePointSequence(seq.begin(), seq.end());
+    // Test constructor with initializer_list
+    CodePointSequence seq3 = { 0xD14C, 0xC3A4, 0xD2B8 };
 
     std::cout << "CodePoint test end" << std::endl;
 

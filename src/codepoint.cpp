@@ -132,6 +132,11 @@ CodePointSequence::CodePointSequence(iterator first, iterator last)
     }
 }
 
+CodePointSequence::CodePointSequence(std::initializer_list<CodePoint> init)
+    : _codes(init)
+{
+}
+
 CodePointSequence::~CodePointSequence()
 {
 }
