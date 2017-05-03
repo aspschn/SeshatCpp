@@ -94,10 +94,14 @@ class UnicodeData:
         self.general_category = li[2]
         self.canonical_combining_class = li[3]
         self.bidi_class = li[4]
-        self.decomposition_type = li[5]
-        self.decomposition_mapping = li[6]
-        self.numeric_type = li[7]
-        self.numeric_value = li[8]
+        if li[5] != '' and li[5][0] == '<':
+            self.decomposition_type = li[5][:li[5].index('>') + 1]
+            self.decomposition_mapping = li[5][li[5].index('>') + 1:].strip()
+        else:
+            self.decomposition_type = ''
+            self.decomposition_mapping = li[5]
+        self.numeric_type = li[6]
+        self.numeric_value = li[7]
         self.bidi_mirrored = li[9]
         self.unicode_1_name = li[10]
         self.iso_comment = li[11]
