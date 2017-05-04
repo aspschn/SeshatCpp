@@ -342,12 +342,9 @@ namespace ucd {
 boilerplate_name_cpp_2 = closing_namespace
 
 boilerplate_normalization_props_cpp_1 = comment + '''//
-//  Normalization properties.
-#include <seshat/unicode/normalization_props.h>
-
-namespace seshat {
-'''
-
+//  Normalization properties tables.
+#include "normalization_props.h"
+''' + opening_namespace
 boilerplate_normalization_props_cpp_2 = closing_namespace
 
 boilerplate_ccc_cpp_1 = comment + '''//
@@ -639,7 +636,7 @@ const std::map<CodePointRange, {}> {} = '''.format(val_type, name)
     nfkc_qc_table = make_table('nfkc_qc_table', 'QcValue', qc_handler,
         db_dict['NFKC_QC'])
 
-    f = open('../src/normalization_props.cpp', 'w')
+    f = open('../src/ucd/normalization_props.cpp', 'w')
     f.write(boilerplate_normalization_props_cpp_1)
     f.write(comp_ex_table + '\n')
     f.write(nfd_qc_table + '\n')

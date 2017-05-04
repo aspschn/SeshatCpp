@@ -10,8 +10,6 @@
 #ifndef _UNICODE_NORMALIZATION_PROPS_H
 #define _UNICODE_NORMALIZATION_PROPS_H
 
-#include <seshat/utils.h>
-
 #include <cstdint>
 #include <map>
 #include <utility>
@@ -24,13 +22,6 @@ enum class QcValue {
     Yes,
     Maybe
 };
-
-// comp_ex_table - Full_Composition_Exclusion
-extern const std::map<CodePointRange, bool> comp_ex_table;
-extern const std::map<CodePointRange, QcValue> nfd_qc_table;
-extern const std::map<CodePointRange, QcValue> nfc_qc_table;
-extern const std::map<CodePointRange, QcValue> nfkd_qc_table;
-extern const std::map<CodePointRange, QcValue> nfkc_qc_table;
 
 bool comp_ex(uint32_t cp);
 QcValue nfd_qc(uint32_t cp);
