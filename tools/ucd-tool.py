@@ -371,6 +371,12 @@ namespace ucd {
 '''
 boilerplate_dt_cpp_2 = closing_namespace
 
+boilerplate_dm_cpp_1 = comment + '''//
+//  Decomposition_Mapping(dm) table.
+#include "dm.h"
+''' + opening_namespace
+boilerplate_dm_cpp_2 = closing_namespace
+
 def download_data():
     if 'UnicodeData.txt' not in os.listdir('./data'):
         os.system('wget ' + UCD_URL + '/UnicodeData.txt -O data/UnicodeData.txt')
@@ -449,6 +455,7 @@ def print_help():
     print('      * normalization_props - normalization_props.cpp')
     print('      * ccc   - ccc.cpp')
     print('      * dt    - dt.cpp')
+    print('      * dm    - dm.cpp')
     print('Arguments')
     print('  --help   print this help')
     exit()
@@ -551,6 +558,32 @@ const std::map<uint32_t, const char*> name_table = {
     f.write(boilerplate_name_cpp_1 + name_cpp_table + boilerplate_name_cpp_2)
     f.close()
 
+def make_dm_cpp():
+    table = '''
+const std::map<uint32_t, CodePointSequence> dm_table = {
+    '''
+
+    for udata in unicode_data_list:
+        if udata.name in ranged_list or udata.name == '<control>':
+            continue
+        cp = '0x' + udata.code
+        seq = ''
+        if udata.decomposition_mapping == '':
+            continue
+        else:
+            l = udata.decomposition_mapping.split(' ')
+            for i, itm in enumerate(l):
+                l[i] = '0x' + itm
+            seq = ', '.join(l)
+        table += '{ ' + cp + ', { ' + seq + ' } },'
+        table += '\n    '
+    table =  table.rstrip().rstrip(',')
+    table += '\n};'
+
+    f = open('../src/ucd/dm.cpp', 'w')
+    f.write(boilerplate_dm_cpp_1 + table + boilerplate_dm_cpp_2)
+    f.close()
+
 def make_normalization_props_cpp():
     def empty_or_comment(a_line):
         if a_line[0] == '#' or a_line.strip() == '':
@@ -631,7 +664,7 @@ if __name__ == '__main__':
             else:
                 gen = sys.argv[2]
                 gen_list = ('all', 'gc', 'name', 'normalization_props', 'ccc',
-                    'dt')
+                    'dt', 'dm')
                 if gen not in gen_list:
                     print("invalid argument: {}".format(gen))
                     exit(1)
@@ -649,6 +682,9 @@ if __name__ == '__main__':
                     exit()
                 elif gen == 'dt':
                     make_dt_cpp()
+                    exit()
+                elif gen == 'dm':
+                    make_dm_cpp()
                     exit()
                 elif gen == 'all':
                     make_gc_cpp()
