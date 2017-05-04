@@ -301,7 +301,14 @@ def is_skip(code_point):
 comment = '''//  This file generated automatically using 'ucd-tool.py'.
 //  You can find the author and the copyright in file 'tools/ucd-tool.py'.
 '''
+opening_namespace = '''
+namespace seshat {
+namespace unicode {
+namespace ucd {
+
+'''
 closing_namespace = '''
+
 } // namespace ucd
 } // namespace unicode
 } // namespace seshat
@@ -319,13 +326,7 @@ namespace unicode {
 namespace ucd {
 
 '''
-
-boilerplate_gc_cpp_2 = '''
-
-} // namespace ucd
-} // namespace unicode
-} // namespace seshat
-'''
+boilerplate_gc_cpp_2 = closing_namespace
 
 boilerplate_name_cpp_1 = comment + '''//
 //  Name for individual code points.
@@ -338,12 +339,7 @@ namespace seshat {
 namespace unicode {
 namespace ucd {
 '''
-boilerplate_name_cpp_2 = '''
-
-} // namespace ucd
-} // namespace unicode
-} // namespace seshat
-'''
+boilerplate_name_cpp_2 = closing_namespace
 
 boilerplate_normalization_props_cpp_1 = comment + '''//
 //  Normalization properties.
@@ -352,7 +348,7 @@ boilerplate_normalization_props_cpp_1 = comment + '''//
 namespace seshat {
 '''
 
-boilerplate_normalization_props_cpp_2 = boilerplate_name_cpp_2
+boilerplate_normalization_props_cpp_2 = closing_namespace
 
 boilerplate_ccc_cpp_1 = comment + '''//
 //  Canonical_Combining_Class(ccc) property table.
@@ -363,11 +359,7 @@ namespace seshat {
 namespace unicode {
 namespace ucd {
 '''
-boilerplate_ccc_cpp_2 = '''
-} // namespace ucd
-} // namespace unicode
-} // namespace seshat
-'''
+boilerplate_ccc_cpp_2 = closing_namespace
 
 boilerplate_dt_cpp_1 = comment + '''//
 //  Decomposition_Type(dt) table.
