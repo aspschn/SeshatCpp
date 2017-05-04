@@ -1,5 +1,5 @@
 /*
-//  normalization_props.h
+//  unicode/normalization_props.h
 //
 //  Author:     Sophia Lee
 //  Created:    2017. 04. 24. 14:59
@@ -7,8 +7,8 @@
 //
 //
 */
-#ifndef _NORMALIZATION_PROPS_H
-#define _NORMALIZATION_PROPS_H
+#ifndef _UNICODE_NORMALIZATION_PROPS_H
+#define _UNICODE_NORMALIZATION_PROPS_H
 
 #include <seshat/utils.h>
 
@@ -17,6 +17,7 @@
 #include <utility>
 
 namespace seshat {
+namespace unicode {
 
 enum class QcValue {
     No,
@@ -37,6 +38,7 @@ QcValue nfc_qc(uint32_t cp);
 QcValue nfkd_qc(uint32_t cp);
 QcValue nfkc_qc(uint32_t cp);
 
+} // namespace unicode
 } // namespace seshat
 
-#endif /* _NORMALIZATION_PROPS_H */
+#endif /* _UNICODE_NORMALIZATION_PROPS_H */

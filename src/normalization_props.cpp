@@ -2,7 +2,7 @@
 //  You can find the author and the copyright in file 'tools/ucd-tool.py'.
 //
 //  Normalization properties.
-#include <seshat/normalization_props.h>
+#include <seshat/unicode/normalization_props.h>
 
 namespace seshat {
 

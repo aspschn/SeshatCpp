@@ -343,7 +343,7 @@ boilerplate_name_cpp_2 = closing_namespace
 
 boilerplate_normalization_props_cpp_1 = comment + '''//
 //  Normalization properties.
-#include <seshat/normalization_props.h>
+#include <seshat/unicode/normalization_props.h>
 
 namespace seshat {
 '''
