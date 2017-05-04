@@ -148,6 +148,29 @@ class CodePointRange:
         txt = 'CodePointRange(0x{:04X}, 0x{:04X})'.format(self._from, self._to)
         return txt
 
+def dt_alias(dt):
+    alias_dict = {
+        'Canonical': 'Can',
+        'Compat': 'Com',
+        'Circle': 'Enc',
+        'Final': 'Fin',
+        'Font': 'Font',
+        'Fraction': 'Fra',
+        'Initial': 'Init',
+        'Isolated': 'Iso',
+        'Medial': 'Med',
+        'Narrow': 'Nar',
+        'Nobreak': 'Nb',
+        'None': 'None',
+        'Small': 'Sml',
+        'Square': 'Sqr',
+        'Sub': 'Sub',
+        'Super': 'Sup',
+        'Vertical': 'Vert',
+        'Wide': 'Wide'
+    }
+    return alias_dict[dt]
+
 # Ranged data. Some large data area are omitted such as Hangul Syllable,
 # CJK Ideograph etc.
 #
@@ -278,6 +301,11 @@ def is_skip(code_point):
 comment = '''//  This file generated automatically using 'ucd-tool.py'.
 //  You can find the author and the copyright in file 'tools/ucd-tool.py'.
 '''
+closing_namespace = '''
+} // namespace ucd
+} // namespace unicode
+} // namespace seshat
+'''
 
 boilerplate_gc_cpp_1 = comment + '''//
 //  General_Category(gc) data table.
@@ -341,6 +369,16 @@ boilerplate_ccc_cpp_2 = '''
 } // namespace seshat
 '''
 
+boilerplate_dt_cpp_1 = comment + '''//
+//  Decomposition_Type(dt) table.
+#include "dt.h"
+
+namespace seshat {
+namespace unicode {
+namespace ucd {
+'''
+boilerplate_dt_cpp_2 = closing_namespace
+
 def download_data():
     if 'UnicodeData.txt' not in os.listdir('./data'):
         os.system('wget ' + UCD_URL + '/UnicodeData.txt -O data/UnicodeData.txt')
@@ -350,6 +388,8 @@ def download_data():
         os.system('wget ' + UCD_URL + '/extracted/DerivedGeneralCategory.txt -O data/DerivedGeneralCategory.txt')
     if 'DerivedCombiningClass.txt' not in os.listdir('./data'):
         os.system('wget ' + UCD_URL + '/extracted/DerivedCombiningClass.txt -O data/DerivedCombiningClass.txt')
+    if 'DerivedDecompositionType.txt' not in os.listdir('./data'):
+        os.system('wget ' + UCD_URL + '/extracted/DerivedDecompositionType.txt -O data/DerivedDecompositionType.txt')
 
 def parse_unicode_data():
     unicode_data_list = []
@@ -416,6 +456,7 @@ def print_help():
     print('      * name  - name.cpp')
     print('      * normalization_props - normalization_props.cpp')
     print('      * ccc   - ccc.cpp')
+    print('      * dt    - dt.cpp')
     print('Arguments')
     print('  --help   print this help')
     exit()
@@ -469,6 +510,28 @@ const std::map<CodePointRange, uint8_t> ccc_table = {
 
     f = open('../src/ucd/ccc.cpp', 'w')
     f.write(boilerplate_ccc_cpp_1 + table + boilerplate_ccc_cpp_2)
+    f.close()
+
+def make_dt_cpp():
+    f = open('data/DerivedDecompositionType.txt', 'r')
+    txt = f.readlines()
+    f.close()
+
+    table = '''
+const std::map<CodePointRange, Dt> dt_table = {
+    '''
+
+    parser = DerivedParser()
+    for line in txt:
+        parser.parse_line(line)
+        if parser.empty():
+            continue
+        table += ('{ ' + parser.range.to_seshat() + ', Dt::' + dt_alias(parser.first) + ' },')
+        table += '\n    '
+    table = table.rstrip().rstrip(',') + '\n};'
+
+    f = open('../src/ucd/dt.cpp', 'w')
+    f.write(boilerplate_dt_cpp_1 + table + boilerplate_dt_cpp_2)
     f.close()
 
 def make_name_cpp():
@@ -575,7 +638,8 @@ if __name__ == '__main__':
                 print_help()
             else:
                 gen = sys.argv[2]
-                gen_list = ('all', 'gc', 'name', 'normalization_props', 'ccc')
+                gen_list = ('all', 'gc', 'name', 'normalization_props', 'ccc',
+                    'dt')
                 if gen not in gen_list:
                     print("invalid argument: {}".format(gen))
                     exit(1)
@@ -590,6 +654,9 @@ if __name__ == '__main__':
                     exit()
                 elif gen == 'ccc':
                     make_ccc_cpp()
+                    exit()
+                elif gen == 'dt':
+                    make_dt_cpp()
                     exit()
                 elif gen == 'all':
                     make_gc_cpp()
