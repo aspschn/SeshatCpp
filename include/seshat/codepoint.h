@@ -67,6 +67,9 @@ public:
     const_iterator begin() const;
     iterator end();
     const_iterator end() const;
+
+    bool operator==(const CodePointSequence& other) const;
+    bool operator!=(const CodePointSequence& other) const;
 };
 
 class CodePointSequenceIter {

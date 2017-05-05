@@ -175,6 +175,23 @@ CodePointSequence::const_iterator CodePointSequence::end() const
     return it;
 }
 
+bool CodePointSequence::operator==(const CodePointSequence& other) const
+{
+    if (this->length() != other.length()) {
+        return false;
+    }
+    auto other_iter = other.begin();
+    for (auto this_ref: *this) {
+        if (this_ref != *(other_iter++)) return false;
+    }
+    return true;
+}
+
+bool CodePointSequence::operator!=(const CodePointSequence& other) const
+{
+    return *this == other;
+}
+
 // class CodePointSequenceIter
 CodePointSequenceIter::CodePointSequenceIter(pointer ptr)
     : _ptr(ptr)
