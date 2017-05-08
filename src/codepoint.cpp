@@ -354,6 +354,19 @@ CodePointSequenceConstIter CodePointSequenceConstIter::operator++(int)
     return ret;
 }
 
+CodePointSequenceConstIter& CodePointSequenceConstIter::operator--()
+{
+    this->_ptr--;
+    return *this;
+}
+
+CodePointSequenceConstIter CodePointSequenceConstIter::operator--(int)
+{
+    decltype(*this) ret = *this;
+    this->_ptr--;
+    return ret;
+}
+
 const CodePoint& CodePointSequenceConstIter::operator*() const
 {
     return *_ptr;

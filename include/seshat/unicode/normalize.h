@@ -22,6 +22,11 @@ bool starter(uint32_t cp);
 // Canonical Ordering Algorithm
 bool reorderable(uint32_t cp_1, uint32_t cp_2);
 void canonical_ordering(CodePointSequence& sequence);
+// Canonical Composition Algorithm
+bool full_composition_exclusion(uint32_t cp);
+bool primary_composite(uint32_t cp);
+bool blocked(CodePointSequenceConstIter& first,
+    CodePointSequenceConstIter& last);
 
 } // namespace unicode
 } // namespace seshat

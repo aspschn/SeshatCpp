@@ -10,7 +10,9 @@
 #include <seshat/unicode/normalize.h>
 
 #include <seshat/unicode/ccc.h>
+#include <seshat/unicode/dt.h>
 #include <seshat/unicode/gc.h>
+#include <seshat/unicode/normalization_props.h> // comp_ex()
 
 namespace seshat {
 namespace unicode {
@@ -60,6 +62,31 @@ void canonical_ordering(CodePointSequence& sequence)
         }
         --sorted;
     }
+}
+
+bool full_composition_exclusion(uint32_t cp)
+{
+    return comp_ex(cp);
+}
+
+bool primary_composite(uint32_t cp)
+{
+    // According to D114 (Unicode 9.0.0), Primary composite is "A Canonical
+    // Decomposable Character which is not a Full Composition Exclusion."
+    return (full_composition_exclusion(cp)) && (dt(cp) == Dt::Can);
+}
+
+bool blocked(CodePointSequenceConstIter& first,
+    CodePointSequenceConstIter& last)
+{
+    if ( !(ccc((*first).code()) == 0) ) return false;
+    auto iter = last;
+    if (--iter == first) return false;
+    if ( (ccc((*iter).code()) == 0) ||
+        (ccc((*iter).code()) >= ccc((*last).code())) ) {
+        return true;
+    }
+    return false;
 }
 
 } // namespace unicode

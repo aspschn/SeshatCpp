@@ -10,6 +10,11 @@
 #ifndef _UNICODE_DT_H
 #define _UNICODE_DT_H
 
+#include <cstdint>
+
+namespace seshat {
+namespace unicode {
+
 // Dt: Decomposition_Type (dt)
 // Aliases from PropertyValueAliases.txt
 enum class Dt {
@@ -32,5 +37,10 @@ enum class Dt {
     Vert,   // Vertical
     Wide    // Wide
 };
+
+Dt dt(uint32_t cp);
+
+} // namespace unicode
+} // namespace seshat
 
 #endif /* _UNICODE_DT_H */

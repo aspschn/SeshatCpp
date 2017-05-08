@@ -115,6 +115,8 @@ public:
     bool operator!=(const CodePointSequenceConstIter& other) const;
     CodePointSequenceConstIter& operator++(); // ++it
     CodePointSequenceConstIter operator++(int); // it++
+    CodePointSequenceConstIter& operator--(); // --it
+    CodePointSequenceConstIter operator--(int); // it--
     reference operator*() const;
 private:
     pointer _ptr;
