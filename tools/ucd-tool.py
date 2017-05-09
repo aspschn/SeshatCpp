@@ -375,16 +375,18 @@ boilerplate_dm_cpp_1 = comment + '''//
 boilerplate_dm_cpp_2 = closing_namespace
 
 def download_data():
-    if 'UnicodeData.txt' not in os.listdir('./data'):
-        os.system('wget ' + UCD_URL + '/UnicodeData.txt -O data/UnicodeData.txt')
-    if 'DerivedNormalizationProps.txt' not in os.listdir('./data'):
-        os.system('wget ' + UCD_URL + '/DerivedNormalizationProps.txt -O data/DerivedNormalizationProps.txt')
-    if 'DerivedGeneralCategory.txt' not in os.listdir('./data'):
-        os.system('wget ' + UCD_URL + '/extracted/DerivedGeneralCategory.txt -O data/DerivedGeneralCategory.txt')
-    if 'DerivedCombiningClass.txt' not in os.listdir('./data'):
-        os.system('wget ' + UCD_URL + '/extracted/DerivedCombiningClass.txt -O data/DerivedCombiningClass.txt')
-    if 'DerivedDecompositionType.txt' not in os.listdir('./data'):
-        os.system('wget ' + UCD_URL + '/extracted/DerivedDecompositionType.txt -O data/DerivedDecompositionType.txt')
+    def data_dir():
+        return os.listdir('./data')
+    data_files = {
+        'UnicodeData.txt': '/',
+        'DerivedNormalizationProps.txt': '/',
+        'DerivedGeneralCategory.txt': '/extracted/',
+        'DerivedCombiningClass.txt': '/extracted',
+        'DerivedDecompositionType.txt': '/extracted/'
+    }
+    for fname, srcpath in data_files.items():
+        if fname not in data_dir():
+            os.system('wget ' + UCD_URL + srcpath + fname + ' -O data/' + fname)
 
 def parse_unicode_data():
     unicode_data_list = []
@@ -660,30 +662,23 @@ if __name__ == '__main__':
                 print_help()
             else:
                 gen = sys.argv[2]
-                gen_list = ('all', 'gc', 'name', 'normalization_props', 'ccc',
-                    'dt', 'dm')
-                if gen not in gen_list:
+                gen_func = {
+                    'gc': make_gc_cpp,
+                    'name': make_name_cpp,
+                    'normalization_props': make_normalization_props_cpp,
+                    'ccc': make_ccc_cpp,
+                    'dt': make_dt_cpp,
+                    'dm': make_dm_cpp
+                }
+                if gen == 'all':
+                    for name, f in gen_func.items():
+                        print('build ' + name + ' ...')
+                        f()
+                    exit()
+                if gen not in gen_func.keys():
                     print("invalid argument: {}".format(gen))
                     exit(1)
-                if gen == 'gc':
-                    make_gc_cpp()
-                    exit()
-                elif gen == 'name':
-                    make_name_cpp()
-                    exit()
-                elif gen == 'normalization_props':
-                    make_normalization_props_cpp()
-                    exit()
-                elif gen == 'ccc':
-                    make_ccc_cpp()
-                    exit()
-                elif gen == 'dt':
-                    make_dt_cpp()
-                    exit()
-                elif gen == 'dm':
-                    make_dm_cpp()
-                    exit()
-                elif gen == 'all':
-                    make_gc_cpp()
-                    make_name_cpp()
+                else:
+                    f = gen_func[gen]
+                    f()
                     exit()

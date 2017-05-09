@@ -921,6 +921,7 @@ const std::map<CodePointRange, Dt> dt_table = {
     { CodePointRange(0x2150, 0x215F), Dt::Fra },
     { CodePointRange(0x2189, 0x2189), Dt::Fra }
 };
+
 } // namespace ucd
 } // namespace unicode
 } // namespace seshat

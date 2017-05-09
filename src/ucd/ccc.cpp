@@ -345,6 +345,7 @@ const std::map<CodePointRange, uint8_t> ccc_table = {
     { CodePointRange(0x1DCD, 0x1DCD), 234 },
     { CodePointRange(0x0345, 0x0345), 240 }
 };
+
 } // namespace ucd
 } // namespace unicode
 } // namespace seshat
