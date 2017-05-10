@@ -189,7 +189,7 @@ bool CodePointSequence::operator==(const CodePointSequence& other) const
 
 bool CodePointSequence::operator!=(const CodePointSequence& other) const
 {
-    return *this == other;
+    return !(*this == other);
 }
 
 // class CodePointSequenceIter
