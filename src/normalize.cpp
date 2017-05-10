@@ -10,9 +10,10 @@
 #include <seshat/unicode/normalize.h>
 
 #include <seshat/unicode/ccc.h>
+#include <seshat/unicode/dm.h>
 #include <seshat/unicode/dt.h>
 #include <seshat/unicode/gc.h>
-#include <seshat/unicode/normalization_props.h> // comp_ex()
+#include <seshat/unicode/normalization_props.h> // comp_ex(), quick checks
 
 namespace seshat {
 namespace unicode {
@@ -87,6 +88,27 @@ bool blocked(CodePointSequenceConstIter& first,
         return true;
     }
     return false;
+}
+
+
+CodePointSequence nfd(const CodePointSequence& sequence)
+{
+    CodePointSequence decomp;
+
+    // Decompose each code points
+    for (auto cp: sequence) {
+        if (nfd_qc(cp.code()) == QcValue::Yes && dt(cp.code()) == Dt::Can) {
+            for (auto each: dm(cp.code())) {
+                decomp.append(each);
+            }
+        } else {
+            decomp.append(cp);
+        }
+    }
+    // Re-order the decomposed sequence
+    canonical_ordering(decomp);
+
+    return decomp;
 }
 
 } // namespace unicode

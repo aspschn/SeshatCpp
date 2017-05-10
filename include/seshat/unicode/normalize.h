@@ -28,6 +28,9 @@ bool primary_composite(uint32_t cp);
 bool blocked(CodePointSequenceConstIter& first,
     CodePointSequenceConstIter& last);
 
+// Composition/Decomposition
+CodePointSequence nfd(const CodePointSequence& sequence);
+
 } // namespace unicode
 } // namespace seshat
 
