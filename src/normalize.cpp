@@ -97,7 +97,7 @@ CodePointSequence nfd(const CodePointSequence& sequence)
 
     // Decompose each code points
     for (auto cp: sequence) {
-        if (nfd_qc(cp.code()) == QcValue::Yes && dt(cp.code()) == Dt::Can) {
+        if (dt(cp.code()) == Dt::Can) {
             for (auto each: dm(cp.code())) {
                 decomp.append(each);
             }
@@ -108,6 +108,10 @@ CodePointSequence nfd(const CodePointSequence& sequence)
     // Re-order the decomposed sequence
     canonical_ordering(decomp);
 
+    // Do recursively until pass quick check
+    if (nfd_qc(decomp) != QcValue::Yes) {
+        return nfd(decomp);
+    }
     return decomp;
 }
 

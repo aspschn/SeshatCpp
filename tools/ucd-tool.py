@@ -382,7 +382,8 @@ def download_data():
         'DerivedNormalizationProps.txt': '/',
         'DerivedGeneralCategory.txt': '/extracted/',
         'DerivedCombiningClass.txt': '/extracted',
-        'DerivedDecompositionType.txt': '/extracted/'
+        'DerivedDecompositionType.txt': '/extracted/',
+        'NormalizationTest.txt': '/'
     }
     for fname, srcpath in data_files.items():
         if fname not in data_dir():
@@ -455,6 +456,7 @@ def print_help():
     print('      * ccc   - ccc.cpp')
     print('      * dt    - dt.cpp')
     print('      * dm    - dm.cpp')
+    # print('      * normalization_test - normalization_test.cpp')
     print('Arguments')
     print('  --help   print this help')
     exit()
@@ -668,6 +670,7 @@ if __name__ == '__main__':
                     'normalization_props': make_normalization_props_cpp,
                     'ccc': make_ccc_cpp,
                     'dt': make_dt_cpp,
+                    # 'normalization_test': make_normalization_test_cpp,
                     'dm': make_dm_cpp
                 }
                 if gen == 'all':
