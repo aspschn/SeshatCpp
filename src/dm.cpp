@@ -11,15 +11,31 @@
 
 #include "ucd/dm.h"
 
+#include <cstdlib>
+
 namespace seshat {
 namespace unicode {
 
+static_assert(
+    sizeof(decltype(std::strtoul(nullptr, nullptr, 0))) >= sizeof(uint32_t),
+    "std::strtoul return type cannot cover range of uint32_t"
+);
 const CodePointSequence dm(uint32_t cp)
 {
+    CodePointSequence seq;
     auto found = ucd::dm_table.find(cp);
     if (found != ucd::dm_table.end()) {
-        return found->second;
+        const char *str = found->second;
+        char *end;
+        auto i = std::strtoul(str, &end, 16);
+        while (str != end) {
+            seq.append(CodePoint(i));
+            str = end;
+            i = std::strtoul(str, &end, 16);
+        }
+        return seq;
     }
+    // return CodePointSequence{ CodePoint(cp) };
     return CodePointSequence();
 }
 

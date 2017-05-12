@@ -561,7 +561,7 @@ const std::map<uint32_t, const char*> name_table = {
 
 def make_dm_cpp():
     table = '''
-const std::map<uint32_t, CodePointSequence> dm_table = {
+const std::map<uint32_t, const char*> dm_table = {
     '''
 
     for udata in unicode_data_list:
@@ -574,9 +574,9 @@ const std::map<uint32_t, CodePointSequence> dm_table = {
         else:
             l = udata.decomposition_mapping.split(' ')
             for i, itm in enumerate(l):
-                l[i] = '0x' + itm
-            seq = ', '.join(l)
-        table += '{ ' + cp + ', { ' + seq + ' } },'
+                l[i] = itm.lstrip('0')
+            seq = ' '.join(l)
+        table += '{ ' + cp + ', "' + seq + '" },'
         table += '\n    '
     table =  table.rstrip().rstrip(',')
     table += '\n};'

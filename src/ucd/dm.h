@@ -10,8 +10,6 @@
 #ifndef _UCD_DM_H
 #define _UCD_DM_H
 
-#include <seshat/codepoint.h>
-
 #include <cstdint>
 #include <map>
 
@@ -19,7 +17,7 @@ namespace seshat {
 namespace unicode {
 namespace ucd {
 
-extern const std::map<uint32_t, CodePointSequence> dm_table;
+extern const std::map<uint32_t, const char*> dm_table;
 
 } // namespace ucd
 } // namespace unicode
