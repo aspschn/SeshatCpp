@@ -14,6 +14,7 @@
 #include <seshat/unicode/dt.h>
 #include <seshat/unicode/gc.h>
 #include <seshat/unicode/normalization_props.h> // comp_ex(), quick checks
+#include <seshat/unicode/properties.h>
 
 namespace seshat {
 namespace unicode {
@@ -90,7 +91,6 @@ bool blocked(CodePointSequenceConstIter& first,
     return false;
 }
 
-
 CodePointSequence nfd(const CodePointSequence& sequence)
 {
     CodePointSequence decomp;
@@ -98,6 +98,11 @@ CodePointSequence nfd(const CodePointSequence& sequence)
     // Decompose each code points
     for (auto cp: sequence) {
         if (dt(cp.code()) == Dt::Can) {
+            // Decomposition mapping for Hangul not implemented yet!
+            if (block(cp.code()) == Block::Hangul) {
+                CodePointSequence except = sequence;
+                return sequence;
+            }
             for (auto each: dm(cp.code())) {
                 decomp.append(each);
             }

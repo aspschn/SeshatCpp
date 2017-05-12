@@ -234,7 +234,7 @@ enum class Block {
 };
 
 // Script script(uint32_t cp);
-// Block block(uint32_t cp);
+Block block(uint32_t cp);
 
 } // namespace unicode
 } // namespace seshat

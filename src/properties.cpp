@@ -9,6 +9,7 @@
 */
 #include <seshat/unicode/properties.h>
 
+#include "ucd/block.h"
 #include "ucd/script.h"
 
 namespace seshat {
@@ -25,6 +26,16 @@ Script script(uint32_t cp)
     return Script::Zzzz;
 }
 */
+
+Block block(uint32_t cp)
+{
+    auto found = ucd::block_table.find(CodePointRange(cp, cp));
+
+    if (found != ucd::block_table.end()) {
+        return found->second;
+    }
+    return Block::NB;
+}
 
 } // namespace unicode
 } // namespace seshat
