@@ -1,5 +1,5 @@
 /*
-//  unicodedata/hangul.h
+//  unicode/hangul.h
 //
 //  Author:     Sophia Lee
 //  Created:    2017. 04. 17. 11:29
@@ -7,20 +7,22 @@
 //
 //
 */
-#ifndef _UNICODEDATA_HANGUL_H
-#define _UNICODEDATA_HANGUL_H
+#ifndef _UNICODE_HANGUL_H
+#define _UNICODE_HANGUL_H
+
+#include <seshat/codepoint.h>
 
 #include <cstdint>
-#include <map>
 #include <string>
 
 namespace seshat {
+namespace unicode {
 namespace hangul {
 
 #define HANGUL_SYLLABLE_BEGIN   0xAC00  // '가' <HANGUL SYLLABLE GA>
-#define HANGUL_CHOSUNG_BEGIN    0x1100
-#define HANGUL_JUNGSUNG_BEGIN   0x1161
-#define HANGUL_JONGSUNG_BEGIN   0x11A8
+#define HANGUL_CHOSUNG_BEGIN    0x1100  // 'ᄀ' <HANGUL CHOSEONG KIYEOK>
+#define HANGUL_JUNGSUNG_BEGIN   0x1161  // <HANGUL JUNGSEONG A>
+#define HANGUL_JONGSUNG_BEGIN   0x11A8  // <HANGUL JONGSEONG KIYEOK>
 
 #define S_BASE  0xAC00  // Syllable
 #define L_BASE  0x1100  // Leading
@@ -51,7 +53,11 @@ extern const char* JAMO_T_TABLE[T_COUNT];
 // Naming
 std::string syllable_name(uint32_t syllab_code);
 
+// Conjoining
+const CodePointSequence decompose(uint32_t cp);
+
 } // namespace hangul
+} // namespace unicode
 } // namespace seshat
 
-#endif /* _UNICODEDATA_HANGUL_H */
+#endif /* _UNICODE_HANGUL_H */

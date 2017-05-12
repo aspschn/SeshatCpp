@@ -9,7 +9,7 @@
 */
 #include <seshat/unicodedata/naming_rule.h>
 
-#include <seshat/unicodedata/hangul.h>
+#include <seshat/unicode/hangul.h>
 #include <seshat/utils.h>
 
 namespace seshat {
@@ -99,7 +99,7 @@ HangulSyllableName::HangulSyllableName()
 std::string HangulSyllableName::name() const
 {
     std::string n = std::string(prefix) + separator
-        + hangul::syllable_name(code);
+        + unicode::hangul::syllable_name(code);
 
     return n;
 }

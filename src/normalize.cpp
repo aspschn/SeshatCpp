@@ -13,6 +13,7 @@
 #include <seshat/unicode/dm.h>
 #include <seshat/unicode/dt.h>
 #include <seshat/unicode/gc.h>
+#include <seshat/unicode/hangul.h>
 #include <seshat/unicode/normalization_props.h> // comp_ex(), quick checks
 #include <seshat/unicode/properties.h>
 
@@ -98,12 +99,10 @@ CodePointSequence nfd(const CodePointSequence& sequence)
     // Decompose each code points
     for (auto cp: sequence) {
         if (dt(cp.code()) == Dt::Can) {
-            // Decomposition mapping for Hangul not implemented yet!
-            if (block(cp.code()) == Block::Hangul) {
-                CodePointSequence except = sequence;
-                return sequence;
-            }
-            for (auto each: dm(cp.code())) {
+            // For Hangul, using conjoining algorithm instead of search dm.
+            auto mapping = (block(cp.code()) != Block::Hangul) ?
+                dm(cp.code()) : hangul::decompose(cp.code());
+            for (auto each: mapping) {
                 decomp.append(each);
             }
         } else {
