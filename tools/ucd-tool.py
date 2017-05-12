@@ -14,6 +14,24 @@ UCD_URL = "http://www.unicode.org/Public/{}.{}.{}/ucd".format(
     UNICODE_VERSION_UPDATE
 )
 
+def download_data():
+    def data_dir():
+        return os.listdir('./data')
+    data_files = {
+        'UnicodeData.txt': '/',
+        'DerivedNormalizationProps.txt': '/',
+        'DerivedGeneralCategory.txt': '/extracted/',
+        'DerivedCombiningClass.txt': '/extracted',
+        'Scripts.txt': '/',
+        'ScriptExtensions.txt': '/',
+        'Blocks.txt': '/',
+        'PropertyValueAliases.txt': '/',
+        'DerivedDecompositionType.txt': '/extracted/'
+    }
+    for fname, srcpath in data_files.items():
+        if fname not in data_dir():
+            os.system('wget ' + UCD_URL + srcpath + fname + ' -O data/' + fname)
+
 class Gc:
     '''General_Category'''
     # C = 'Other'
@@ -148,6 +166,28 @@ class CodePointRange:
         txt = 'CodePointRange(0x{:04X}, 0x{:04X})'.format(self._from, self._to)
         return txt
 
+class PropertyValueAliases:
+    def __init__(self):
+        self._dict = {}
+        download_data()
+        f = open('data/PropertyValueAliases.txt', 'r')
+        txt = f.readlines()
+        f.close()
+
+        for line in txt:
+            if line[0] == '#' or line.strip() == '':
+                continue
+            cols = line.split(';')
+            prop = cols[0].strip()
+            full = cols[2].strip().replace('-', '').replace('_', '').replace(' ', '').upper()
+            if prop not in self._dict:
+                self._dict[prop] = {}
+            self._dict[prop][full] = cols[1].strip()
+    def alias(self, prop, val):
+        val = val.replace('-', '').replace('_', '').replace(' ', '').upper()
+        return self._dict[prop][val]
+property_value_aliases = PropertyValueAliases()
+
 def dt_alias(dt):
     alias_dict = {
         'Canonical': 'Can',
@@ -170,6 +210,60 @@ def dt_alias(dt):
         'Wide': 'Wide'
     }
     return alias_dict[dt]
+
+def script_alias(sc):
+    alias_dict = {
+        'Adlam': 'Adlm', 'Caucasian_Albanian': 'Aghb', 'Ahom': 'Ahom',
+        'Arabic': 'Arab', 'Imperial_Aramaic': 'Armi', 'Armenian': 'Armn',
+        'Avestan': 'Avst', 'Balinese': 'Bali', 'Bamum': 'Bamu',
+        'Bassa_Vah': 'Bass', 'Batak': 'Batk', 'Bengali': 'Beng',
+        'Bhaiksuki': 'Bhks', 'Bopomofo': 'Bopo', 'Brahmi': 'Brah',
+        'Braille': 'Brai', 'Buginese': 'Bugi', 'Buhid': 'Buhd',
+        'Chakma': 'Cakm', 'Canadian_Aboriginal': 'Cans', 'Carian': 'Cari',
+        'Cham': 'Cham', 'Cherokee': 'Cher',
+        'Coptic': 'Copt', # Qaac
+        'Cypriot': 'Cprt', 'Cyrillic': 'Cyrl', 'Devanagari': 'Deva',
+        'Deseret': 'Dsrt', 'Duployan': 'Dupl', 'Egyptian_Hieroglyphs': 'Egyp',
+        'Elbasan': 'Elba', 'Ethiopic': 'Ethi', 'Georgian': 'Geor',
+        'Glagolitic': 'Glag', 'Gothic': 'Goth', 'Grantha': 'Gran',
+        'Greek': 'Grek', 'Gujarati': 'Gujr', 'Gurmukhi': 'Guru',
+        'Hangul': 'Hang', 'Han': 'Hani', 'Hanunoo': 'Hano',
+        'Hatran': 'Hatr', 'Hebrew': 'Hebr', 'Hiragana': 'Hira',
+        'Anatolian_Hieroglyphs': 'Hluw', 'Pahawh_Hmong': 'Hmng',
+        'Katakana_Or_Hiragana': 'Hrkt', 'Old_Hungarian': 'Hung',
+        'Old_Italic': 'Ital', 'Javanese': 'Java', 'Kayah_Li': 'Kali',
+        'Katakana': 'Kana', 'Kharoshthi': 'Khar', 'Khmer': 'Khmr',
+        'Khojki': 'Khoj', 'Kannada': 'Knda', 'Kaithi': 'Kthi',
+        'Tai_Tham': 'Lana', 'Lao': 'Laoo', 'Latin': 'Latn', 'Lepcha': 'Lepc',
+        'Limbu': 'Limb', 'Linear_A': 'Lina', 'Linear_B': 'Linb',
+        'Lisu': 'Lisu', 'Lycian': 'Lyci', 'Lydian': 'Lydi', 'Mahajani': 'Mahj',
+        'Mandaic': 'Mand', 'Manichaean': 'Mani', 'Marchen': 'Marc',
+        'Mende_Kikakui': 'Mend', 'Meroitic_Cursive': 'Merc',
+        'Meroitic_Hieroglyphs': 'Mero', 'Malayalam': 'Mlym', 'Modi': 'Modi',
+        'Mongolian': 'Mong', 'Mro': 'Mroo', 'Meetei_Mayek': 'Mtei',
+        'Multani': 'Mult', 'Myanmar': 'Mymr', 'Old_North_Arabian': 'Narb',
+        'Nabataean': 'Nbat', 'Newa': 'Newa', 'Nko': 'Nkoo', 'Ogham': 'Ogam',
+        'Ol_Chiki': 'Olck', 'Old_Turkic': 'Orkh', 'Oriya': 'Orya',
+        'Osage': 'Osge', 'Osmanya': 'Osma', 'Palmyrene': 'Palm',
+        'Pau_Cin_Hau': 'Pauc', 'Old_Permic': 'Perm', 'Phags_Pa': 'Phag',
+        'Inscriptional_Pahlavi': 'Phli', 'Psalter_Pahlavi': 'Phlp',
+        'Phoenician': 'Phnx', 'Miao': 'Plrd', 'Inscriptional_Parthian': 'Prti',
+        'Rejang': 'Rjng', 'Runic': 'Runr', 'Samaritan': 'Samr',
+        'Old_South_Arabian': 'Sarb', 'Saurashtra': 'Saur',
+        'SignWriting': 'Sgnw', 'Shavian': 'Shaw', 'Sharada': 'Shrd',
+        'Siddham': 'Sidd', 'Khudawadi': 'Sind', 'Sinhala': 'Sinh',
+        'Sora_Sompeng': 'Sora', 'Sundanese': 'Sund', 'Syloti_Nagri': 'Sylo',
+        'Syriac': 'Syrc', 'Tagbanwa': 'Tagb', 'Takri': 'Takr',
+        'Tai_Le': 'Tale', 'New_Tai_Lue': 'Talu', 'Tamil': 'Taml',
+        'Tangut': 'Tang', 'Tai_Viet': 'Tavt', 'Telugu': 'Telu',
+        'Tifinagh': 'Tfng', 'Tagalog': 'Tglg', 'Thaana': 'Thaa',
+        'Thai': 'Thai', 'Tibetan': 'Tibt', 'Tirhuta': 'Tirh',
+        'Ugaritic': 'Ugar', 'Vai': 'Vaii', 'Warang_Citi': 'Wara',
+        'Old_Persian': 'Xpeo', 'Cuneiform': 'Xsux', 'Yi': 'Yiii',
+        'Inherited': 'Zinh', # Qaai
+        'Common': 'Zyyy', 'Unknown': 'Zzzz' 
+    }
+    return alias_dict[sc]
 
 # Ranged data. Some large data area are omitted such as Hangul Syllable,
 # CJK Ideograph etc.
@@ -374,20 +468,18 @@ boilerplate_dm_cpp_1 = comment + '''//
 ''' + opening_namespace
 boilerplate_dm_cpp_2 = closing_namespace
 
-def download_data():
-    def data_dir():
-        return os.listdir('./data')
-    data_files = {
-        'UnicodeData.txt': '/',
-        'DerivedNormalizationProps.txt': '/',
-        'DerivedGeneralCategory.txt': '/extracted/',
-        'DerivedCombiningClass.txt': '/extracted',
-        'DerivedDecompositionType.txt': '/extracted/',
-        'NormalizationTest.txt': '/'
-    }
-    for fname, srcpath in data_files.items():
-        if fname not in data_dir():
-            os.system('wget ' + UCD_URL + srcpath + fname + ' -O data/' + fname)
+boilerplate_script_cpp_1 = comment + '''//
+//  Script(sc) table.
+//  TODO: Add Script_Extensions(scx) table too.
+#include "script.h"
+''' + opening_namespace
+boilerplate_script_cpp_2 = closing_namespace
+
+boilerplate_block_cpp_1 = comment + '''//
+//  Block(blk) table.
+#include "block.h"
+'''  + opening_namespace
+boilerplate_block_cpp_2 = closing_namespace
 
 def parse_unicode_data():
     unicode_data_list = []
@@ -443,6 +535,11 @@ class DerivedParser:
         if len(fields) > 2:
             self.second = fields[2]
         self._empty = False
+    def readlines(filepath):
+        f = open(filepath, 'r')
+        txt = f.readlines()
+        f.close()
+        return txt
 
 def print_help():
     print('Usage: ./ucd-tool.py [--help] <command>')
@@ -457,6 +554,8 @@ def print_help():
     print('      * dt    - dt.cpp')
     print('      * dm    - dm.cpp')
     # print('      * normalization_test - normalization_test.cpp')
+    print('      * script - script.cpp')
+    print('      * block - block.cpp')
     print('Arguments')
     print('  --help   print this help')
     exit()
@@ -532,6 +631,47 @@ const std::map<CodePointRange, Dt> dt_table = {
 
     f = open('../src/ucd/dt.cpp', 'w')
     f.write(boilerplate_dt_cpp_1 + table + boilerplate_dt_cpp_2)
+    f.close()
+
+def make_script_cpp():
+    f = open('data/Scripts.txt', 'r')
+    txt = f.readlines()
+    f.close()
+
+    table = '''
+const std::map<CodePointRange, Script> script_table = {
+    '''
+
+    parser = DerivedParser()
+    for line in txt:
+        parser.parse_line(line)
+        if parser.empty():
+            continue
+        table += ('{ ' + parser.range.to_seshat() + ', Script::' + script_alias(parser.first) + ' },')
+        table += '\n    '
+    table = table.rstrip().rstrip(',') + '\n};'
+
+    f = open('../src/ucd/script.cpp', 'w')
+    f.write(boilerplate_script_cpp_1 + table + boilerplate_script_cpp_2)
+    f.close()
+
+def make_block_cpp():
+    txt = DerivedParser.readlines('data/Blocks.txt')
+    table = '''
+const std::map<CodePointRange, Block> block_table = {
+    '''
+
+    parser = DerivedParser()
+    for line in txt:
+        parser.parse_line(line)
+        if parser.empty():
+            continue
+        table += ('{ ' + parser.range.to_seshat() + ', Block::' + property_value_aliases.alias('blk', parser.first) + ' },')
+        table += '\n    '
+    table = table.rstrip().rstrip(',') + '\n};'
+
+    f = open('../src/ucd/block.cpp', 'w')
+    f.write(boilerplate_block_cpp_1 + table + boilerplate_block_cpp_2)
     f.close()
 
 def make_name_cpp():
@@ -671,6 +811,8 @@ if __name__ == '__main__':
                     'ccc': make_ccc_cpp,
                     'dt': make_dt_cpp,
                     # 'normalization_test': make_normalization_test_cpp,
+                    'script': make_script_cpp,
+                    'block': make_block_cpp,
                     'dm': make_dm_cpp
                 }
                 if gen == 'all':
