@@ -90,7 +90,7 @@ enum class Script {
     Zinh, Zyyy, Zzzz // Inherited ; Qaai // Common // Unknown
 };
 
-Script script(uint32_t cp);
+// Script script(uint32_t cp);
 
 } // namespace unicode
 } // namespace seshat

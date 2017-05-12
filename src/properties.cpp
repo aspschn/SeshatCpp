@@ -14,6 +14,7 @@
 namespace seshat {
 namespace unicode {
 
+/*
 Script script(uint32_t cp)
 {
     auto found = ucd::script_table.find(CodePointRange(cp, cp));
@@ -23,6 +24,7 @@ Script script(uint32_t cp)
     }
     return Script::Zzzz;
 }
+*/
 
 } // namespace unicode
 } // namespace seshat
