@@ -14,6 +14,24 @@ UCD_URL = "http://www.unicode.org/Public/{}.{}.{}/ucd".format(
     UNICODE_VERSION_UPDATE
 )
 
+def download_data():
+    def data_dir():
+        return os.listdir('./data')
+    data_files = {
+        'UnicodeData.txt': '/',
+        'DerivedNormalizationProps.txt': '/',
+        'DerivedGeneralCategory.txt': '/extracted/',
+        'DerivedCombiningClass.txt': '/extracted',
+        'Scripts.txt': '/',
+        'ScriptExtensions.txt': '/',
+        'Blocks.txt': '/',
+        'PropertyValueAliases.txt': '/',
+        'DerivedDecompositionType.txt': '/extracted/'
+    }
+    for fname, srcpath in data_files.items():
+        if fname not in data_dir():
+            os.system('wget ' + UCD_URL + srcpath + fname + ' -O data/' + fname)
+
 class Gc:
     '''General_Category'''
     # C = 'Other'
@@ -147,6 +165,28 @@ class CodePointRange:
     def to_seshat(self):
         txt = 'CodePointRange(0x{:04X}, 0x{:04X})'.format(self._from, self._to)
         return txt
+
+class PropertyValueAliases:
+    def __init__(self):
+        self._dict = {}
+        download_data()
+        f = open('data/PropertyValueAliases.txt', 'r')
+        txt = f.readlines()
+        f.close()
+
+        for line in txt:
+            if line[0] == '#' or line.strip() == '':
+                continue
+            cols = line.split(';')
+            prop = cols[0].strip()
+            full = cols[2].strip().replace('-', '').replace('_', '').replace(' ', '').upper()
+            if prop not in self._dict:
+                self._dict[prop] = {}
+            self._dict[prop][full] = cols[1].strip()
+    def alias(self, prop, val):
+        val = val.replace('-', '').replace('_', '').replace(' ', '').upper()
+        return self._dict[prop][val]
+property_value_aliases = PropertyValueAliases()
 
 def dt_alias(dt):
     alias_dict = {
@@ -435,21 +475,11 @@ boilerplate_script_cpp_1 = comment + '''//
 ''' + opening_namespace
 boilerplate_script_cpp_2 = closing_namespace
 
-def download_data():
-    def data_dir():
-        return os.listdir('./data')
-    data_files = {
-        'UnicodeData.txt': '/',
-        'DerivedNormalizationProps.txt': '/',
-        'DerivedGeneralCategory.txt': '/extracted/',
-        'DerivedCombiningClass.txt': '/extracted',
-        'Scripts.txt': '/',
-        'ScriptExtensions.txt': '/',
-        'DerivedDecompositionType.txt': '/extracted/'
-    }
-    for fname, srcpath in data_files.items():
-        if fname not in data_dir():
-            os.system('wget ' + UCD_URL + srcpath + fname + ' -O data/' + fname)
+boilerplate_block_cpp_1 = comment + '''//
+//  Block(blk) table.
+#include "block.h"
+'''  + opening_namespace
+boilerplate_block_cpp_2 = closing_namespace
 
 def parse_unicode_data():
     unicode_data_list = []
@@ -505,6 +535,11 @@ class DerivedParser:
         if len(fields) > 2:
             self.second = fields[2]
         self._empty = False
+    def readlines(filepath):
+        f = open(filepath, 'r')
+        txt = f.readlines()
+        f.close()
+        return txt
 
 def print_help():
     print('Usage: ./ucd-tool.py [--help] <command>')
@@ -519,6 +554,7 @@ def print_help():
     print('      * dt    - dt.cpp')
     print('      * dm    - dm.cpp')
     print('      * script - script.cpp')
+    print('      * block - block.cpp')
     print('Arguments')
     print('  --help   print this help')
     exit()
@@ -616,6 +652,25 @@ const std::map<CodePointRange, Script> script_table = {
 
     f = open('../src/ucd/script.cpp', 'w')
     f.write(boilerplate_script_cpp_1 + table + boilerplate_script_cpp_2)
+    f.close()
+
+def make_block_cpp():
+    txt = DerivedParser.readlines('data/Blocks.txt')
+    table = '''
+const std::map<CodePointRange, Block> block_table = {
+    '''
+
+    parser = DerivedParser()
+    for line in txt:
+        parser.parse_line(line)
+        if parser.empty():
+            continue
+        table += ('{ ' + parser.range.to_seshat() + ', Block::' + property_value_aliases.alias('blk', parser.first) + ' },')
+        table += '\n    '
+    table = table.rstrip().rstrip(',') + '\n};'
+
+    f = open('../src/ucd/block.cpp', 'w')
+    f.write(boilerplate_block_cpp_1 + table + boilerplate_block_cpp_2)
     f.close()
 
 def make_name_cpp():
@@ -755,6 +810,7 @@ if __name__ == '__main__':
                     'ccc': make_ccc_cpp,
                     'dt': make_dt_cpp,
                     'script': make_script_cpp,
+                    'block': make_block_cpp,
                     'dm': make_dm_cpp
                 }
                 if gen == 'all':
