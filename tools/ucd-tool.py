@@ -159,9 +159,6 @@ class CodePointRange:
         return (self._from == other._from) and (self._to == other._to)
     def contains(self, cp):
         return (self._from <= cp and cp <= self._to)
-    def to_make_pair(self):
-        txt = 'std::make_pair(0x{:04X}, 0x{:04X})'.format(self._from, self._to)
-        return txt
     def to_seshat(self):
         txt = 'CodePointRange(0x{:04X}, 0x{:04X})'.format(self._from, self._to)
         return txt
@@ -503,19 +500,6 @@ def remove_ucd_comment(a_line):
     a_line = a_line.split('#')[0].rstrip()
     return a_line
 
-def ucd_range_to_std_make_pair(ucd_range):
-    r = ucd_range.split('..')
-    if len(r) == 1:
-        return 'std::make_pair({}, {})'.format('0x'+r[0], '0x'+r[0])
-    else:
-        return 'std::make_pair({}, {})'.format('0x'+r[0], '0x'+r[1])
-def ucd_range_to_code_point_range(ucd_range):
-    r = ucd_range.split('..')
-    if len(r) == 1:
-        return 'CodePointRange({}, {})'.format('0x'+r[0], '0x'+r[0])
-    else:
-        return 'CodePointRange({}, {})'.format('0x'+r[0], '0x'+r[1])
-
 class DerivedParser:
     def __init__(self):
         self.range = None
@@ -588,9 +572,7 @@ const std::map<CodePointRange, Gc> gc_table = {
     f.close()
 
 def make_ccc_cpp():
-    f = open('data/DerivedCombiningClass.txt', 'r')
-    txt = f.readlines()
-    f.close()
+    txt = DerivedParser.readlines('data/DerivedCombiningClass.txt')
 
     table = '''
 const std::map<CodePointRange, uint8_t> ccc_table = {
@@ -612,9 +594,7 @@ const std::map<CodePointRange, uint8_t> ccc_table = {
     f.close()
 
 def make_dt_cpp():
-    f = open('data/DerivedDecompositionType.txt', 'r')
-    txt = f.readlines()
-    f.close()
+    txt = DerivedParser.readlines('data/DerivedDecompositionType.txt')
 
     table = '''
 const std::map<CodePointRange, Dt> dt_table = {
@@ -634,9 +614,7 @@ const std::map<CodePointRange, Dt> dt_table = {
     f.close()
 
 def make_script_cpp():
-    f = open('data/Scripts.txt', 'r')
-    txt = f.readlines()
-    f.close()
+    txt = DerivedParser.readlines('data/Scripts.txt')
 
     table = '''
 const std::map<CodePointRange, Script> script_table = {
