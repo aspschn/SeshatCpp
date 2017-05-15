@@ -233,8 +233,31 @@ enum class Block {
     Yijing
 };
 
+// Grapheme_Cluster_Break (GCB)
+enum class Gcb {
+    CN,     // Control
+    CR,     // CR
+    EB,     // E_Base
+    EBG,    // E_Base_GAZ
+    EM,     // E_Modifier
+    EX,     // Extend
+    GAZ,    // Glue_After_Zwj
+    L,      // L
+    LF,     // LF
+    LV,     // LV
+    LVT,    // LVT
+    PP,     // Prepend
+    RI,     // Regional_Indicator
+    SM,     // SpacingMark
+    T,      // T
+    V,      // V
+    XX,     // Other
+    ZWJ     // ZWJ
+};
+
 // Script script(uint32_t cp);
 Block block(uint32_t cp);
+// Gcb gcb(uint32_t cp);
 
 } // namespace unicode
 } // namespace seshat

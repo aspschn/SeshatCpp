@@ -9,6 +9,7 @@
 */
 #include <seshat/unicode/properties.h>
 
+#include <seshat/unicode/gc.h>
 #include "ucd/block.h"
 #include "ucd/script.h"
 
@@ -36,6 +37,36 @@ Block block(uint32_t cp)
     }
     return Block::NB;
 }
+
+/*
+Gcb gcb(uint32_t cp)
+{
+    if (cp == 0x000D)
+        return Gcb::CR;
+    if (cp == 0x000A)
+        return Gcb::LF;
+    // Gcb::CN (Control)
+    //
+    // General_Category = Line_Separator, or
+    // General_Category = Paragraph_Separator, or
+    // General_Category = Control, or
+    // General_Category = Unassigned and Default_Ignorable_Code_Point, or
+    // General_Category = Surrogate, or
+    // General_Category = Format
+    // and not U+000D CARRIAGE RETURN
+    // and not U+000A LINE FEED
+    // and not U+200C ZERO WIDTH NON-JOINER (ZWNJ)
+    // and not U+200D ZERO WIDTH JOINER (ZWJ)
+    if (gc(cp) == Gc::Zl ||
+        gc(cp) == Gc::Zp ||
+        gc(cp) == Gc::Cc ||
+        (gc(cp) == Gc::Cn && di(cp) == true) ||
+        gc(cp) == Gc::Cs ||
+        (gc(cp) == Gc::Cf &&
+            cp != 0x000D && cp != 0x000A && cp != 0x200C && cp != 0x200D))
+        return Gcb::CN;
+}
+*/
 
 } // namespace unicode
 } // namespace seshat
