@@ -11,6 +11,7 @@
 
 #include <seshat/unicode/gc.h>
 #include "ucd/block.h"
+#include "ucd/core.h"
 #include "ucd/script.h"
 
 namespace seshat {
@@ -67,6 +68,24 @@ Gcb gcb(uint32_t cp)
         return Gcb::CN;
 }
 */
+
+bool odi(uint32_t cp)
+{
+    auto found = ucd::odi_table.find(CodePointRange(cp, cp));
+    return (found != ucd::odi_table.end()) ? true : false;
+}
+
+bool ogr_ext(uint32_t cp)
+{
+    auto found = ucd::ogr_ext_table.find(CodePointRange(cp, cp));
+    return (found != ucd::ogr_ext_table.end()) ? true : false;
+}
+
+bool prepended_concatenation_mark(uint32_t cp)
+{
+    auto found = ucd::pcm_table.find(CodePointRange(cp, cp));
+    return (found != ucd::pcm_table.end()) ? true : false;
+}
 
 } // namespace unicode
 } // namespace seshat

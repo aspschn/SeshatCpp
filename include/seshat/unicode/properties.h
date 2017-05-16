@@ -385,7 +385,9 @@ Block block(uint32_t cp);
 // Noncharacter_Code_Point (NChar)
 // Other_Alphabetic (OAlpha)
 // Other_Default_Ignorable_Code_Point (ODI)
+bool odi(uint32_t cp);
 // Other_Grapheme_Extend (OGr_Ext)
+bool ogr_ext(uint32_t cp);
 // Other_ID_Continue (OIDC)
 // Other_ID_Start (OIDS)
 // Other_Lowercase (OLower)
@@ -394,6 +396,7 @@ Block block(uint32_t cp);
 // Pattern_Syntax (Pat_Syn)
 // Pattern_White_Space (Pat_WS)
 // Prepended_Concatenation_Mark (PCM)
+bool prepended_concatenation_mark(uint32_t cp);
 // Quotation_Mark (QMark)
 // Radical (Radical)
 // Soft_Dotted (SD)
