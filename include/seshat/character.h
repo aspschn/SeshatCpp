@@ -21,16 +21,16 @@ private:
     CodePointSequence _code_points;
 public:
     Character(char a_char); // an ascii character
-    // Character(uint32_t code_point);
     Character(const CodePoint& code_point);
-    // Character(const uint32_t *code_points);
-    // Character(const CodePoint *code_points);
     Character(const CodePointSequence& sequence);
     ~Character();
 
     size_t size() const; // length of code point
     const CodePointSequence& sequence() const;
     std::string to_utf8() const;
+
+    bool operator==(const Character& other) const;
+    bool operator!=(const Character& other) const;
 };
 
 }

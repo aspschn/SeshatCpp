@@ -10,6 +10,7 @@
 #include <seshat/character.h>
 
 #include <seshat/codepoint.h>
+#include <seshat/unicode/normalize.h>
 
 #include <sstream>
 
@@ -91,6 +92,16 @@ std::string Character::to_utf8() const
     }
 
     return stream.str();
+}
+
+bool Character::operator==(const Character& other) const
+{
+    return (unicode::nfd(_code_points) == unicode::nfd(other._code_points));
+}
+
+bool Character::operator!=(const Character& other) const
+{
+    return *this != other;
 }
 
 } // namespace seshat

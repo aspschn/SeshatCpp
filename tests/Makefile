@@ -4,6 +4,8 @@ default:
 	echo "codepoint, unicode unicode_name"
 codepoint:
 	g++ -std=c++11 -o codepoint codepoint.cpp ../lib/libseshat.a -I../include
+character:
+	g++ -std=c++11 -o character character.cpp ../lib/libseshat.a -I../include
 unicode:
 	g++ -std=c++11 -o unicode unicode.cpp ../lib/libseshat.a -I../include
 unicode_name:
@@ -12,4 +14,4 @@ normalization:
 	g++ -std=c++11 -Wall -o normalization normalization.cpp ../lib/libseshat.a -I../include
 
 clean:
-	rm codepoint unicode unicode_name normalization
+	rm codepoint unicode unicode_name normalization character
