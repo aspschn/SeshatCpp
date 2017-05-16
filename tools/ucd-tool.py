@@ -667,7 +667,7 @@ const std::map<CodePointRange, Block> block_table = {
 
 def make_core_cpp():
     txt = DerivedParser.readlines('data/PropList.txt')
-    # table_wspace = 'const std::set<CodePointRange> wspace_table = {\n    '
+    table_wspace = 'const std::set<CodePointRange> wspace_table = {\n    '
     # table_BIDI_CONTROL
     # table_DASH
     # table_HYPHEN
@@ -700,18 +700,22 @@ def make_core_cpp():
             continue
         if parser.first == 'Other_Grapheme_Extend':
             table_ogr_ext += ('{ ' + parser.range.to_seshat() + ' },\n    ')
+        elif parser.first == 'White_Space':
+            table_wspace += ('{ ' + parser.range.to_seshat() + ' },\n    ')
         elif parser.first == 'Other_Default_Ignorable_Code_Point':
             table_odi += ('{ ' + parser.range.to_seshat() + ' },\n    ')
         elif parser.first == 'Prepended_Concatenation_Mark':
             table_pcm += ('{ ' + parser.range.to_seshat() + ' },\n    ')
         else:
             pass
+    table_wspace = table_wspace.rstrip().rstrip(',') + '\n};'
     table_ogr_ext = table_ogr_ext.rstrip().rstrip(',') + '\n};'
     table_odi = table_odi.rstrip().rstrip(',') + '\n};'
     table_pcm = table_pcm.rstrip().rstrip(',') + '\n};'
 
     f = open('../src/ucd/core.cpp', 'w')
     f.write(boilerplate_core_cpp_1)
+    f.write('\n\n' + table_wspace)
     f.write('\n\n' + table_ogr_ext)
     f.write('\n\n' + table_odi)
     f.write('\n\n' + table_pcm)

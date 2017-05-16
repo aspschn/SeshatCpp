@@ -2,7 +2,7 @@
 //  You can find the author and the copyright in file 'tools/ucd-tool.py'.
 //
 // Properties from PropList.txt
-// 
+//
 // Tables for ...
 // Other_Grapheme_Extend (OGr_Ext)
 // Other_Default_Ignorable_Code_Point (ODI)
@@ -14,6 +14,20 @@ namespace unicode {
 namespace ucd {
 
 
+
+const std::set<CodePointRange> wspace_table = {
+    { CodePointRange(0x0009, 0x000D) },
+    { CodePointRange(0x0020, 0x0020) },
+    { CodePointRange(0x0085, 0x0085) },
+    { CodePointRange(0x00A0, 0x00A0) },
+    { CodePointRange(0x1680, 0x1680) },
+    { CodePointRange(0x2000, 0x200A) },
+    { CodePointRange(0x2028, 0x2028) },
+    { CodePointRange(0x2029, 0x2029) },
+    { CodePointRange(0x202F, 0x202F) },
+    { CodePointRange(0x205F, 0x205F) },
+    { CodePointRange(0x3000, 0x3000) }
+};
 
 const std::set<CodePointRange> ogr_ext_table = {
     { CodePointRange(0x09BE, 0x09BE) },

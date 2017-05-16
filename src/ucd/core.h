@@ -18,6 +18,7 @@ namespace seshat {
 namespace unicode {
 namespace ucd {
 
+extern const std::set<CodePointRange> wspace_table;
 extern const std::set<CodePointRange> ogr_ext_table;
 extern const std::set<CodePointRange> odi_table;
 extern const std::set<CodePointRange> pcm_table;

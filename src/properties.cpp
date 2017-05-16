@@ -87,5 +87,55 @@ bool prepended_concatenation_mark(uint32_t cp)
     return (found != ucd::pcm_table.end()) ? true : false;
 }
 
+bool grapheme_extend(uint32_t cp)
+{
+    // # Derived Property: Grapheme_Extend
+    // #  Generated from: Me + Mn + Other_Grapheme_Extend
+    if (gc(cp) == Gc::Me || gc(cp) == Gc::Mn || ogr_ext(cp) == true)
+        return true;
+    return false;
+}
+
+bool default_ignorable_code_point(uint32_t cp)
+{
+    // # Derived Property: Default_Ignorable_Code_Point
+    // #  Generated from
+    // #    Other_Default_Ignorable_Code_Point
+    // #  + Cf (Format characters)
+    // #  + Variation_Selector
+    // #  - White_Space
+    // #  - FFF9..FFFB (Annotation Characters)
+    // #  - 0600..0605, 06DD, 070F, 08E2, 110BD (exceptional Cf characters that should be visible)
+    if (odi(cp) || gc(cp) == Gc::Cf || variation_selector(cp)) {
+        if (!(white_space(cp)) && !(0xFFF9 <= cp && cp <= 0xFFFB) &&
+            !(cp == 0x0600) && !(cp == 0x0605) && !(cp == 0x06DD) &&
+            !(cp == 0x070F) && !(cp == 0x08E2) && !(cp == 0x110BD)) {
+            return true;
+        }
+    }
+    return false;
+}
+
+bool variation_selector(uint32_t cp)
+{
+    // From PropList.txt (Unicode 9.0.0)
+    // 180B..180D    ; Variation_Selector # Mn   [3]
+    // FE00..FE0F    ; Variation_Selector # Mn  [16]
+    // E0100..E01EF  ; Variation_Selector # Mn [240]
+    // # Total code points: 259
+    if ((0x180B <= cp && cp <= 0x180D) ||
+        (0xFE00 <= cp && cp <= 0xFE0F) ||
+        (0xE0100 <= cp && cp <= 0xE01EF))
+        return true;
+    else
+        return false;
+}
+
+bool white_space(uint32_t cp)
+{
+    auto found = ucd::wspace_table.find(CodePointRange(cp, cp));
+    return (found != ucd::wspace_table.end()) ? true : false;
+}
+
 } // namespace unicode
 } // namespace seshat

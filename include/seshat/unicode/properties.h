@@ -366,10 +366,12 @@ Block block(uint32_t cp);
 // Dash (Dash)
 // Deprecated (Dep)
 // Default_Ignorable_Code_Point (DI)
+bool default_ignorable_code_point(uint32_t cp);
 // Diacritic (Dia)
 // Extender (Ext)
 // Grapheme_Base (Gr_Base)
 // Grapheme_Extend (Gr_Ext)
+bool grapheme_extend(uint32_t cp);
 // Grapheme_Link (Gr_Link)
 // Hex_Digit (Hex)
 // Hyphen (Hyphen)
@@ -405,7 +407,9 @@ bool prepended_concatenation_mark(uint32_t cp);
 // Unified_Ideograph (UIdeo)
 // Uppercase (Upper)
 // Variation_Selector (VS)
+bool variation_selector(uint32_t cp);
 // White_Space (WSpace) ; space
+bool white_space(uint32_t cp);
 // XID_Continue (XIDC)
 // XID_Start (XIDS)
 // Expands_On_NFC (XO_NFC)
