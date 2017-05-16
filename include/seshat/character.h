@@ -12,6 +12,7 @@
 
 #include <seshat/codepoint.h>
 
+#include <exception>
 #include <vector>
 
 namespace seshat {
@@ -33,6 +34,22 @@ public:
     bool operator!=(const Character& other) const;
 };
 
-}
+class SurrogateIncluded : public std::exception {
+public:
+    const char* what() const noexcept
+    {
+        return "SurrogateIncluded: Surrogate code point to Character is not allowed.";
+    }
+};
+
+class NotASingleCharacter : public std::exception {
+public:
+    const char* what() const noexcept
+    {
+        return "NotASingleCharacter: The sequence cannot be considered a single character.";
+    }
+};
+
+} // namespace seshat
 
 #endif /* _CHARACTER_H */

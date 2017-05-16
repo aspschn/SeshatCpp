@@ -17,6 +17,7 @@ int main()
     using seshat::Character;
     using seshat::CodePoint;
     using seshat::CodePointSequence;
+    using seshat::SurrogateIncluded;
 
     Character ch1 = Character('a');
     Character ch2 = Character(CodePoint(0xAC01)); // '각'
@@ -43,6 +44,15 @@ int main()
     // operators
     assert((ch1 == ch2) == false);
     assert((ch2 == ch3) == true);
+
+    // exceptions
+    try {
+        Character from_surrogate = Character(CodePointSequence {
+            'a', 0xD800
+        });
+    } catch (const SurrogateIncluded& e) {
+        std::cout << e.what() << std::endl;
+    }
 
     return 0;
 }

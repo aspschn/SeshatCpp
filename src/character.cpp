@@ -23,35 +23,32 @@ Character::Character(char a_char)
     _code_points.append(cp);
 }
 
-/*
-Character::Character(uint32_t code_point)
-    : _code_points(decltype(_code_points)())
-{
-    CodePoint cp = CodePoint(code_point);
-    _code_points.push_back(cp);
-}
-*/
-
 Character::Character(const CodePoint& code_point)
     : _code_points(decltype(_code_points)())
 {
+    // if (gc(code_point.code()) == Gc::Cs) {
+    // For performance, Surrogate code points compared directly.
+    if (0xD800 <= code_point.code() && code_point.code() <= 0xDFFF) {
+        throw SurrogateIncluded();
+    }
     _code_points.append(code_point);
 }
 
-/*
-Character::Character(const uint32_t *code_points)
+Character::Character(const CodePointSequence &sequence)
     : _code_points(decltype(_code_points)())
 {
-    std::vector<CodePoint> cps;
-    for (auto it = code_points; *it != 0; ++it) {
-        cps.push_back(CodePoint(*it));
+    for (auto cp: sequence) {
+        if (0xD800 <= cp.code() && cp.code() <= 0xDFFF) {
+            throw SurrogateIncluded();
+        }
     }
-}
-*/
-
-Character::Character(const CodePointSequence &sequence)
-    : _code_points(decltype(_code_points)(sequence))
-{
+    // Check if not a single grapheme cluster
+    // if (not a single grapheme cluster) {
+    //     throw NotASingleCharacter();
+    // }
+    for (auto cp: sequence) {
+        _code_points.append(cp);
+    }
 }
 
 Character::~Character()
