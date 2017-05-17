@@ -4,6 +4,7 @@ OBJ = src/utils.o src/codepoint.o src/character.o src/naming_rule.o src/gc.o src
 	src/properties.o \
 	src/ucd/block.o \
 	src/emoji.o src/emoji/data.o \
+	src/ucd/core.o \
 	src/dm.o src/ucd/dm.o
 default: $(OBJ)
 	mkdir -p lib

@@ -233,8 +233,189 @@ enum class Block {
     Yijing
 };
 
-// Script script(uint32_t cp);
+// Grapheme_Cluster_Break (GCB)
+enum class Gcb {
+    CN,     // Control
+    CR,     // CR
+    EB,     // E_Base
+    EBG,    // E_Base_GAZ
+    EM,     // E_Modifier
+    EX,     // Extend
+    GAZ,    // Glue_After_Zwj
+    L,      // L
+    LF,     // LF
+    LV,     // LV
+    LVT,    // LVT
+    PP,     // Prepend
+    RI,     // Regional_Indicator
+    SM,     // SpacingMark
+    T,      // T
+    V,      // V
+    XX,     // Other
+    ZWJ     // ZWJ
+};
+
+/*
+ * Property determining functions
+ */
+
+// ==============================
+// Numeric Properties
+// ==============================
+//
+// kAccountingNumeric (cjkAccountingNumeric)
+// kOtherNumeric (cjkOtherNumeric)
+// kPrimaryNumeric (cjkPrimaryNumeric)
+// Numeric_Value (nv)
+
+// ==============================
+// String Properties
+// ==============================
+//
+// Case_Folding (cf)
+// kCompatibilityVariant (cjkCompatibilityVariant)
+// Decomposition_Mapping (dm)
+// FC_NFKC_Closure (FC_NFKC)
+// Lowercase_Mapping (lc)
+// NFKC_Casefold (NFKC_CF)
+// Simple_Case_Folding  (scf) ; sfc
+// Simple_Lowercase_Mapping (slc)
+// Simple_Titlecase_Mapping (stc)
+// Simple_Uppercase_Mapping (suc)
+// Titlecase_Mapping (tc)
+// Uppercase_Mapping (uc)
+
+// ==============================
+// Miscellaneous Properties
+// ==============================
+//
+// Bidi_Mirroring_Glyph (bmg)
+// Bidi_Paired_Bracket (bpb)
+// kIICore (cjkIICore)
+// kIRG_GSource (cjkIRG_GSource)
+// kIRG_HSource (cjkIRG_HSource)
+// kIRG_JSource (cjkIRG_JSource)
+// kIRG_KPSource (cjkIRG_KPSource)
+// kIRG_KSource (cjkIRG_KSource)
+// kIRG_MSource (cjkIRG_MSource)
+// kIRG_TSource (cjkIRG_TSource)
+// kIRG_USource (cjkIRG_USource)
+// kIRG_VSource (cjkIRG_VSource)
+// kRSUnicode (cjkRSUnicode) ; Unicode_Radical_Stroke; URS
+// ISO_Comment (isc)
+// Jamo_Short_Name (JSN)
+// ! Name (na) - @name.h
+// Unicode_1_Name (na1)
+// Name_Alias (Name_Alias)
+// Script_Extensions (scx)
+
+// ==============================
+// Catalog Properties
+// ==============================
+//
+// Age (age)
+// Block (blk)
 Block block(uint32_t cp);
+// Script (sc)
+// Script script(uint32_t cp);
+
+// ==============================
+// Enumerated Properties
+// ==============================
+//
+// Bidi_Class (bc)
+// Bidi_Paired_Bracket_Type (bpt)
+// ! Canonical_Combining_Class (ccc) - @ccc.h
+// ! Decomposition_Type (dt) - @dt.h
+// East_Asian_Width (ea)
+// ! General_Category (gc) - @gc.h
+// Grapheme_Cluster_Break (GCB)
+Gcb gcb(uint32_t cp);
+// ! Hangul_Syllable_Type (hst) - @hangul.h
+// Indic_Positional_Category (InPC)
+// Indic_Syllabic_Category (InSC)
+// Joining_Group (jg)
+// Joining_Type (jt)
+// Line_Break (lb)
+// ! NFC_Quick_Check (NFC_QC) - @normalization_props.h
+// ! NFD_Quick_Check (NFD_QC) - @normalization_props.h
+// ! NFKC_Quick_Check (NFKC_QC) - @normalization_props.h
+// ! NFKD_Quick_Check (NFKD_QC) - @normalization_props.h
+// Numeric_Type (nt)
+// Sentence_Break (SB)
+// Word_Break (WB)
+
+// ==============================
+// Binary Properties
+// ==============================
+//
+// ASCII_Hex_Digit (AHex)
+// Alphabetic (Alpha)
+// Bidi_Control (Bidi_C)
+// Bidi_Mirrored (Bidi_M)
+// Cased (Cased)
+// Composition_Exclusion (CE)
+// Case_Ignorable (CI)
+// ! Full_Composition_Exclusion (Comp_Ex) - @normalization_props.h
+// Changes_When_Casefolded (CWCF)
+// Changes_When_Casemapped (CWCM)
+// Changes_When_NFKC_Casefolded (CWKCF)
+// Changes_When_Lowercased (CWL)
+// Changes_When_Titlecased (CWT)
+// Changes_When_Uppercased (CWU)
+// Dash (Dash)
+// Deprecated (Dep)
+// Default_Ignorable_Code_Point (DI)
+bool default_ignorable_code_point(uint32_t cp);
+// Diacritic (Dia)
+// Extender (Ext)
+// Grapheme_Base (Gr_Base)
+// Grapheme_Extend (Gr_Ext)
+bool grapheme_extend(uint32_t cp);
+// Grapheme_Link (Gr_Link)
+// Hex_Digit (Hex)
+// Hyphen (Hyphen)
+// ID_Continue (IDC)
+// Ideographic (Ideo)
+// ID_Start (IDS)
+// IDS_Binary_Operator (IDSB)
+// IDS_Trinary_Operator (IDST)
+// Join_Control (Join_C)
+// Logical_Order_Exception (LOE)
+// Lowercase (Lower)
+// Math (Math)
+// Noncharacter_Code_Point (NChar)
+// Other_Alphabetic (OAlpha)
+// Other_Default_Ignorable_Code_Point (ODI)
+bool odi(uint32_t cp);
+// Other_Grapheme_Extend (OGr_Ext)
+bool ogr_ext(uint32_t cp);
+// Other_ID_Continue (OIDC)
+// Other_ID_Start (OIDS)
+// Other_Lowercase (OLower)
+// Other_Math (OMath)
+// Other_Uppercase (OUpper)
+// Pattern_Syntax (Pat_Syn)
+// Pattern_White_Space (Pat_WS)
+// Prepended_Concatenation_Mark (PCM)
+bool prepended_concatenation_mark(uint32_t cp);
+// Quotation_Mark (QMark)
+// Radical (Radical)
+// Soft_Dotted (SD)
+// Sentence_Terminal (STerm)
+// Terminal_Punctuation (Term)
+// Unified_Ideograph (UIdeo)
+// Uppercase (Upper)
+// Variation_Selector (VS)
+bool variation_selector(uint32_t cp);
+// White_Space (WSpace) ; space
+bool white_space(uint32_t cp);
+// XID_Continue (XIDC)
+// XID_Start (XIDS)
+// Expands_On_NFC (XO_NFC)
+// Expands_On_NFD (XO_NFD)
+// Expands_On_NFKC (XO_NFKC)
+// Expands_On_NFKD (XO_NFKD)
 
 } // namespace unicode
 } // namespace seshat

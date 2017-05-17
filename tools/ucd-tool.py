@@ -32,6 +32,7 @@ def download_data():
         'ScriptExtensions.txt': '/',
         'Blocks.txt': '/',
         'PropertyValueAliases.txt': '/',
+        'PropList.txt': '/',
         'DerivedDecompositionType.txt': '/extracted/'
     }
     emoji_data_files = {
@@ -499,6 +500,17 @@ boilerplate_emoji_data_cpp_1 = comment + '''//
 ''' + opening_namespace
 boilerplate_emoji_data_cpp_2 = closing_namespace
 
+boilerplate_core_cpp_1 = comment + '''//
+// Properties from PropList.txt
+//
+// Tables for ...
+// Other_Grapheme_Extend (OGr_Ext)
+// Other_Default_Ignorable_Code_Point (ODI)
+// Prepended_Concatenation_Mark (PCM)
+#include "core.h"
+''' + opening_namespace
+boilerplate_core_cpp_2 = closing_namespace
+
 def parse_unicode_data():
     unicode_data_list = []
     f = open('data/UnicodeData.txt', 'r')
@@ -561,6 +573,7 @@ def print_help():
     # print('      * normalization_test - normalization_test.cpp')
     print('      * script - script.cpp')
     print('      * block - block.cpp')
+    print('      * core - core.cpp')
     print('      * emoji_data - emoji/data.cpp')
     print('Arguments')
     print('  --help   print this help')
@@ -672,6 +685,63 @@ const std::map<CodePointRange, Block> block_table = {
 
     f = open('../src/ucd/block.cpp', 'w')
     f.write(boilerplate_block_cpp_1 + table + boilerplate_block_cpp_2)
+    f.close()
+
+def make_core_cpp():
+    txt = DerivedParser.readlines('data/PropList.txt')
+    table_wspace = 'const std::set<CodePointRange> wspace_table = {\n    '
+    # table_BIDI_CONTROL
+    # table_DASH
+    # table_HYPHEN
+    # table_QUOTATION_MARK
+    # table_TERMINAL_PUNCTUATION
+    # table_OTHER_MATH
+    # table_HEX_DIGIT
+    # table_ASCII_HEX_DIGIT
+    # table_OTHER_ALPHABETIC
+    # table_IDEOGRAPHIC
+    # table_DIACRITIC
+    # table_EXTENDER
+    # table_OTHER_LOWERCASE
+    # table_OTHER_UPPERCASE
+    # table_NONCHARACTER_CODE_POINT
+    table_ogr_ext = 'const std::set<CodePointRange> ogr_ext_table = {\n    '
+    # table_IDS_BINARY_OPERATOR
+    # table_IDS_TRINARY_OPERATOR
+    # table_RADICAL
+    # table_UNIFIED_IDEOGRAPH
+    table_odi = 'const std::set<CodePointRange> odi_table = {\n    '
+    # table_DEPRECATED
+    # table_SOFT_DOTTED
+    # table_LOGICAL_ORDER_EXCEPTION
+    table_pcm = 'const std::set<CodePointRange> pcm_table = {\n    '
+    parser = DerivedParser()
+    for line in txt:
+        parser.parse_line(line)
+        if parser.empty():
+            continue
+        if parser.first == 'Other_Grapheme_Extend':
+            table_ogr_ext += ('{ ' + parser.range.to_seshat() + ' },\n    ')
+        elif parser.first == 'White_Space':
+            table_wspace += ('{ ' + parser.range.to_seshat() + ' },\n    ')
+        elif parser.first == 'Other_Default_Ignorable_Code_Point':
+            table_odi += ('{ ' + parser.range.to_seshat() + ' },\n    ')
+        elif parser.first == 'Prepended_Concatenation_Mark':
+            table_pcm += ('{ ' + parser.range.to_seshat() + ' },\n    ')
+        else:
+            pass
+    table_wspace = table_wspace.rstrip().rstrip(',') + '\n};'
+    table_ogr_ext = table_ogr_ext.rstrip().rstrip(',') + '\n};'
+    table_odi = table_odi.rstrip().rstrip(',') + '\n};'
+    table_pcm = table_pcm.rstrip().rstrip(',') + '\n};'
+
+    f = open('../src/ucd/core.cpp', 'w')
+    f.write(boilerplate_core_cpp_1)
+    f.write('\n\n' + table_wspace)
+    f.write('\n\n' + table_ogr_ext)
+    f.write('\n\n' + table_odi)
+    f.write('\n\n' + table_pcm)
+    f.write(boilerplate_core_cpp_2)
     f.close()
 
 def make_name_cpp():
@@ -841,6 +911,7 @@ if __name__ == '__main__':
                     'script': make_script_cpp,
                     'block': make_block_cpp,
                     'emoji_data': make_emoji_data_cpp,
+                    'core': make_core_cpp,
                     'dm': make_dm_cpp
                 }
                 if gen == 'all':
