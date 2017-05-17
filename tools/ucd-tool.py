@@ -143,6 +143,19 @@ class UnicodeData:
         self.simple_lowercase_mapping = li[13]
         self.simple_titlecase_mapping = li[14]
 
+class UInt:
+    def __init__(self, arg1):
+        self._hex = arg1 # as string. e.g. '10FB'
+    def to_seshat(self):
+        return '0x' + arg1
+
+class EnumClass:
+    def __init__(self, c, e):
+        self._class = c
+        self._enum = e
+    def to_seshat(self):
+        return self._class + '::' + self._enum
+
 class CodePointRange:
     def __init__(self, arg1, arg2=None):
         self._from = 0
@@ -178,6 +191,42 @@ class CodePointRange:
     def to_seshat(self):
         txt = 'CodePointRange(0x{:04X}, 0x{:04X})'.format(self._from, self._to)
         return txt
+
+class DataTable:
+    def __init__(self, name, t, k, v=None):
+        '''t: type of table. `set` or `map`
+k: key type.
+v: value type, if table type is `map`
+        '''
+        if t not in ('set', 'map'):
+            raise TypeError(t + ' is not a valid table type')
+        self.table_name = name
+        self.table_type = t
+        self.key_type = k
+        self.val_type = v
+        self._data = []
+    def append(self, k, v=None):
+        record = (k, v)
+        self._data.append(record)
+    def to_seshat(self):
+        (k_type, v_type) = ('', None)
+        k_type = {
+            'UInt': 'uint32_t',
+            'CodePointRange': 'CodePointRange'
+        }[self.key_type]
+        v_type = self.val_type
+        text = 'const std::' + self.table_type + '<' + k_type
+        if self.table_type == 'map':
+            text += ', ' + v_type
+        text += '> ' + self.table_name + ' = {\n    '
+        for r in self._data:
+            text_append = '{ ' + r[0].to_seshat()
+            if self.table_type == 'map':
+                text_append += ', ' + r[1].to_seshat()
+            text_append += ' },\n    '
+            text += text_append
+        text = text.rstrip().rstrip(',') + '\n};'
+        return text
 
 class PropertyValueAliases:
     def __init__(self):
@@ -350,12 +399,7 @@ boilerplate_gc_cpp_1 = comment + '''//
 
 #include <cstdint>
 #include <map>
-
-namespace seshat {
-namespace unicode {
-namespace ucd {
-
-'''
+''' + opening_namespace
 boilerplate_gc_cpp_2 = closing_namespace
 
 boilerplate_name_cpp_1 = comment + '''//
@@ -364,11 +408,7 @@ boilerplate_name_cpp_1 = comment + '''//
 
 #include <cstdint>
 #include <map>
-
-namespace seshat {
-namespace unicode {
-namespace ucd {
-'''
+''' + opening_namespace
 boilerplate_name_cpp_2 = closing_namespace
 
 boilerplate_normalization_props_cpp_1 = comment + '''//
@@ -381,21 +421,13 @@ boilerplate_ccc_cpp_1 = comment + '''//
 //  Canonical_Combining_Class(ccc) property table.
 //  ccc=0 omitted in this table.
 #include "ccc.h"
-
-namespace seshat {
-namespace unicode {
-namespace ucd {
-'''
+''' + opening_namespace
 boilerplate_ccc_cpp_2 = closing_namespace
 
 boilerplate_dt_cpp_1 = comment + '''//
 //  Decomposition_Type(dt) table.
 #include "dt.h"
-
-namespace seshat {
-namespace unicode {
-namespace ucd {
-'''
+''' + opening_namespace
 boilerplate_dt_cpp_2 = closing_namespace
 
 boilerplate_dm_cpp_1 = comment + '''//
@@ -457,11 +489,15 @@ def remove_ucd_comment(a_line):
     return a_line
 
 class DerivedParser:
-    def __init__(self):
+    def __init__(self, filepath=None):
         self.range = None
         self.first = ''
         self.second = ''
         self._empty = False
+        self.txt = None
+
+        if filepath != None:
+            self.txt = DerivedParser.readlines(filepath)
     def empty(self):
         return self._empty
     def parse_line(self, line):
@@ -574,44 +610,37 @@ const std::map<CodePointRange, Dt> dt_table = {
     f.close()
 
 def make_script_cpp():
-    def script_alias(val):
+    def alias(val):
         return property_value_aliases.alias('sc', val)
-    txt = DerivedParser.readlines('data/Scripts.txt')
+    table = DataTable('script_table', 'map', 'CodePointRange', 'Script')
 
-    table = '''
-const std::map<CodePointRange, Script> script_table = {
-    '''
-
-    parser = DerivedParser()
-    for line in txt:
+    parser = DerivedParser('data/Scripts.txt')
+    for line in parser.txt:
         parser.parse_line(line)
         if parser.empty():
             continue
-        table += ('{ ' + parser.range.to_seshat() + ', Script::' + script_alias(parser.first) + ' },')
-        table += '\n    '
-    table = table.rstrip().rstrip(',') + '\n};'
+        table.append(
+            parser.range, EnumClass('Script', alias(parser.first)))
 
     f = open('../src/ucd/script.cpp', 'w')
-    f.write(boilerplate_script_cpp_1 + table + boilerplate_script_cpp_2)
+    f.write(boilerplate_script_cpp_1 + '\n' + table.to_seshat() + boilerplate_script_cpp_2)
     f.close()
 
 def make_block_cpp():
-    txt = DerivedParser.readlines('data/Blocks.txt')
-    table = '''
-const std::map<CodePointRange, Block> block_table = {
-    '''
+    def alias(val):
+        return property_value_aliases.alias('blk', val)
+    table = DataTable('block_table', 'map', 'CodePointRange', 'Block')
 
-    parser = DerivedParser()
-    for line in txt:
+    parser = DerivedParser('data/Blocks.txt')
+    for line in parser.txt:
         parser.parse_line(line)
         if parser.empty():
             continue
-        table += ('{ ' + parser.range.to_seshat() + ', Block::' + property_value_aliases.alias('blk', parser.first) + ' },')
-        table += '\n    '
-    table = table.rstrip().rstrip(',') + '\n};'
+        table.append(
+            parser.range, EnumClass('Block', alias(parser.first)))
 
     f = open('../src/ucd/block.cpp', 'w')
-    f.write(boilerplate_block_cpp_1 + table + boilerplate_block_cpp_2)
+    f.write(boilerplate_block_cpp_1 + '\n' + table.to_seshat() + boilerplate_block_cpp_2)
     f.close()
 
 def make_core_cpp():
