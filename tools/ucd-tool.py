@@ -7,11 +7,17 @@ import os
 UNICODE_VERSION_MAJOR = 9
 UNICODE_VERSION_MINOR = 0
 UNICODE_VERSION_UPDATE = 0
+EMOJI_VERSION_MAJOR = 4
+EMOJI_VERSION_MINOR = 0
 
 UCD_URL = "http://www.unicode.org/Public/{}.{}.{}/ucd".format(
     UNICODE_VERSION_MAJOR,
     UNICODE_VERSION_MINOR,
     UNICODE_VERSION_UPDATE
+)
+EMOJI_URL = "http://www.unicode.org/Public/emoji/{}.{}".format(
+    EMOJI_VERSION_MAJOR,
+    EMOJI_VERSION_MINOR
 )
 
 def download_data():
@@ -28,9 +34,18 @@ def download_data():
         'PropertyValueAliases.txt': '/',
         'DerivedDecompositionType.txt': '/extracted/'
     }
+    emoji_data_files = {
+        'emoji-data.txt': '/',
+        'emoji-sequences.txt': '/',
+        'emoji-test.txt': '/',
+        'emoji-zwj-sequences.txt': '/'
+    }
     for fname, srcpath in data_files.items():
         if fname not in data_dir():
             os.system('wget ' + UCD_URL + srcpath + fname + ' -O data/' + fname)
+    for fname, srcpath in emoji_data_files.items():
+        if fname not in data_dir():
+            os.system('wget ' + EMOJI_URL + srcpath + fname + ' -O data/' + fname)
 
 class Gc:
     '''General_Category'''
@@ -478,6 +493,12 @@ boilerplate_block_cpp_1 = comment + '''//
 '''  + opening_namespace
 boilerplate_block_cpp_2 = closing_namespace
 
+boilerplate_emoji_data_cpp_1 = comment + '''//
+//  Emoji property tables.
+#include "data.h"
+''' + opening_namespace
+boilerplate_emoji_data_cpp_2 = closing_namespace
+
 def parse_unicode_data():
     unicode_data_list = []
     f = open('data/UnicodeData.txt', 'r')
@@ -540,6 +561,7 @@ def print_help():
     # print('      * normalization_test - normalization_test.cpp')
     print('      * script - script.cpp')
     print('      * block - block.cpp')
+    print('      * emoji_data - emoji/data.cpp')
     print('Arguments')
     print('  --help   print this help')
     exit()
@@ -768,6 +790,33 @@ const std::map<CodePointRange, {}> {} = '''.format(val_type, name)
     f.write(boilerplate_normalization_props_cpp_2)
     f.close()
 
+def make_emoji_data_cpp():
+    txt = DerivedParser.readlines('data/emoji-data.txt')
+    def table_open(name):
+        return 'const std::set<CodePointRange> ' + name + ' = {\n    '
+    tables = {
+        'Emoji': table_open('emoji_table'),
+        'Emoji_Presentation': table_open('emoji_presentation_table'),
+        'Emoji_Modifier': table_open('emoji_modifier_table'),
+        'Emoji_Modifier_Base': table_open('emoji_modifier_base_table')
+    }
+
+    parser = DerivedParser()
+    for line in txt:
+        parser.parse_line(line)
+        if parser.empty():
+            continue
+        tables[parser.first] += ('{ ' + parser.range.to_seshat() + ' },\n    ')
+    for k in tables.keys():
+        tables[k] = tables[k].rstrip().rstrip(',') + '\n};'
+
+    f = open('../src/emoji/data.cpp', 'w')
+    f.write(boilerplate_emoji_data_cpp_1)
+    for t in tables.values():
+        f.write('\n' + t)
+    f.write(boilerplate_emoji_data_cpp_2)
+    f.close()
+
 if __name__ == '__main__':
     if len(sys.argv) > 1:
         if sys.argv[1] == 'clean':
@@ -791,6 +840,7 @@ if __name__ == '__main__':
                     # 'normalization_test': make_normalization_test_cpp,
                     'script': make_script_cpp,
                     'block': make_block_cpp,
+                    'emoji_data': make_emoji_data_cpp,
                     'dm': make_dm_cpp
                 }
                 if gen == 'all':

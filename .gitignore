@@ -2,4 +2,5 @@ tools/__pycache__
 tools/data/*.txt
 src/*.o
 src/ucd/*.o
+src/emoji/*.o
 lib/
