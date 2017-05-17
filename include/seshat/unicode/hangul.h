@@ -44,6 +44,18 @@ namespace hangul {
 #define V_PART(v_idx)   (V_BASE + (v_idx))
 #define T_PART(t_idx)   (T_BASE + (t_idx))
 
+enum class HangulSyllableType {
+    L,      // Leading_Jamo
+    LV,     // LV_Syllable
+    LVT,    // LVT_Syllable
+    NA,     // Not_Applicable
+    T,      // Trailing_Jamo
+    V       // Vowel_Jamo
+};
+
+// Unicode character property
+HangulSyllableType hangul_syllable_type(uint32_t cp);
+
 // Hangul jamo name mapping
 //
 extern const char* JAMO_L_TABLE[L_COUNT];

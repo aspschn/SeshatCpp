@@ -13,6 +13,29 @@ namespace seshat {
 namespace unicode {
 namespace hangul {
 
+HangulSyllableType hangul_syllable_type(uint32_t cp)
+{
+    if (S_BASE <= cp && cp <= S_BASE + S_COUNT - 1) {
+        uint32_t s_index = S_INDEX(cp);
+        uint32_t t_part = T_PART(T_INDEX(s_index));
+        if (t_part == T_BASE) { // Jongseong not exists
+            return HangulSyllableType::LV;
+        } else {
+            return HangulSyllableType::LVT;
+        }
+    }
+    if ((L_BASE <= cp && cp <= 0x115F) ||
+        (0xA960 <= cp && cp <= 0xA97C))
+        return HangulSyllableType::L;
+    if ((0x1160 <= cp && cp <= 0x11A7) ||
+        (0xD7B0 <= cp && cp <= 0xD7C6))
+        return HangulSyllableType::V;
+    if ((0x11A8 <= cp && cp <= 0x11FF) ||
+        (0xD7CB <= cp && cp <= 0xD7FB))
+        return HangulSyllableType::T;
+    return HangulSyllableType::NA;
+}
+
 const char* JAMO_L_TABLE[L_COUNT] =  {
     "G", "GG", "N", "D", "DD", "R", "M", "B", "BB", "S",
     "SS", "", "J", "JJ", "C", "K", "T", "P", "H"

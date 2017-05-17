@@ -330,8 +330,8 @@ Block block(uint32_t cp);
 // East_Asian_Width (ea)
 // ! General_Category (gc) - @gc.h
 // Grapheme_Cluster_Break (GCB)
-// Gcb gcb(uint32_t cp);
-// Hangul_Syllable_Type (hst)
+Gcb gcb(uint32_t cp);
+// ! Hangul_Syllable_Type (hst) - @hangul.h
 // Indic_Positional_Category (InPC)
 // Indic_Syllabic_Category (InSC)
 // Joining_Group (jg)
