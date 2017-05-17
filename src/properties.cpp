@@ -9,6 +9,7 @@
 */
 #include <seshat/unicode/properties.h>
 
+#include <seshat/unicode/emoji.h>
 #include <seshat/unicode/gc.h>
 #include <seshat/unicode/hangul.h>
 #include "ucd/block.h"
@@ -42,6 +43,9 @@ Block block(uint32_t cp)
 
 Gcb gcb(uint32_t cp)
 {
+    using hangul::HangulSyllableType;
+    using hangul::hangul_syllable_type;
+
     if (cp == 0x000D)
         return Gcb::CR;
     if (cp == 0x000A)
@@ -61,7 +65,7 @@ Gcb gcb(uint32_t cp)
     if (gc(cp) == Gc::Zl ||
         gc(cp) == Gc::Zp ||
         gc(cp) == Gc::Cc ||
-        (gc(cp) == Gc::Cn && di(cp) == true) ||
+        (gc(cp) == Gc::Cn && default_ignorable_code_point(cp) == true) ||
         gc(cp) == Gc::Cs ||
         (gc(cp) == Gc::Cf &&
             cp != 0x000D && cp != 0x000A && cp != 0x200C && cp != 0x200D))
@@ -156,7 +160,7 @@ Gcb gcb(uint32_t cp)
     // which do not occur after ZWJ in emoji-zwj-sequences.txt. See [UTR51].
     if (0) // TODO: IMPLEMENT!
         return Gcb::EB;
-    if (emoji_modifier(cp))
+    if (emoji::emoji_modifier(cp))
         return Gcb::EM;
     if (0) // TODO: IMPLEMENT!
         return Gcb::GAZ;

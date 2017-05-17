@@ -452,8 +452,8 @@ boilerplate_block_cpp_2 = closing_namespace
 boilerplate_emoji_data_cpp_1 = comment + '''//
 //  Emoji property tables.
 #include "data.h"
-''' + opening_namespace
-boilerplate_emoji_data_cpp_2 = closing_namespace
+''' + opening_namespace.replace('ucd', 'emoji')
+boilerplate_emoji_data_cpp_2 = closing_namespace.replace('ucd', 'emoji')
 
 boilerplate_core_cpp_1 = comment + '''//
 // Properties from PropList.txt

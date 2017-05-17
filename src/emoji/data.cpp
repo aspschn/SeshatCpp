@@ -6,7 +6,7 @@
 
 namespace seshat {
 namespace unicode {
-namespace ucd {
+namespace emoji {
 
 
 const std::set<CodePointRange> emoji_table = {
@@ -377,6 +377,6 @@ const std::set<CodePointRange> emoji_modifier_base_table = {
     { CodePointRange(0x1F93D, 0x1F93E) }
 };
 
-} // namespace ucd
+} // namespace emoji
 } // namespace unicode
 } // namespace seshat
