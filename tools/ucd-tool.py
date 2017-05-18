@@ -27,7 +27,7 @@ def download_data():
         'UnicodeData.txt': '/',
         'DerivedNormalizationProps.txt': '/',
         'DerivedGeneralCategory.txt': '/extracted/',
-        'DerivedCombiningClass.txt': '/extracted',
+        'DerivedCombiningClass.txt': '/extracted/',
         'Scripts.txt': '/',
         'ScriptExtensions.txt': '/',
         'Blocks.txt': '/',
