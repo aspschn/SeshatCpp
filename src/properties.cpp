@@ -14,6 +14,7 @@
 #include <seshat/unicode/hangul.h>
 #include "ucd/block.h"
 #include "ucd/core.h"
+#include "ucd/gcb.h"
 #include "ucd/script.h"
 
 namespace seshat {
@@ -80,70 +81,6 @@ Gcb gcb(uint32_t cp)
     // ..U+1F1FF REGIONAL INDICATOR SYMBOL LETTER Z
     if (0x1F1E6 <= cp && cp <= 0x1F1FF)
         return Gcb::RI;
-    // Gcb::PP (Prepend)
-    //
-    // Indic_Syllabic_Category = Consonant_Preceding_Repha, or
-    // Indic_Syllabic_Category = Consonant_Prefixed, or
-    // Prepended_Concatenation_Mark = Yes
-    if ((0x0600 <= cp && cp <=0x0605) ||
-        (cp == 0x070F) ||
-        (cp == 0x06DD) ||
-        (cp == 0x08E2) ||
-        (cp == 0x0D4E) ||
-        (cp == 0x110BD) ||
-        (0x111C2 <= cp && cp <= 0x111C3))
-        return Gcb::PP;
-    // Gcb::SM (SpacingMark)
-    //
-    // Grapheme_Cluster_Break ≠ Extend, and
-    // General_Category = Spacing_Mark, or
-    // any of the following (which have General_Category = Other_Letter):
-    // U+0E33 ( ำ ) THAI CHARACTER SARA AM
-    // U+0EB3 ( ຳ ) LAO VOWEL SIGN AM
-
-    // Exceptions: The following (which have General_Category = Spacing_Mark and would otherwise be included) are specifically excluded:
-    // U+102B ( ါ ) MYANMAR VOWEL SIGN TALL AA
-    // U+102C ( ာ ) MYANMAR VOWEL SIGN AA
-    // U+1038 ( း ) MYANMAR SIGN VISARGA
-    // U+1062 ( ၢ ) MYANMAR VOWEL SIGN SGAW KAREN EU
-    // ..U+1064 ( ၤ ) MYANMAR TONE MARK SGAW KAREN KE PHO
-    // U+1067 ( ၧ ) MYANMAR VOWEL SIGN WESTERN PWO KAREN EU
-    // ..U+106D ( ၭ ) MYANMAR SIGN WESTERN PWO KAREN TONE-5
-    // U+1083 ( ႃ ) MYANMAR VOWEL SIGN SHAN AA
-    // U+1087 ( ႇ ) MYANMAR SIGN SHAN TONE-2
-    // ..U+108C ( ႌ ) MYANMAR SIGN SHAN COUNCIL TONE-3
-    // U+108F ( ႏ ) MYANMAR SIGN RUMAI PALAUNG TONE-5
-    // U+109A ( ႚ ) MYANMAR SIGN KHAMTI TONE-1
-    // ..U+109C ( ႜ ) MYANMAR VOWEL SIGN AITON A
-    // U+1A61 ( ᩡ ) TAI THAM VOWEL SIGN A
-    // U+1A63 ( ᩣ ) TAI THAM VOWEL SIGN AA
-    // U+1A64 ( ᩤ ) TAI THAM VOWEL SIGN TALL AA
-    // U+AA7B ( ꩻ ) MYANMAR SIGN PAO KAREN TONE
-    // U+AA7D ( ꩽ ) MYANMAR SIGN TAI LAING TONE-5
-    // U+11720 ( 𑜠 ) AHOM VOWEL SIGN A
-    // U+11721 ( 𑜡 ) AHOM VOWEL SIGN AA
-    if (!(grapheme_extend(cp)) &&
-        gc(cp) == Gc::Mc ||
-        (cp == 0x0E33 || cp == 0x0EB3)) {
-        if (cp != 0x102B ||
-            cp != 0x102C ||
-            cp != 0x1038 ||
-            !(0x1062 <= cp && cp <= 0x1064) ||
-            !(0x1067 <= cp && cp <= 0x106D) ||
-            cp != 0x1083 ||
-            !(0x1087 <= cp && cp <= 0x108C) ||
-            cp != 0x108F ||
-            !(0x109A <= cp && cp <= 0x109C) ||
-            cp != 0x1A61 ||
-            cp != 0x1A63 ||
-            cp != 0x1A64 ||
-            cp != 0xAA7B ||
-            cp != 0xAA7D ||
-            cp != 0x11720 ||
-            cp != 0x11721) {
-            return Gcb::SM;
-        }
-    }
     if (hangul_syllable_type(cp) == HangulSyllableType::L)
         return Gcb::L;
     if (hangul_syllable_type(cp) == HangulSyllableType::V)
@@ -154,18 +91,12 @@ Gcb gcb(uint32_t cp)
         return Gcb::LV;
     if (hangul_syllable_type(cp) == HangulSyllableType::LVT)
         return Gcb::LVT;
-    // Gcb::EB (E_Base)
-    //
-    // Emoji characters listed as Emoji_Modifier_Base=Yes in emoji-data.txt,
-    // which do not occur after ZWJ in emoji-zwj-sequences.txt. See [UTR51].
-    if (0) // TODO: IMPLEMENT!
-        return Gcb::EB;
     if (emoji::emoji_modifier(cp))
         return Gcb::EM;
-    if (0) // TODO: IMPLEMENT!
-        return Gcb::GAZ;
-    if (0) // TODO: IMPLEMENT!
-        return Gcb::EBG;
+    auto found = ucd::gcb_table.find(CodePointRange(cp, cp));
+    if (found != ucd::gcb_table.end()) {
+        return found->second;
+    }
     return Gcb::XX; // Other
 }
 

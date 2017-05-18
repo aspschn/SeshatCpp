@@ -33,6 +33,7 @@ def download_data():
         'Blocks.txt': '/',
         'PropertyValueAliases.txt': '/',
         'PropList.txt': '/',
+        'GraphemeBreakProperty.txt': '/auxiliary/',
         'DerivedDecompositionType.txt': '/extracted/'
     }
     emoji_data_files = {
@@ -466,6 +467,21 @@ boilerplate_core_cpp_1 = comment + '''//
 ''' + opening_namespace
 boilerplate_core_cpp_2 = closing_namespace
 
+boilerplate_gcb_cpp_1 = comment + '''//
+//  Grapheme_Cluster_Break (GCB) table.
+//
+//  The following property values are not included in this table because
+//  those values can be derived easily from other properties.
+//  - CR (CR): U+000D only
+//  - LF (LF): U+000A only
+//  - Extend (EX): Grapheme_Extent = Yes
+//  - ZWJ (ZWJ): U+200D only
+//  - L, V, T, LV, LVT: Hangul_Syllable_Type
+//  - E_Modifier (EM): Emoji_Modifier = Yes
+#include "gcb.h"
+''' + opening_namespace
+boilerplate_gcb_cpp_2 = closing_namespace
+
 def parse_unicode_data():
     unicode_data_list = []
     f = open('data/UnicodeData.txt', 'r')
@@ -533,6 +549,7 @@ def print_help():
     print('      * script - script.cpp')
     print('      * block - block.cpp')
     print('      * core - core.cpp')
+    print('      * gcb - gcb.cpp')
     print('      * emoji_data - emoji/data.cpp')
     print('Arguments')
     print('  --help   print this help')
@@ -641,6 +658,25 @@ def make_block_cpp():
 
     f = open('../src/ucd/block.cpp', 'w')
     f.write(boilerplate_block_cpp_1 + '\n' + table.to_seshat() + boilerplate_block_cpp_2)
+    f.close()
+
+def make_gcb_cpp():
+    def alias(val):
+        return property_value_aliases.alias('GCB', val)
+    table = DataTable('gcb_table', 'map', 'CodePointRange', 'Gcb')
+
+    parser = DerivedParser('data/GraphemeBreakProperty.txt')
+    for line in parser.txt:
+        parser.parse_line(line)
+        if parser.empty():
+            continue
+        if parser.first in ('CR', 'LF', 'Extend', 'ZWJ', 'L', 'V', 'T', 'LV', 'LVT', 'E_Modifier'):
+            continue
+        table.append(
+            parser.range, EnumClass('Gcb', alias(parser.first)))
+
+    f = open('../src/ucd/gcb.cpp', 'w')
+    f.write(boilerplate_gcb_cpp_1 + table.to_seshat() + boilerplate_gcb_cpp_2)
     f.close()
 
 def make_core_cpp():
@@ -868,6 +904,7 @@ if __name__ == '__main__':
                     'block': make_block_cpp,
                     'emoji_data': make_emoji_data_cpp,
                     'core': make_core_cpp,
+                    'gcb': make_gcb_cpp,
                     'dm': make_dm_cpp
                 }
                 if gen == 'all':
