@@ -141,7 +141,7 @@ CodePointSequence::~CodePointSequence()
 {
 }
 
-size_t CodePointSequence::length() const
+CodePointSequence::size_type CodePointSequence::length() const
 {
     return this->_codes.size();
 }

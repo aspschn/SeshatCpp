@@ -50,6 +50,7 @@ class CodePointSequence {
 private:
     std::vector<CodePoint> _codes;
 public:
+    using size_type = decltype(_codes)::size_type;
     using iterator = CodePointSequenceIter;
     using const_iterator = CodePointSequenceConstIter;
 
@@ -59,7 +60,7 @@ public:
     CodePointSequence(std::initializer_list<CodePoint> init);
     ~CodePointSequence();
 
-    size_t length() const;
+    size_type length() const;
 
     void append(const CodePoint& cp);
 
