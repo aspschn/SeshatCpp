@@ -50,6 +50,7 @@ class CodePointSequence {
 private:
     std::vector<CodePoint> _codes;
 public:
+    using size_type = decltype(_codes)::size_type;
     using iterator = CodePointSequenceIter;
     using const_iterator = CodePointSequenceConstIter;
 
@@ -59,7 +60,8 @@ public:
     CodePointSequence(std::initializer_list<CodePoint> init);
     ~CodePointSequence();
 
-    size_t length() const;
+    size_type length() const;
+    size_type max_size() const;
 
     void append(const CodePoint& cp);
 
@@ -117,6 +119,8 @@ public:
     CodePointSequenceConstIter operator++(int); // it++
     CodePointSequenceConstIter& operator--(); // --it
     CodePointSequenceConstIter operator--(int); // it--
+    CodePointSequenceConstIter& operator+=(difference_type n);
+    CodePointSequenceConstIter operator+(difference_type n) const;
     reference operator*() const;
 private:
     pointer _ptr;

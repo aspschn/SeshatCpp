@@ -141,9 +141,14 @@ CodePointSequence::~CodePointSequence()
 {
 }
 
-size_t CodePointSequence::length() const
+CodePointSequence::size_type CodePointSequence::length() const
 {
     return this->_codes.size();
+}
+
+CodePointSequence::size_type CodePointSequence::max_size() const
+{
+    return this->_codes.max_size();
 }
 
 void CodePointSequence::append(const CodePoint& cp)
@@ -365,6 +370,25 @@ CodePointSequenceConstIter CodePointSequenceConstIter::operator--(int)
     decltype(*this) ret = *this;
     this->_ptr--;
     return ret;
+}
+
+CodePointSequenceConstIter& CodePointSequenceConstIter::operator+=(
+    CodePointSequenceConstIter::difference_type n)
+{
+    auto m = n;
+    if (m >= 0) {
+        while (m--) ++(*this);
+    } else {
+        while (m++) --(*this);
+    }
+    return *this;
+}
+
+CodePointSequenceConstIter CodePointSequenceConstIter::operator+(
+    CodePointSequenceConstIter::difference_type n) const
+{
+    auto ret = *this;
+    return ret += n;
 }
 
 const CodePoint& CodePointSequenceConstIter::operator*() const

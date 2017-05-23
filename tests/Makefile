@@ -14,6 +14,8 @@ normalization:
 	g++ -std=c++11 -Wall -o normalization normalization.cpp ../lib/libseshat.a -I../include
 derivation:
 	g++ -std=c++11 -Wall -o derivation derivation.cpp ../lib/libseshat.a -I../include
+seg:
+	g++ -std=c++11 -Wall -o seg seg.cpp ../lib/libseshat.a -I../include
 
 clean:
 	rm codepoint unicode unicode_name normalization character derivation
