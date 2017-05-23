@@ -18,6 +18,7 @@ int main()
     using seshat::CodePoint;
     using seshat::CodePointSequence;
     using seshat::SurrogateIncluded;
+    using seshat::NotASingleCharacter;
 
     Character ch1 = Character('a');
     Character ch2 = Character(CodePoint(0xAC01)); // '각'
@@ -51,6 +52,18 @@ int main()
             'a', 0xD800
         });
     } catch (const SurrogateIncluded& e) {
+        std::cout << e.what() << std::endl;
+    }
+    try {
+        Character zero_sequence = Character(CodePointSequence {});
+    } catch (const NotASingleCharacter& e) {
+        std::cout << e.what() << std::endl;
+    }
+    try {
+        Character multiple_grapheme = Character(CodePointSequence {
+            0x1100, 0x1161, 0x1100
+        });
+    } catch (const NotASingleCharacter& e) {
         std::cout << e.what() << std::endl;
     }
 

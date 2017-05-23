@@ -11,6 +11,7 @@
 
 #include <seshat/codepoint.h>
 #include <seshat/unicode/normalize.h>
+#include <seshat/unicode/segmentation.h>
 
 #include <sstream>
 
@@ -42,10 +43,10 @@ Character::Character(const CodePointSequence &sequence)
             throw SurrogateIncluded();
         }
     }
-    // Check if not a single grapheme cluster
-    // if (not a single grapheme cluster) {
-    //     throw NotASingleCharacter();
-    // }
+    // Check if not a single grapheme cluster (zero or greater than one)
+    if ((unicode::grapheme_bound(sequence) + 1) != sequence.length()) {
+        throw NotASingleCharacter();
+    }
     for (auto cp: sequence) {
         _code_points.append(cp);
     }
