@@ -141,12 +141,12 @@ CodePointSequence::~CodePointSequence()
 {
 }
 
-CodePointSequence::size_type CodePointSequence::length() const
+auto CodePointSequence::length() const -> size_type
 {
     return this->_codes.size();
 }
 
-CodePointSequence::size_type CodePointSequence::max_size() const
+auto CodePointSequence::max_size() const -> size_type
 {
     return this->_codes.max_size();
 }
@@ -156,25 +156,25 @@ void CodePointSequence::append(const CodePoint& cp)
     this->_codes.push_back(cp);
 }
 
-CodePointSequence::iterator CodePointSequence::begin()
+auto CodePointSequence::begin() -> iterator
 {
     iterator it = iterator(&*(_codes.begin()));
     return it;
 }
 
-CodePointSequence::const_iterator CodePointSequence::begin() const
+auto CodePointSequence::begin() const -> const_iterator
 {
     const_iterator it = const_iterator(&*(_codes.cbegin()));
     return it;
 }
 
-CodePointSequence::iterator CodePointSequence::end()
+auto CodePointSequence::end() -> iterator
 {
     iterator it = iterator(&*(_codes.end()));
     return it;
 }
 
-CodePointSequence::const_iterator CodePointSequence::end() const
+auto CodePointSequence::end() const -> const_iterator
 {
     const_iterator it = const_iterator(&*(_codes.cend()));
     return it;
@@ -265,8 +265,7 @@ CodePointSequenceIter CodePointSequenceIter::operator--(int)
     return ret;
 }
 
-CodePointSequenceIter&
-CodePointSequenceIter::operator+=(CodePointSequenceIter::difference_type n)
+CodePointSequenceIter& CodePointSequenceIter::operator+=(difference_type n)
 {
     auto m = n;
     if (m >= 0) {
@@ -277,28 +276,27 @@ CodePointSequenceIter::operator+=(CodePointSequenceIter::difference_type n)
     return *this;
 }
 
-CodePointSequenceIter&
-CodePointSequenceIter::operator-=(CodePointSequenceIter::difference_type n)
+CodePointSequenceIter& CodePointSequenceIter::operator-=(difference_type n)
 {
     return *this += -n;
 }
 
 CodePointSequenceIter CodePointSequenceIter::operator+(
-        CodePointSequenceIter::difference_type n) const
+        difference_type n) const
 {
     auto ret = *this;
     return ret += n;
 }
 
 CodePointSequenceIter CodePointSequenceIter::operator-(
-        CodePointSequenceIter::difference_type n) const
+        difference_type n) const
 {
     auto ret = *this;
     return ret -= n;
 }
 
-CodePointSequenceIter::difference_type
-CodePointSequenceIter::operator-(const CodePointSequenceIter& other) const
+auto CodePointSequenceIter::operator-(
+        const CodePointSequenceIter& other) const -> difference_type
 {
     difference_type n = 0;
     auto temp = *this;
@@ -316,13 +314,12 @@ CodePointSequenceIter::operator-(const CodePointSequenceIter& other) const
     return n;
 }
 
-CodePointSequenceIter::reference
-CodePointSequenceIter::operator[](CodePointSequenceIter::difference_type n)
+auto CodePointSequenceIter::operator[](difference_type n) -> reference
 {
     return *(this->_ptr + n);
 }
 
-CodePoint& CodePointSequenceIter::operator*()
+auto CodePointSequenceIter::operator*() -> reference
 {
     return *_ptr;
 }
@@ -373,7 +370,7 @@ CodePointSequenceConstIter CodePointSequenceConstIter::operator--(int)
 }
 
 CodePointSequenceConstIter& CodePointSequenceConstIter::operator+=(
-    CodePointSequenceConstIter::difference_type n)
+    difference_type n)
 {
     auto m = n;
     if (m >= 0) {
@@ -385,13 +382,13 @@ CodePointSequenceConstIter& CodePointSequenceConstIter::operator+=(
 }
 
 CodePointSequenceConstIter CodePointSequenceConstIter::operator+(
-    CodePointSequenceConstIter::difference_type n) const
+    difference_type n) const
 {
     auto ret = *this;
     return ret += n;
 }
 
-const CodePoint& CodePointSequenceConstIter::operator*() const
+auto CodePointSequenceConstIter::operator*() const -> reference
 {
     return *_ptr;
 }
