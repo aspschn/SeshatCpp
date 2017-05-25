@@ -44,7 +44,9 @@ Character::Character(const CodePointSequence &sequence)
         }
     }
     // Check if not a single grapheme cluster (zero or greater than one)
-    if ((unicode::grapheme_bound(sequence) + 1) != sequence.length()) {
+    if (unicode::grapheme_bound(sequence.begin(), sequence.end()) + 1 !=
+        sequence.end()) {
+    // if ((unicode::grapheme_bound(sequence) + 1) != sequence.length()) {
         throw NotASingleCharacter();
     }
     for (auto cp: sequence) {

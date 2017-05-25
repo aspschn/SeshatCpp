@@ -14,16 +14,13 @@
 namespace seshat {
 namespace unicode {
 
-CodePointSequence::size_type grapheme_bound(const CodePointSequence& seq,
-    CodePointSequence::size_type pos)
+template <typename It>
+It grapheme_bound(It first, It last)
 {
-    decltype(pos) boundary = pos;
-    auto eot = seq.end();
+    auto boundary = first;
+    auto eot = last;
 
-    auto it = seq.begin();
-    for (decltype(pos) i = 0; i < pos; ++i)
-        ++it;
-    for (; it != eot; ++it) {
+    for (auto it = first; it != eot; ++it) {
         // GB1 - break at the sot
         // GB2 - break at the eot
         if ((it + 1) == eot) {
@@ -91,6 +88,14 @@ CodePointSequence::size_type grapheme_bound(const CodePointSequence& seq,
     }
     return boundary;
 }
+
+template
+CodePointSequenceIter grapheme_bound<CodePointSequenceIter>(
+    CodePointSequenceIter first, CodePointSequenceIter last);
+
+template
+CodePointSequenceConstIter grapheme_bound<CodePointSequenceConstIter>(
+    CodePointSequenceConstIter first, CodePointSequenceConstIter last);
 
 } // namespace unicode
 } // namespace seshat

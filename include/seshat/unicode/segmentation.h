@@ -16,8 +16,8 @@
 namespace seshat {
 namespace unicode {
 
-CodePointSequence::size_type grapheme_bound(const CodePointSequence& seq,
-    CodePointSequence::size_type pos=0);
+template <typename It>
+It grapheme_bound(It first, It last);
 
 } // namespace unicode
 } // namespace seshat
