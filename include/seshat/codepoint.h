@@ -56,7 +56,8 @@ public:
 
     CodePointSequence();
     CodePointSequence(const CodePointSequence& origin);
-    CodePointSequence(iterator first, iterator last);
+    template <typename It>
+    CodePointSequence(It first, It last);
     CodePointSequence(std::initializer_list<CodePoint> init);
     ~CodePointSequence();
 

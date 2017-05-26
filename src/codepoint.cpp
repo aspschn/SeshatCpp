@@ -124,13 +124,22 @@ CodePointSequence::CodePointSequence(const CodePointSequence& origin)
 {
 }
 
-CodePointSequence::CodePointSequence(iterator first, iterator last)
+template <typename It>
+CodePointSequence::CodePointSequence(It first, It last)
     : _codes(std::vector<CodePoint>())
 {
     for (auto it = first; it != last; it++) {
         this->_codes.push_back(*it);
     }
 }
+
+template
+CodePointSequence::CodePointSequence<CodePointSequence::iterator>(
+    iterator first, iterator last);
+
+template
+CodePointSequence::CodePointSequence<CodePointSequence::const_iterator>(
+    const_iterator first, const_iterator last);
 
 CodePointSequence::CodePointSequence(std::initializer_list<CodePoint> init)
     : _codes(init)
