@@ -7,6 +7,7 @@ OBJ = src/utils.o src/codepoint.o src/character.o src/naming_rule.o src/gc.o src
 	src/ucd/core.o \
 	src/ucd/gcb.o \
 	src/segmentation.o \
+	src/string.o \
 	src/dm.o src/ucd/dm.o
 default: $(OBJ)
 	mkdir -p lib

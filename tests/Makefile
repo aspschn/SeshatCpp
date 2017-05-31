@@ -6,6 +6,8 @@ codepoint:
 	g++ -std=c++11 -o codepoint codepoint.cpp ../lib/libseshat.a -I../include
 character:
 	g++ -std=c++11 -o character character.cpp ../lib/libseshat.a -I../include
+string:
+	g++ -std=c++11 -o string string.cpp ../lib/libseshat.a -I../include
 unicode:
 	g++ -std=c++11 -o unicode unicode.cpp ../lib/libseshat.a -I../include
 unicode_name:
@@ -18,4 +20,4 @@ seg:
 	g++ -std=c++11 -Wall -o seg seg.cpp ../lib/libseshat.a -I../include
 
 clean:
-	rm codepoint unicode unicode_name normalization character derivation
+	rm codepoint unicode unicode_name normalization character derivation string
