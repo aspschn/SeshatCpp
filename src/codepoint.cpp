@@ -12,6 +12,7 @@
 #include <seshat/utils.h>
 
 #include <algorithm>
+#include <utility>
 
 namespace seshat {
 
@@ -21,6 +22,11 @@ CodePoint::CodePoint(uint32_t code)
     if (code > 0x10FFFF) {
         throw IllegalCodePoint();
     }
+}
+
+CodePoint::CodePoint(const CodePoint& origin)
+    : _code(origin._code)
+{
 }
 
 CodePoint::~CodePoint()
@@ -124,6 +130,11 @@ CodePointSequence::CodePointSequence(const CodePointSequence& origin)
 {
 }
 
+CodePointSequence::CodePointSequence(CodePointSequence&& origin)
+    : _codes(std::move(origin._codes))
+{
+}
+
 template <typename It>
 CodePointSequence::CodePointSequence(It first, It last)
     : _codes(std::vector<CodePoint>())
@@ -165,6 +176,49 @@ void CodePointSequence::append(const CodePoint& cp)
     this->_codes.push_back(cp);
 }
 
+void CodePointSequence::clear() noexcept
+{
+    _codes.clear();
+}
+
+auto CodePointSequence::insert(const_iterator pos,
+    const CodePoint& cp) -> iterator
+{
+    auto codes_pos = _codes.begin();
+    codes_pos += (pos - const_cast<const CodePointSequence*>(this)->begin());
+    auto ret = _codes.insert(codes_pos, cp);
+    return this->begin() + (ret - _codes.begin());
+}
+
+template <typename It>
+auto CodePointSequence::insert(const_iterator pos,
+    It first, It last) -> iterator
+{
+    auto diff = pos - const_cast<const CodePointSequence*>(this)->begin();
+    auto codes_pos = _codes.begin() + diff;
+
+    auto ret = _codes.insert(codes_pos, first, last);
+    return this->begin() + (ret - _codes.begin());
+}
+
+template
+auto CodePointSequence::insert<CodePointSequence::iterator>(
+    const_iterator pos, iterator first, iterator last) -> iterator;
+
+template
+auto CodePointSequence::insert<CodePointSequence::const_iterator>(
+    const_iterator pos, const_iterator first, const_iterator last) -> iterator;
+
+auto CodePointSequence::insert(const_iterator pos,
+    std::initializer_list<CodePoint> ilist) -> iterator
+{
+    auto diff = pos - this->begin();
+    auto codes_pos = _codes.begin() + diff;
+
+    auto ret = _codes.insert(codes_pos, ilist);
+    return this->begin() + (ret - _codes.begin());
+}
+
 auto CodePointSequence::begin() -> iterator
 {
     iterator it = iterator(&*(_codes.begin()));
@@ -187,6 +241,20 @@ auto CodePointSequence::end() const -> const_iterator
 {
     const_iterator it = const_iterator(&*(_codes.cend()));
     return it;
+}
+
+CodePointSequence& CodePointSequence::operator=(
+    const CodePointSequence& origin)
+{
+    this->_codes = origin._codes;
+    return *this;
+}
+
+CodePointSequence& CodePointSequence::operator=(
+    CodePointSequence&& origin)
+{
+    this->_codes = std::move(origin._codes);
+    return *this;
 }
 
 bool CodePointSequence::operator==(const CodePointSequence& other) const
@@ -333,6 +401,11 @@ auto CodePointSequenceIter::operator*() -> reference
     return *_ptr;
 }
 
+CodePointSequenceIter::operator CodePointSequenceConstIter() const
+{
+    return CodePointSequenceConstIter(_ptr);
+}
+
 // class CodePointSequenceConstIter
 CodePointSequenceConstIter::CodePointSequenceConstIter(pointer ptr)
     : _ptr(ptr)
@@ -350,6 +423,34 @@ CodePointSequenceConstIter::operator!=(
         const CodePointSequenceConstIter& other) const
 {
     return this->_ptr != other._ptr;
+}
+
+bool
+CodePointSequenceConstIter::operator<(
+        const CodePointSequenceConstIter& other) const
+{
+    return this->_ptr < other._ptr;
+}
+
+bool
+CodePointSequenceConstIter::operator>(
+        const CodePointSequenceConstIter& other) const
+{
+    return this->_ptr > other._ptr;
+}
+
+bool
+CodePointSequenceConstIter::operator<=(
+        const CodePointSequenceConstIter& other) const
+{
+    return this->_ptr <= other._ptr;
+}
+
+bool
+CodePointSequenceConstIter::operator>=(
+        const CodePointSequenceConstIter& other) const
+{
+    return this->_ptr >= other._ptr;
 }
 
 CodePointSequenceConstIter& CodePointSequenceConstIter::operator++()
@@ -395,6 +496,25 @@ CodePointSequenceConstIter CodePointSequenceConstIter::operator+(
 {
     auto ret = *this;
     return ret += n;
+}
+
+auto CodePointSequenceConstIter::operator-(
+        const CodePointSequenceConstIter& other) const -> difference_type
+{
+    difference_type n = 0;
+    auto temp = *this;
+    if (*this > other) {
+        while (temp != other) {
+            --temp;
+            ++n;
+        }
+    } else {
+        while (temp != other) {
+            ++temp;
+            --n;
+        }
+    }
+    return n;
 }
 
 auto CodePointSequenceConstIter::operator*() const -> reference

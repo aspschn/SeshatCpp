@@ -24,12 +24,16 @@ public:
     Character(char a_char); // an ascii character
     Character(const CodePoint& code_point);
     Character(const CodePointSequence& sequence);
+    Character(const Character& origin);
+    Character(Character&& origin);
     ~Character();
 
     size_t size() const; // length of code point
     const CodePointSequence& sequence() const;
     std::string to_utf8() const;
 
+    Character& operator=(const Character& origin);
+    Character& operator=(Character&& origin);
     bool operator==(const Character& other) const;
     bool operator!=(const Character& other) const;
 };

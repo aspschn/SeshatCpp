@@ -14,6 +14,7 @@
 #include <seshat/unicode/segmentation.h>
 
 #include <sstream>
+#include <utility>
 
 namespace seshat {
 
@@ -54,6 +55,14 @@ Character::Character(const CodePointSequence &sequence)
     }
 }
 
+Character::Character(const Character& origin)
+    : _code_points(origin._code_points)
+{}
+
+Character::Character(Character&& origin)
+    : _code_points(std::move(origin._code_points))
+{}
+
 Character::~Character()
 {
 }
@@ -92,6 +101,18 @@ std::string Character::to_utf8() const
     }
 
     return stream.str();
+}
+
+Character& Character::operator=(const Character& origin)
+{
+    _code_points = origin._code_points;
+    return *this;
+}
+
+Character& Character::operator=(Character&& origin)
+{
+    _code_points = std::move(origin._code_points);
+    return *this;
 }
 
 bool Character::operator==(const Character& other) const

@@ -24,6 +24,7 @@ private:
     uint32_t _code;
 public:
     CodePoint(uint32_t code);
+    CodePoint(const CodePoint& origin);
     ~CodePoint();
 
     uint32_t code() const;
@@ -56,6 +57,7 @@ public:
 
     CodePointSequence();
     CodePointSequence(const CodePointSequence& origin);
+    CodePointSequence(CodePointSequence&& origin);
     template <typename It>
     CodePointSequence(It first, It last);
     CodePointSequence(std::initializer_list<CodePoint> init);
@@ -65,12 +67,20 @@ public:
     size_type max_size() const;
 
     void append(const CodePoint& cp);
+    void clear() noexcept;
+    iterator insert(const_iterator pos, const CodePoint& cp);
+    template <typename It>
+    iterator insert(const_iterator pos, It first, It last);
+    iterator insert(const_iterator pos,
+        std::initializer_list<CodePoint> ilist);
 
     iterator begin();
     const_iterator begin() const;
     iterator end();
     const_iterator end() const;
 
+    CodePointSequence& operator=(const CodePointSequence& origin);
+    CodePointSequence& operator=(CodePointSequence&& origin);
     bool operator==(const CodePointSequence& other) const;
     bool operator!=(const CodePointSequence& other) const;
 };
@@ -101,6 +111,8 @@ public:
     difference_type operator-(const CodePointSequenceIter& other) const;
     reference operator[](difference_type n);
     reference operator*();
+
+    operator CodePointSequenceConstIter() const;
 private:
     pointer _ptr;
 };
@@ -116,12 +128,17 @@ public:
     CodePointSequenceConstIter(pointer ptr);
     bool operator==(const CodePointSequenceConstIter& other) const;
     bool operator!=(const CodePointSequenceConstIter& other) const;
+    bool operator<(const CodePointSequenceConstIter& other) const;
+    bool operator>(const CodePointSequenceConstIter& other) const;
+    bool operator<=(const CodePointSequenceConstIter& other) const;
+    bool operator>=(const CodePointSequenceConstIter& other) const;
     CodePointSequenceConstIter& operator++(); // ++it
     CodePointSequenceConstIter operator++(int); // it++
     CodePointSequenceConstIter& operator--(); // --it
     CodePointSequenceConstIter operator--(int); // it--
     CodePointSequenceConstIter& operator+=(difference_type n);
     CodePointSequenceConstIter operator+(difference_type n) const;
+    difference_type operator-(const CodePointSequenceConstIter& other) const;
     reference operator*() const;
 private:
     pointer _ptr;

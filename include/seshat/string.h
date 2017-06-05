@@ -24,12 +24,18 @@ private:
 public:
     using size_type = decltype(_chars)::size_type;
     String();
-    // String(std::initializer_list<Character> init);
     String(const CodePointSequence& sequence);
     String(std::initializer_list<CodePoint> init);
+    String(const String& origin);
+    String(String&& origin);
     ~String();
 
     size_type count() const;
+
+    String& operator=(const String& origin);
+    String& operator=(String&& origin);
+    bool operator==(const String& other) const;
+    bool operator!=(const String& other) const;
 };
 
 } // namespace seshat
