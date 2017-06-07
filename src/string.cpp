@@ -49,9 +49,71 @@ String::String(String&& origin)
 String::~String()
 {}
 
+CodePointSequence String::to_sequence() const
+{
+    CodePointSequence seq;
+    for (auto& ch: _chars) {
+        seq.insert(seq.end(), ch.sequence().begin(), ch.sequence().end());
+    }
+    return seq;
+}
+
+std::string String::to_utf8() const
+{
+    std::string s;
+    for (auto& ch: _chars) {
+        s += ch.to_utf8();
+    }
+    return s;
+}
+
 auto String::count() const -> size_type
 {
     return _chars.size();
+}
+
+void String::clear() noexcept
+{
+    _chars.clear();
+}
+
+auto String::insert(const_iterator pos, const Character& chr) -> iterator
+{
+    if (pos == this->begin())
+        return _chars.insert(pos, chr);
+
+    auto before = pos - 1;
+    auto seq = before->sequence();
+    seq.insert(seq.end(), chr.sequence().begin(), chr.sequence().end());
+    if (unicode::grapheme_bound(seq.begin(), seq.end()) != seq.end() - 1) {
+        // Just insert if new character can be independent regardless
+        // former character.
+        return _chars.insert(pos, chr);
+    } else {
+        // Merge two characters if those can count as a single character
+        _chars.at(before - _chars.begin()) = seq;
+        return this->begin() + (before - _chars.begin());
+    }
+}
+
+auto String::begin() -> iterator
+{
+    return _chars.begin();
+}
+
+auto String::begin() const -> const_iterator
+{
+    return _chars.begin();
+}
+
+auto String::end() -> iterator
+{
+    return _chars.end();
+}
+
+auto String::end() const -> const_iterator
+{
+    return _chars.end();
 }
 
 String& String::operator=(const String& origin)
@@ -68,17 +130,8 @@ String& String::operator=(String&& origin)
 
 bool String::operator==(const String& other) const
 {
-    CodePointSequence this_seq;
-    CodePointSequence othr_seq;
-
-    for (auto ch: this->_chars) {
-        this_seq.insert(this_seq.end(),
-            ch.sequence().begin(), ch.sequence().end());
-    }
-    for (auto ch: other._chars) {
-        othr_seq.insert(othr_seq.end(),
-            ch.sequence().begin(), ch.sequence().end());
-    }
+    auto this_seq = this->to_sequence();
+    auto othr_seq = other.to_sequence();
 
     return (unicode::nfd(this_seq) == unicode::nfd(othr_seq));
 }
