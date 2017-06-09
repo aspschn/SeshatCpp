@@ -82,7 +82,41 @@ It grapheme_bound(It first, It last)
             ++boundary;
             continue;
         }
-        // GB10 -
+        // GB10 - do not break within emoji modifier sequences
+        if (gcb((*(it + 1)).code()) == Gcb::EM) {
+            if ((gcb((*it).code()) == Gcb::EB) ||
+                (gcb((*it).code()) == Gcb::EBG)) {
+                ++boundary;
+                continue;
+            }
+            // Seek back until found EB or EBG
+            if ((gcb((*it).code()) == Gcb::EX)) {
+                for (auto back_it = it - 1; back_it != first; --back_it) {
+                    // Continue to seek if EX
+                    if (gcb((*back_it).code()) == Gcb::EX)
+                        continue;
+                    // If EB or EBG found, the sequence is
+                    // Emoji Modifier Sequence
+                    if ((gcb((*back_it).code()) == Gcb::EB) ||
+                        (gcb((*back_it).code()) == Gcb::EBG)) {
+                        ++boundary;
+                        break;
+                    } else {
+                        break;
+                    }
+                }
+            }
+        }
+        // GB11 - do not break within emoji zwj sequences
+        if ((gcb((*it).code()) == Gcb::ZWJ)
+            &&
+            ((gcb((*(it + 1)).code()) == Gcb::GAZ) ||
+            (gcb((*(it + 1)).code()) == Gcb::EBG))) {
+            ++boundary;
+            continue;
+        }
+        // GB12 - do not break within emoji flag sequences
+        // GB13 - do not break within emoji flag sequences
         // GB999 - otherwise, break everywhere
         break;
     }
