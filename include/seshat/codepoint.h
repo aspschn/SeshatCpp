@@ -137,7 +137,9 @@ public:
     CodePointSequenceConstIter& operator--(); // --it
     CodePointSequenceConstIter operator--(int); // it--
     CodePointSequenceConstIter& operator+=(difference_type n);
+    CodePointSequenceConstIter& operator-=(difference_type n);
     CodePointSequenceConstIter operator+(difference_type n) const;
+    CodePointSequenceConstIter operator-(difference_type n) const;
     difference_type operator-(const CodePointSequenceConstIter& other) const;
     reference operator*() const;
 private:

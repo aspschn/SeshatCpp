@@ -491,11 +491,24 @@ CodePointSequenceConstIter& CodePointSequenceConstIter::operator+=(
     return *this;
 }
 
+CodePointSequenceConstIter& CodePointSequenceConstIter::operator-=(
+        difference_type n)
+{
+    return *this += -n;
+}
+
 CodePointSequenceConstIter CodePointSequenceConstIter::operator+(
     difference_type n) const
 {
     auto ret = *this;
     return ret += n;
+}
+
+CodePointSequenceConstIter CodePointSequenceConstIter::operator-(
+        difference_type n) const
+{
+    auto ret = *this;
+    return ret -= n;
 }
 
 auto CodePointSequenceConstIter::operator-(
