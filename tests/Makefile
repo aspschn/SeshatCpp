@@ -20,4 +20,4 @@ seg:
 	g++ -std=c++11 -Wall -o seg seg.cpp ../lib/libseshat.a -I../include
 
 clean:
-	rm codepoint unicode unicode_name normalization character derivation string
+	rm codepoint unicode unicode_name normalization character derivation string seg

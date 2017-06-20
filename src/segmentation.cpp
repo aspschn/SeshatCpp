@@ -108,6 +108,8 @@ It grapheme_bound(It first, It last)
             }
         }
         // GB11 - do not break within emoji zwj sequences
+        // Emoji ZWJ Sequence break not works properly since it
+        // requires CLDR expanded rule.
         if ((gcb((*it).code()) == Gcb::ZWJ)
             &&
             ((gcb((*(it + 1)).code()) == Gcb::GAZ) ||
@@ -117,6 +119,12 @@ It grapheme_bound(It first, It last)
         }
         // GB12 - do not break within emoji flag sequences
         // GB13 - do not break within emoji flag sequences
+        if ((gcb((*it).code()) == Gcb::RI)
+            &&
+            (gcb((*(it + 1)).code()) == Gcb::RI)) {
+            ++boundary;
+            break;
+        }
         // GB999 - otherwise, break everywhere
         break;
     }
