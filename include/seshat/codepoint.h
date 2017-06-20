@@ -34,6 +34,8 @@ public:
     CodePoint& operator=(uint32_t code);
     bool operator==(const CodePoint& other) const;
     bool operator!=(const CodePoint& other) const;
+
+    operator uint32_t() const { return _code; }
 };
 
 class IllegalCodePoint : public std::exception {

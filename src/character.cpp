@@ -30,7 +30,7 @@ Character::Character(const CodePoint& code_point)
 {
     // if (gc(code_point.code()) == Gc::Cs) {
     // For performance, Surrogate code points compared directly.
-    if (0xD800 <= code_point.code() && code_point.code() <= 0xDFFF) {
+    if (0xD800 <= code_point && code_point <= 0xDFFF) {
         throw SurrogateIncluded();
     }
     _code_points.append(code_point);
@@ -40,7 +40,7 @@ Character::Character(const CodePointSequence &sequence)
     : _code_points(decltype(_code_points)())
 {
     for (auto cp: sequence) {
-        if (0xD800 <= cp.code() && cp.code() <= 0xDFFF) {
+        if (0xD800 <= cp && cp <= 0xDFFF) {
             throw SurrogateIncluded();
         }
     }
@@ -83,20 +83,20 @@ std::string Character::to_utf8() const
 
     // For all code points
     for (auto&& cp: _code_points) {
-        if (0x0000 <= cp.code() && cp.code() <= 0x007F) {
-            stream << static_cast<char>(cp.code());
-        } else if (0x0080 <= cp.code() && cp.code() <= 0x07FF) {
-            stream << static_cast<char>(0xC0 | (cp.code() >> 6));
-            stream << static_cast<char>(0x80 | (0x3F & (cp.code())));
-        } else if (0x0800 <= cp.code() && cp.code() <= 0xFFFF) {
-            stream << static_cast<char>(0xE0 | (cp.code() >> 12));
-            stream << static_cast<char>(0x80 | (0x3F & (cp.code() >> 6)));
-            stream << static_cast<char>(0x80 | (0x3F & (cp.code())));
-        } else if (0x10000 <= cp.code() && cp.code() <= 0x10FFFF) {
-            stream << static_cast<char>(0xF0 | (cp.code() >> 18));
-            stream << static_cast<char>(0x80 | (0x3F & (cp.code() >> 12)));
-            stream << static_cast<char>(0x80 | (0x3F & (cp.code() >> 6)));
-            stream << static_cast<char>(0x80 | (0x3F & (cp.code())));
+        if (0x0000 <= cp && cp <= 0x007F) {
+            stream << static_cast<char>(cp);
+        } else if (0x0080 <= cp && cp <= 0x07FF) {
+            stream << static_cast<char>(0xC0 | (cp >> 6));
+            stream << static_cast<char>(0x80 | (0x3F & (cp)));
+        } else if (0x0800 <= cp && cp <= 0xFFFF) {
+            stream << static_cast<char>(0xE0 | (cp >> 12));
+            stream << static_cast<char>(0x80 | (0x3F & (cp >> 6)));
+            stream << static_cast<char>(0x80 | (0x3F & (cp)));
+        } else if (0x10000 <= cp && cp <= 0x10FFFF) {
+            stream << static_cast<char>(0xF0 | (cp >> 18));
+            stream << static_cast<char>(0x80 | (0x3F & (cp >> 12)));
+            stream << static_cast<char>(0x80 | (0x3F & (cp >> 6)));
+            stream << static_cast<char>(0x80 | (0x3F & (cp)));
         }
     }
 
