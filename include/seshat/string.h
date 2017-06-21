@@ -51,6 +51,9 @@ public:
     String& operator=(String&& origin);
     bool operator==(const String& other) const;
     bool operator!=(const String& other) const;
+
+    String& operator+=(const String& other);
+    String operator+(const String& other);
 };
 
 } // namespace seshat

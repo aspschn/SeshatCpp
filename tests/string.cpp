@@ -30,6 +30,16 @@ int main()
     std::cout << "s2.count(): " << s2.count() << std::endl;
     std::cout << "s3.count(): " << s3.count() << std::endl;
 
+    s2 += String { '!', '!' };
+    assert(s2.count() == 6);
+    assert(s2 == (String { 'T', 'e', 's', 't', '!', '!' }));
+
+    auto iter = s2.begin();
+    ++iter; ++iter; // iter points 's'
+    s2.insert(iter, seshat::CodePoint(0x0301));
+    std::cout << "s2.to_utf8(): " << s2.to_utf8() << std::endl;
+    assert(s2.count() == 6);
+
     // Count
     { // GB10
         String count_gb10 = {

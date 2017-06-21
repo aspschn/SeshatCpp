@@ -141,4 +141,19 @@ bool String::operator!=(const String& other) const
     return !(*this == other);
 }
 
+String& String::operator+=(const String& other)
+{
+    for (auto& chr: other._chars)
+        this->insert(this->end(), chr);
+    return *this;
+}
+
+String String::operator+(const String& other)
+{
+    auto ret = *this;
+    for (auto& chr: other._chars)
+        ret.insert(ret.end(), chr);
+    return ret;
+}
+
 } // namespace seshat
