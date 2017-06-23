@@ -9,8 +9,12 @@
 */
 #include <seshat/unicode/name.h>
 
+#ifndef SESHAT_ICU_BACKEND
 #include "ucd/name.h"
 #include <seshat/unicodedata/naming_rule.h>
+#else
+#include "icu/name.h"
+#endif // SESHAT_ICU_BACKEND
 
 #include <algorithm>
 
@@ -19,6 +23,7 @@ namespace unicode {
 
 const std::string name(uint32_t cp)
 {
+#ifndef SESHAT_ICU_BACKEND
     std::string unicode_name;
 
     // Find which area the code point belongs to
@@ -43,6 +48,12 @@ const std::string name(uint32_t cp)
     }
 
     return unicode_name;
+#else
+    std::string unicode_name = icu::name(cp);
+    if (unicode_name.size() == 0)
+        throw NoName();
+    return unicode_name;
+#endif // SESHAT_ICU_BACKEND
 }
 
 } // namespace unicode
