@@ -12,10 +12,54 @@
 #ifndef _UNICODE_PROPERTIES_H
 #define _UNICODE_PROPERTIES_H
 
+#include <seshat/utils.h>
+
 #include <cstdint>
 
 namespace seshat {
 namespace unicode {
+
+// General_Category (gc)
+enum class Gc {
+    // C - Other
+    Cc, Cf, Cn, Co, Cs,
+    // L - Letter
+    // LC - Cased_Letter (Ll | Lt | Lu)
+    Ll, Lm, Lo, Lt, Lu,
+    // M - Mark
+    Mc, Me, Mn,
+    // N - Number
+    Nd, Nl, No,
+    // P - Punctuation
+    Pc, Pd, Pe, Pf, Pi, Po, Ps,
+    // S - Symbol
+    Sc, Sk, Sm, So,
+    // Z - Separator
+    Zl, Zp, Zs,
+};
+
+// Decomposition_Type (dt)
+// Aliases from PropertyValueAliases.txt
+enum class Dt {
+    Can,    // Canonical
+    Com,    // Compat
+    Enc,    // Circle
+    Fin,    // Final
+    Font,   // Font
+    Fra,    // Fraction
+    Init,   // Initial
+    Iso,    // Isolated
+    Med,    // Medial
+    Nar,    // Narrow
+    Nb,     // Nobreak
+    None,   // None
+    Sml,    // Small
+    Sqr,    // Square
+    Sub,    // Sub
+    Sup,    // Super
+    Vert,   // Vertical
+    Wide    // Wide
+};
 
 // Script (sc)
 enum class Script {
@@ -325,10 +369,13 @@ Block block(uint32_t cp);
 //
 // Bidi_Class (bc)
 // Bidi_Paired_Bracket_Type (bpt)
-// ! Canonical_Combining_Class (ccc) - @ccc.h
-// ! Decomposition_Type (dt) - @dt.h
+// Canonical_Combining_Class (ccc)
+uint8_t ccc(uint32_t cp);
+// Decomposition_Type (dt)
+Dt dt(uint32_t cp);
 // East_Asian_Width (ea)
-// ! General_Category (gc) - @gc.h
+// General_Category (gc)
+Gc gc(uint32_t cp);
 // Grapheme_Cluster_Break (GCB)
 Gcb gcb(uint32_t cp);
 // ! Hangul_Syllable_Type (hst) - @hangul.h

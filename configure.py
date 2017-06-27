@@ -7,7 +7,7 @@ import shutil
 import xml.etree.ElementTree
 import subprocess
 
-ICU_MIN_VERSION = "58.2"
+ICU_MIN_VERSION = "59.1"
 
 options = {
     'SESHAT_ICU_BACKEND': False,
@@ -18,7 +18,7 @@ makefile_template = '''OBJ = {m_OBJ_LIST}
 CXXFLAGS = {m_CXXFLAGS}
 default: $(OBJ)
 \tmkdir -p lib
-\t{m_CXX} -std=c++11 -shared -o lib/libseshat.so $^ -Iinclude
+\t{m_CXX} -std=c++11 -shared -o lib/libseshat.so $^ -Iinclude -licuuc
 
 static: $(OBJ)
 \tmkdir -p lib
@@ -52,6 +52,9 @@ def append_ucd():
 
 def append_icu():
     append_obj('./src/icu')
+    obj_list.append('src/ucd/normalization_props.o')
+    obj_list.append('src/ucd/dm.o')
+    obj_list.append('src/emoji/data.o')
 
 # Detect compiler
 def detect_compiler():
@@ -98,6 +101,7 @@ if __name__ == '__main__':
         if sys.argv[1] == '--help':
             print_help()
         if '--icu-backend' in sys.argv:
+            options['SESHAT_ICU_BACKEND'] = True
             options['CXXFLAGS'] += ' -DSESHAT_ICU_BACKEND'
     append_src()
     if options['SESHAT_ICU_BACKEND'] == True:

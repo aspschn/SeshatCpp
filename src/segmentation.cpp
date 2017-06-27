@@ -9,7 +9,13 @@
 */
 #include <seshat/unicode/segmentation.h>
 
+#ifndef SESHAT_ICU_BACKEND
 #include <seshat/unicode/properties.h>
+#else
+#include <unicode/ubrk.h>
+#include <unicode/uloc.h> // ULOC_US
+#include <unicode/ustring.h> // u_strFromUTF32()
+#endif // SESHAT_ICU_BACKEND
 
 namespace seshat {
 namespace unicode {
@@ -17,6 +23,40 @@ namespace unicode {
 template <typename It>
 It grapheme_bound(It first, It last)
 {
+#ifdef SESHAT_ICU_BACKEND
+    std::vector<UChar> seq16; // ICU UTF-16 string
+    int32_t seq16_len;
+    UChar *p_seq16;
+    UErrorCode e = U_ZERO_ERROR;
+
+    if (first == last) // String length 0.
+        return first;
+    if ((first + 1) == last) // Last code point always breaks (GB2).
+        return first;
+
+    // Convert UTF-32(Seshat) to UTF-16(ICU).
+    const auto seq = std::vector<uint32_t>(first, last);
+    seq16.reserve(seq.size() * 2);
+    p_seq16 = u_strFromUTF32(seq16.data(), seq16.capacity(), &seq16_len,
+        reinterpret_cast<const UChar32*>(seq.data()), seq.size(),
+        &e);
+
+    // Iterate to next character.
+    UBreakIterator *brk_iter = ubrk_open(UBRK_CHARACTER, ULOC_US,
+        p_seq16, seq16_len, &e);
+    int32_t pos = ubrk_next(brk_iter);
+    ubrk_close(brk_iter);
+
+    // Get offset of last code point of boundary.
+    U16_SET_CP_START(p_seq16, 0, --pos); // Move `pos` to begin of code point.
+    decltype(pos) offset = 0;
+    while (pos > 0) {
+        U16_BACK_1(p_seq16, 0, pos);
+        ++offset;
+    }
+
+    return first + offset;
+#else
     auto boundary = first;
     auto eot = last;
 
@@ -129,6 +169,7 @@ It grapheme_bound(It first, It last)
         break;
     }
     return boundary;
+#endif // SESHAT_ICU_BACKEND
 }
 
 template

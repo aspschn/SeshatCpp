@@ -11,7 +11,7 @@
 #define _UCD_DT_H
 
 #include <seshat/utils.h> // CodePointRange
-#include <seshat/unicode/dt.h> // enum class Dt
+#include <seshat/unicode/properties.h> // enum class Dt
 
 #include <map>
 

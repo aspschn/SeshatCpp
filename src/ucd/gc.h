@@ -11,7 +11,7 @@
 #define _UCD_GC_H
 
 #include <seshat/utils.h> // CodePointRange
-#include <seshat/unicode/gc.h> // enum class Gc
+#include <seshat/unicode/properties.h> // enum class Gc
 
 #include <cstdint>
 #include <map>

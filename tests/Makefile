@@ -1,4 +1,5 @@
 CXX_FILES = ../src/codepoint.cpp ../src/gc.cpp ../src/name.cpp ../src/utils.cpp ../src/naming_rule.cpp ../src/hangul.cpp
+CXXFLAGS = -licuuc
 
 default:
 	echo "codepoint, unicode unicode_name"
@@ -17,7 +18,7 @@ normalization:
 derivation:
 	g++ -std=c++11 -Wall -o derivation derivation.cpp ../lib/libseshat.a -I../include
 seg:
-	g++ -std=c++11 -Wall -o seg seg.cpp ../lib/libseshat.a -I../include
+	g++ -std=c++11 -Wall -o seg seg.cpp ../lib/libseshat.a -I../include $(CXXFLAGS)
 
 clean:
 	rm codepoint unicode unicode_name normalization character derivation string seg

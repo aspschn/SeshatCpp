@@ -145,11 +145,11 @@ CodePointSequence::CodePointSequence(It first, It last)
 }
 
 template
-CodePointSequence::CodePointSequence<CodePointSequence::iterator>(
+CodePointSequence::CodePointSequence(
     iterator first, iterator last);
 
 template
-CodePointSequence::CodePointSequence<CodePointSequence::const_iterator>(
+CodePointSequence::CodePointSequence(
     const_iterator first, const_iterator last);
 
 CodePointSequence::CodePointSequence(std::initializer_list<CodePoint> init)

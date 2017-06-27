@@ -3,4 +3,6 @@ tools/data/*.txt
 src/*.o
 src/ucd/*.o
 src/emoji/*.o
+src/icu/*.o
 lib/
+Makefile

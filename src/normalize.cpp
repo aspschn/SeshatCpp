@@ -9,10 +9,7 @@
 */
 #include <seshat/unicode/normalize.h>
 
-#include <seshat/unicode/ccc.h>
 #include <seshat/unicode/dm.h>
-#include <seshat/unicode/dt.h>
-#include <seshat/unicode/gc.h>
 #include <seshat/unicode/hangul.h>
 #include <seshat/unicode/normalization_props.h> // comp_ex(), quick checks
 #include <seshat/unicode/properties.h>
