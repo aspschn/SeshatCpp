@@ -3,13 +3,15 @@
 //
 //  Name for individual code points.
 #include "name.h"
-
-#include <cstdint>
-#include <map>
+#include <seshat/unicode/version.h>
 
 namespace seshat {
 namespace unicode {
 namespace ucd {
+
+static_assert(UnicodeVersion == (Version { 9, 0, 0 }), "Version error");
+
+
 
 const std::map<uint32_t, const char*> name_table = {
     { 0x0020, "SPACE" },

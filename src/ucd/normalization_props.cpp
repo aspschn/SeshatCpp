@@ -3,10 +3,14 @@
 //
 //  Normalization properties tables.
 #include "normalization_props.h"
+#include <seshat/unicode/version.h>
 
 namespace seshat {
 namespace unicode {
 namespace ucd {
+
+static_assert(UnicodeVersion == (Version { 9, 0, 0 }), "Version error");
+
 
 
 const std::map<CodePointRange, bool> comp_ex_table = {
@@ -85,6 +89,8 @@ const std::map<CodePointRange, bool> comp_ex_table = {
     { CodePointRange(0x1D1BB, 0x1D1C0), true },
     { CodePointRange(0x2F800, 0x2FA1D), true }
 };
+
+
 
 const std::map<CodePointRange, QcValue> nfd_qc_table = {
     { CodePointRange(0x00C0, 0x00C5), QcValue::No },
@@ -331,6 +337,8 @@ const std::map<CodePointRange, QcValue> nfd_qc_table = {
     { CodePointRange(0x2F800, 0x2FA1D), QcValue::No }
 };
 
+
+
 const std::map<CodePointRange, QcValue> nfc_qc_table = {
     { CodePointRange(0x0300, 0x0304), QcValue::Maybe },
     { CodePointRange(0x0306, 0x030C), QcValue::Maybe },
@@ -449,6 +457,8 @@ const std::map<CodePointRange, QcValue> nfc_qc_table = {
     { CodePointRange(0x1D1BB, 0x1D1C0), QcValue::No },
     { CodePointRange(0x2F800, 0x2FA1D), QcValue::No }
 };
+
+
 
 const std::map<CodePointRange, QcValue> nfkd_qc_table = {
     { CodePointRange(0x00A0, 0x00A0), QcValue::No },
@@ -994,6 +1004,8 @@ const std::map<CodePointRange, QcValue> nfkd_qc_table = {
     { CodePointRange(0x2F800, 0x2FA1D), QcValue::No }
 };
 
+
+
 const std::map<CodePointRange, QcValue> nfkc_qc_table = {
     { CodePointRange(0x00A0, 0x00A0), QcValue::No },
     { CodePointRange(0x00A8, 0x00A8), QcValue::No },
@@ -1425,7 +1437,6 @@ const std::map<CodePointRange, QcValue> nfkc_qc_table = {
     { CodePointRange(0x1F250, 0x1F251), QcValue::No },
     { CodePointRange(0x2F800, 0x2FA1D), QcValue::No }
 };
-
 
 } // namespace ucd
 } // namespace unicode

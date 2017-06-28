@@ -4,10 +4,14 @@
 //  Canonical_Combining_Class(ccc) property table.
 //  ccc=0 omitted in this table.
 #include "ccc.h"
+#include <seshat/unicode/version.h>
 
 namespace seshat {
 namespace unicode {
 namespace ucd {
+
+static_assert(UnicodeVersion == (Version { 9, 0, 0 }), "Version error");
+
 
 const std::map<CodePointRange, uint8_t> ccc_table = {
     { CodePointRange(0x0334, 0x0338), 1 },

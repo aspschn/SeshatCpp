@@ -4,10 +4,13 @@
 //  Script(sc) table.
 //  TODO: Add Script_Extensions(scx) table too.
 #include "script.h"
+#include <seshat/unicode/version.h>
 
 namespace seshat {
 namespace unicode {
 namespace ucd {
+
+static_assert(UnicodeVersion == (Version { 9, 0, 0 }), "Version error");
 
 
 const std::map<CodePointRange, Script> script_table = {

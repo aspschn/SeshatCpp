@@ -1,5 +1,8 @@
 tools/__pycache__
 tools/data/*.txt
+tools/data/9.0.0
+tools/data/10.0.0
+tools/data/emoji
 src/*.o
 src/ucd/*.o
 src/emoji/*.o

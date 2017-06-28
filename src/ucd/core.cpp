@@ -8,11 +8,13 @@
 // Other_Default_Ignorable_Code_Point (ODI)
 // Prepended_Concatenation_Mark (PCM)
 #include "core.h"
+#include <seshat/unicode/version.h>
 
 namespace seshat {
 namespace unicode {
 namespace ucd {
 
+static_assert(UnicodeVersion == (Version { 9, 0, 0 }), "Version error");
 
 
 const std::set<CodePointRange> wspace_table = {
@@ -28,6 +30,7 @@ const std::set<CodePointRange> wspace_table = {
     { CodePointRange(0x205F, 0x205F) },
     { CodePointRange(0x3000, 0x3000) }
 };
+
 
 const std::set<CodePointRange> ogr_ext_table = {
     { CodePointRange(0x09BE, 0x09BE) },
@@ -55,6 +58,7 @@ const std::set<CodePointRange> ogr_ext_table = {
     { CodePointRange(0xE0020, 0xE007F) }
 };
 
+
 const std::set<CodePointRange> odi_table = {
     { CodePointRange(0x034F, 0x034F) },
     { CodePointRange(0x115F, 0x1160) },
@@ -68,6 +72,7 @@ const std::set<CodePointRange> odi_table = {
     { CodePointRange(0xE0080, 0xE00FF) },
     { CodePointRange(0xE01F0, 0xE0FFF) }
 };
+
 
 const std::set<CodePointRange> pcm_table = {
     { CodePointRange(0x0600, 0x0605) },

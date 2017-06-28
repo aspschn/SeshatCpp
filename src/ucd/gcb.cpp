@@ -12,10 +12,14 @@
 //  - L, V, T, LV, LVT: Hangul_Syllable_Type
 //  - E_Modifier (EM): Emoji_Modifier = Yes
 #include "gcb.h"
+#include <seshat/unicode/version.h>
 
 namespace seshat {
 namespace unicode {
 namespace ucd {
+
+static_assert(UnicodeVersion == (Version { 9, 0, 0 }), "Version error");
+
 
 const std::map<CodePointRange, Gcb> gcb_table = {
     { CodePointRange(0x0600, 0x0605), Gcb::PP },

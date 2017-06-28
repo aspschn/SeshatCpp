@@ -3,10 +3,13 @@
 //
 //  Emoji property tables.
 #include "data.h"
+#include <seshat/unicode/version.h>
 
 namespace seshat {
 namespace unicode {
 namespace emoji {
+
+static_assert(UnicodeVersion == (Version { 9, 0, 0 }), "Version error");
 
 
 const std::set<CodePointRange> emoji_table = {
@@ -221,6 +224,8 @@ const std::set<CodePointRange> emoji_table = {
     { CodePointRange(0x1F985, 0x1F991) },
     { CodePointRange(0x1F9C0, 0x1F9C0) }
 };
+
+
 const std::set<CodePointRange> emoji_presentation_table = {
     { CodePointRange(0x231A, 0x231B) },
     { CodePointRange(0x23E9, 0x23EC) },
@@ -336,9 +341,13 @@ const std::set<CodePointRange> emoji_presentation_table = {
     { CodePointRange(0x1F985, 0x1F991) },
     { CodePointRange(0x1F9C0, 0x1F9C0) }
 };
+
+
 const std::set<CodePointRange> emoji_modifier_table = {
     { CodePointRange(0x1F3FB, 0x1F3FF) }
 };
+
+
 const std::set<CodePointRange> emoji_modifier_base_table = {
     { CodePointRange(0x261D, 0x261D) },
     { CodePointRange(0x26F9, 0x26F9) },

@@ -3,13 +3,13 @@
 //
 //  General_Category(gc) data table.
 #include "gc.h"
-
-#include <cstdint>
-#include <map>
+#include <seshat/unicode/version.h>
 
 namespace seshat {
 namespace unicode {
 namespace ucd {
+
+static_assert(UnicodeVersion == (Version { 9, 0, 0 }), "Version error");
 
 
 const std::map<CodePointRange, Gc> gc_table = {

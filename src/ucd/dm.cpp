@@ -3,10 +3,14 @@
 //
 //  Decomposition_Mapping(dm) table.
 #include "dm.h"
+#include <seshat/unicode/version.h>
 
 namespace seshat {
 namespace unicode {
 namespace ucd {
+
+static_assert(UnicodeVersion == (Version { 9, 0, 0 }), "Version error");
+
 
 
 const std::map<uint32_t, const char*> dm_table = {
