@@ -482,24 +482,21 @@ builder_gc_cpp = CodeBuilder()
 //  General_Category(gc) data table.''')
     .include('"gc.h"')
     .include('<seshat/unicode/version.h>')
-    .open_ns('seshat').open_ns('unicode').open_ns('ucd')
-    .push_content(version_assert()))
+    .open_ns('seshat').open_ns('unicode').open_ns('ucd'))
 
 builder_name_cpp = CodeBuilder()
 (builder_name_cpp.comment(comment + '''//
 //  Name for individual code points.''')
     .include('"name.h"')
     .include('<seshat/unicode/version.h>')
-    .open_ns('seshat').open_ns('unicode').open_ns('ucd')
-    .push_content(version_assert()))
+    .open_ns('seshat').open_ns('unicode').open_ns('ucd'))
 
 builder_normalization_props_cpp = CodeBuilder()
 (builder_normalization_props_cpp.comment(comment + '''//
 //  Normalization properties tables.''')
     .include('"normalization_props.h"')
     .include('<seshat/unicode/version.h>')
-    .open_ns('seshat').open_ns('unicode').open_ns('ucd')
-    .push_content(version_assert()))
+    .open_ns('seshat').open_ns('unicode').open_ns('ucd'))
 
 builder_ccc_cpp = CodeBuilder()
 (builder_ccc_cpp.comment(comment + '''//
@@ -507,24 +504,21 @@ builder_ccc_cpp = CodeBuilder()
 //  ccc=0 omitted in this table.''')
     .include('"ccc.h"')
     .include('<seshat/unicode/version.h>')
-    .open_ns('seshat').open_ns('unicode').open_ns('ucd')
-    .push_content(version_assert()))
+    .open_ns('seshat').open_ns('unicode').open_ns('ucd'))
 
 builder_dt_cpp = CodeBuilder()
 (builder_dt_cpp.comment(comment + '''//
 //  Decomposition_Type(dt) table.''')
     .include('"dt.h"')
     .include('<seshat/unicode/version.h>')
-    .open_ns('seshat').open_ns('unicode').open_ns('ucd')
-    .push_content(version_assert()))
+    .open_ns('seshat').open_ns('unicode').open_ns('ucd'))
 
 builder_dm_cpp = CodeBuilder()
 (builder_dm_cpp.comment(comment + '''//
 //  Decomposition_Mapping(dm) table.''')
     .include('"dm.h"')
     .include('<seshat/unicode/version.h>')
-    .open_ns('seshat').open_ns('unicode').open_ns('ucd')
-    .push_content(version_assert()))
+    .open_ns('seshat').open_ns('unicode').open_ns('ucd'))
 
 builder_script_cpp = CodeBuilder()
 (builder_script_cpp.comment(comment + '''//
@@ -532,24 +526,21 @@ builder_script_cpp = CodeBuilder()
 //  TODO: Add Script_Extensions(scx) table too.''')
     .include('"script.h"')
     .include('<seshat/unicode/version.h>')
-    .open_ns('seshat').open_ns('unicode').open_ns('ucd')
-    .push_content(version_assert()))
+    .open_ns('seshat').open_ns('unicode').open_ns('ucd'))
 
 builder_block_cpp = CodeBuilder()
 (builder_block_cpp.comment(comment + '''//
 //  Block(blk) table.''')
     .include('"block.h"')
     .include('<seshat/unicode/version.h>')
-    .open_ns('seshat').open_ns('unicode').open_ns('ucd')
-    .push_content(version_assert()))
+    .open_ns('seshat').open_ns('unicode').open_ns('ucd'))
 
 builder_emoji_data_cpp = CodeBuilder()
 (builder_emoji_data_cpp.comment(comment + '''//
 //  Emoji property tables.''')
     .include('"data.h"')
     .include('<seshat/unicode/version.h>')
-    .open_ns('seshat').open_ns('unicode').open_ns('emoji')
-    .push_content(version_assert()))
+    .open_ns('seshat').open_ns('unicode').open_ns('emoji'))
 
 builder_core_cpp = CodeBuilder()
 (builder_core_cpp.comment(comment + '''//
@@ -561,8 +552,7 @@ builder_core_cpp = CodeBuilder()
 // Prepended_Concatenation_Mark (PCM)''')
     .include('"core.h"')
     .include('<seshat/unicode/version.h>')
-    .open_ns('seshat').open_ns('unicode').open_ns('ucd')
-    .push_content(version_assert()))
+    .open_ns('seshat').open_ns('unicode').open_ns('ucd'))
 
 builder_gcb_cpp = CodeBuilder()
 (builder_gcb_cpp.comment(comment + '''//
@@ -578,12 +568,13 @@ builder_gcb_cpp = CodeBuilder()
 //  - E_Modifier (EM): Emoji_Modifier = Yes''')
     .include('"gcb.h"')
     .include('<seshat/unicode/version.h>')
-    .open_ns('seshat').open_ns('unicode').open_ns('ucd')
-    .push_content(version_assert()))
+    .open_ns('seshat').open_ns('unicode').open_ns('ucd'))
 
 def parse_unicode_data():
     unicode_data_list = []
-    f = open('data/UnicodeData.txt', 'r')
+    data_dir = get_ucd_dir(UNICODE_VERSION_MAJOR, UNICODE_VERSION_MINOR,
+        UNICODE_VERSION_UPDATE)
+    f = open(data_dir + '/UnicodeData.txt', 'r')
     for l in f.readlines():
         udata = UnicodeData()
         udata.parse(l)
@@ -669,7 +660,8 @@ def make_gc_cpp():
         if parser.first == 'Cn': # Unassigned
             continue
         table.append(parser.range, EnumClass('Gc', parser.first))
-    builder_gc_cpp.push_content(table.to_seshat()).close_ns_all()
+    (builder_gc_cpp.push_content(version_assert())
+        .push_content(table.to_seshat()).close_ns_all())
 
     f = open('../src/ucd/gc.cpp', 'w')
     f.write(builder_gc_cpp.build())
@@ -689,7 +681,8 @@ def make_ccc_cpp():
         if parser.first == '0': # Not_Reordered
             continue
         table.append(parser.range, UInt(parser.first, base=10))
-    builder_ccc_cpp.push_content(table.to_seshat()).close_ns_all()
+    (builder_ccc_cpp.push_content(version_assert())
+        .push_content(table.to_seshat()).close_ns_all())
 
     f = open('../src/ucd/ccc.cpp', 'w')
     f.write(builder_ccc_cpp.build())
@@ -709,7 +702,8 @@ def make_dt_cpp():
         if parser.empty():
             continue
         table.append(parser.range, EnumClass('Dt', dt_alias(parser.first)))
-    builder_dt_cpp.push_content(table.to_seshat()).close_ns_all()
+    (builder_dt_cpp.push_content(version_assert())
+        .push_content(table.to_seshat()).close_ns_all())
 
     f = open('../src/ucd/dt.cpp', 'w')
     f.write(builder_dt_cpp.build())
@@ -729,7 +723,8 @@ def make_script_cpp():
             continue
         table.append(
             parser.range, EnumClass('Script', alias(parser.first)))
-    builder_script_cpp.push_content(table.to_seshat()).close_ns_all()
+    (builder_script_cpp.push_content(version_assert())
+        .push_content(table.to_seshat()).close_ns_all())
 
     f = open('../src/ucd/script.cpp', 'w')
     f.write(builder_script_cpp.build())
@@ -749,7 +744,8 @@ def make_block_cpp():
             continue
         table.append(
             parser.range, EnumClass('Block', alias(parser.first)))
-    builder_block_cpp.push_content(table.to_seshat()).close_ns_all()
+    (builder_block_cpp.push_content(version_assert())
+        .push_content(table.to_seshat()).close_ns_all())
 
     f = open('../src/ucd/block.cpp', 'w')
     f.write(builder_block_cpp.build())
@@ -771,7 +767,8 @@ def make_gcb_cpp():
             continue
         table.append(
             parser.range, EnumClass('Gcb', alias(parser.first)))
-    builder_gcb_cpp.push_content(table.to_seshat()).close_ns_all()
+    (builder_gcb_cpp.push_content(version_assert())
+        .push_content(table.to_seshat()).close_ns_all())
 
     f = open('../src/ucd/gcb.cpp', 'w')
     f.write(builder_gcb_cpp.build())
@@ -826,7 +823,8 @@ def make_core_cpp():
     table_odi = table_odi.rstrip().rstrip(',') + '\n};'
     table_pcm = table_pcm.rstrip().rstrip(',') + '\n};'
 
-    (builder_core_cpp.push_content(table_wspace)
+    (builder_core_cpp.push_content(version_assert())
+        .push_content(table_wspace)
         .push_content(table_ogr_ext)
         .push_content(table_odi)
         .push_content(table_pcm)
@@ -856,7 +854,8 @@ const std::map<uint32_t, const char*> name_table = {
         name_cpp_table += '\n    '
     name_cpp_table = name_cpp_table.rstrip().rstrip(',')
     name_cpp_table += '\n};'
-    builder_name_cpp.push_content(name_cpp_table).close_ns_all()
+    (builder_name_cpp.push_content(version_assert())
+        .push_content(name_cpp_table).close_ns_all())
 
     f = open('../src/ucd/name.cpp', 'w')
     f.write(builder_name_cpp.build())
@@ -884,7 +883,8 @@ const std::map<uint32_t, const char*> dm_table = {
     table =  table.rstrip().rstrip(',')
     table += '\n};'
 
-    builder_dm_cpp.push_content(table).close_ns_all()
+    (builder_dm_cpp.push_content(version_assert())
+        .push_content(table).close_ns_all())
 
     f = open('../src/ucd/dm.cpp', 'w')
     f.write(builder_dm_cpp.build())
@@ -947,7 +947,8 @@ const std::map<CodePointRange, {}> {} = '''.format(val_type, name)
     nfkc_qc_table = make_table('nfkc_qc_table', 'QcValue', qc_handler,
         db_dict['NFKC_QC'])
 
-    (builder_normalization_props_cpp.push_content(comp_ex_table)
+    (builder_normalization_props_cpp.push_content(version_assert())
+        .push_content(comp_ex_table)
         .push_content(nfd_qc_table)
         .push_content(nfc_qc_table)
         .push_content(nfkd_qc_table)
@@ -981,51 +982,72 @@ def make_emoji_data_cpp():
 
     for t in tables.values():
         builder_emoji_data_cpp.push_content(t)
-    builder_emoji_data_cpp.close_ns_all()
+    (builder_emoji_data_cpp.push_content(version_assert())
+        .close_ns_all())
 
     f = open('../src/emoji/data.cpp', 'w')
     f.write(builder_emoji_data_cpp.build())
     f.close()
 
+gen_args = {
+    'all': {'desc': 'generate all source files', 'func': None},
+    'gc': {'desc': 'gc.cpp', 'func': make_gc_cpp},
+    'name': {'desc': 'name.cpp', 'func': make_name_cpp},
+    'normalization_props': {'desc': 'normalization_props.cpp',
+        'func': make_normalization_props_cpp},
+    'ccc': {'desc': 'ccc.cpp', 'func': make_ccc_cpp},
+    'dt': {'desc': 'dt.cpp', 'func': make_dt_cpp},
+    'dm': {'desc': 'dm.cpp', 'func': make_dm_cpp},
+    # 'normalization_test': {'desc': 'normalization_test.cpp', 'func': },
+    'script': {'desc': 'script.cpp', 'func': make_script_cpp},
+    'block': {'desc': 'block.cpp', 'func': make_block_cpp},
+    'core': {'desc': 'core.cpp', 'func': make_core_cpp},
+    'gcb': {'desc': 'gcb.cpp', 'func': make_gcb_cpp},
+    'emoji_data': {'desc': 'emoji/data.cpp', 'func': make_emoji_data_cpp},
+}
+gen_help = 'generate source files\n'
+for gen in gen_args:
+    gen_help += ' * {:8} - {}\n'.format(gen, gen_args[gen]['desc'])
+
 if __name__ == '__main__':
-    if len(sys.argv) > 1:
-        if sys.argv[1] == 'clean':
-            for fname in os.listdir('data/'):
-                if os.path.isdir('data/' + fname):
-                    os.system('rm -rfv data/' + fname)
-            exit()
-        elif sys.argv[1] == '--help':
-            print_help()
-        elif sys.argv[1] == 'gen':
-            download_data()
-            unicode_data_list = parse_unicode_data()
-            if len(sys.argv) < 2:
-                print_help()
-            else:
-                gen = sys.argv[2]
-                gen_func = {
-                    'gc': make_gc_cpp,
-                    'name': make_name_cpp,
-                    'normalization_props': make_normalization_props_cpp,
-                    'ccc': make_ccc_cpp,
-                    'dt': make_dt_cpp,
-                    # 'normalization_test': make_normalization_test_cpp,
-                    'script': make_script_cpp,
-                    'block': make_block_cpp,
-                    'emoji_data': make_emoji_data_cpp,
-                    'core': make_core_cpp,
-                    'gcb': make_gcb_cpp,
-                    'dm': make_dm_cpp
-                }
-                if gen == 'all':
-                    for name, f in gen_func.items():
-                        print('build ' + name + ' ...')
-                        f()
-                    exit()
-                if gen not in gen_func.keys():
-                    print("invalid argument: {}".format(gen))
-                    exit(1)
-                else:
-                    f = gen_func[gen]
-                    f()
-                    exit()
+    import argparse
+    # argp - Main argument parser
+    argp = argparse.ArgumentParser(
+        prog='./ucd-tool.py',
+        usage='%(prog)s [--help] <command>',
+        formatter_class=argparse.RawTextHelpFormatter)
+    # commandsp - Commands subparser
+    commandsp = argp.add_subparsers(title='Commands', dest='command')
+    # cleanp - Command `clean` parser
+    cleanp = commandsp.add_parser('clean', help='remove all downloaded data')
+    # genp - Command `gen` parser
+    genp = commandsp.add_parser('gen', help=gen_help)
+    genp.add_argument('file', choices=gen_args.keys())
+    genp.add_argument('--unicode-version', type=str)
+    genp.add_argument('--emoji-version', type=str)
+
+    args = argp.parse_args()
+    if args.command == 'clean':
+        for fname in os.listdir('data/'):
+            if os.path.isdir('data/' + fname):
+                os.system('rm -rfv data/' + fname)
+    elif args.command == 'gen':
+        if args.unicode_version != None:
+            (UNICODE_VERSION_MAJOR, UNICODE_VERSION_MINOR,
+                UNICODE_VERSION_UPDATE) = args.unicode_version.split('.')
+        if args.emoji_version != None:
+            (EMOJI_VERSION_MAJOR,
+                EMOJI_VERSION_MINOR) = args.emoji_version.split('.')
+        download_data(UNICODE_VERSION_MAJOR,
+            UNICODE_VERSION_MINOR, UNICODE_VERSION_UPDATE,
+            EMOJI_VERSION_MAJOR, EMOJI_VERSION_MINOR)
+        unicode_data_list = parse_unicode_data()
+        gen = args.file
+        if gen == 'all':
+            for name, prop in gen_args.items():
+                if name == 'all':
+                    continue
+                print('build ' + name + ' ...')
+                prop['func']()
+        else:
+            gen_args[gen]['func']()
