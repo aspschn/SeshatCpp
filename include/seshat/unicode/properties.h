@@ -12,6 +12,7 @@
 #ifndef _UNICODE_PROPERTIES_H
 #define _UNICODE_PROPERTIES_H
 
+#include <seshat/unicode/version.h> // struct Version (for age() function)
 #include <seshat/utils.h>
 
 #include <cstdint>
@@ -358,6 +359,12 @@ enum class Gcb {
 // ==============================
 //
 // Age (age)
+// Version age(uint32_t) - Get first assigned Unicode version.
+// Notes:
+// Version.update always 0.
+// Given code point for value Unassigned(NA) will returns
+// all 0 members. (== Version { 0, 0, 0 })
+Version age(uint32_t cp);
 // Block (blk)
 Block block(uint32_t cp);
 // Script (sc)

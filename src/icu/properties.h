@@ -16,6 +16,7 @@ namespace seshat {
 namespace unicode {
 namespace icu {
 
+Version age(uint32_t cp);
 Block block(uint32_t cp);
 uint8_t ccc(uint32_t cp);
 Dt dt(uint32_t cp);

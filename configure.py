@@ -11,6 +11,7 @@ ICU_MIN_VERSION = "59.1"
 
 options = {
     'SESHAT_ICU_BACKEND': False,
+    'SESHAT_IGNORE_ICU_VERSION': False,
     'CXXFLAGS': '-Wall -fPIC',
 }
 
@@ -82,6 +83,8 @@ def detect_icu():
         icu_version = icu_info['version'].split('.')
         min_version = ICU_MIN_VERSION.split('.')
         if icu_version < min_version:
+            if options['SESHAT_IGNORE_ICU_VERSION']:
+                return
             print('Seshat requires ICU version {} or later, but version installed your system is {}'.format(ICU_MIN_VERSION, icu_info['version']))
             exit(1)
     else:
@@ -94,6 +97,8 @@ def print_help():
     print('  --help         print this help')
     print('  --icu-backend  use ICU as backend instead of seshat')
     print('                 implementation')
+    print('  --ignore-icu-version')
+    print('                 ignore ICU version check')
     exit()
 
 if __name__ == '__main__':
@@ -103,6 +108,8 @@ if __name__ == '__main__':
         if '--icu-backend' in sys.argv:
             options['SESHAT_ICU_BACKEND'] = True
             options['CXXFLAGS'] += ' -DSESHAT_ICU_BACKEND'
+        if '--ignore-icu-version' in sys.argv:
+            options['SESHAT_IGNORE_ICU_VERSION'] = True
     append_src()
     if options['SESHAT_ICU_BACKEND'] == True:
         append_icu()

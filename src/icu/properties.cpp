@@ -15,6 +15,13 @@ namespace seshat {
 namespace unicode {
 namespace icu {
 
+Version age(uint32_t cp)
+{
+    UVersionInfo ver;
+    u_charAge(static_cast<UChar32>(cp), ver);
+    return Version { ver[0], ver[1], ver[2] };
+}
+
 Block block(uint32_t cp)
 {
     switch (ublock_getCode(static_cast<UChar32>(cp))) {

@@ -41,6 +41,7 @@ def download_data(uni_v1=UNICODE_VERSION_MAJOR, uni_v2=UNICODE_VERSION_MINOR,
         'PropertyValueAliases.txt': '/',
         'PropList.txt': '/',
         'GraphemeBreakProperty.txt': '/auxiliary/',
+        'DerivedAge.txt': '/',
         'DerivedDecompositionType.txt': '/extracted/'
     }
     emoji_data_files = {
@@ -217,6 +218,12 @@ class CodePointRange:
     def to_seshat(self):
         txt = 'CodePointRange(0x{:04X}, 0x{:04X})'.format(self._from, self._to)
         return txt
+
+class Age:
+    def __init__(self, age):
+        self._major, self._minor = [int(i) for i in age.split('.')]
+    def to_seshat(self):
+        return '{{ {}, {}, 0 }}'.format(self._major, self._minor)
 
 class DataTable:
     '''DataTable(table_name, type, key_type, value_type)
@@ -567,6 +574,13 @@ builder_gcb_cpp = CodeBuilder()
 //  - L, V, T, LV, LVT: Hangul_Syllable_Type
 //  - E_Modifier (EM): Emoji_Modifier = Yes''')
     .include('"gcb.h"')
+    .include('<seshat/unicode/version.h>')
+    .open_ns('seshat').open_ns('unicode').open_ns('ucd'))
+
+builder_age_cpp = CodeBuilder()
+(builder_age_cpp.comment(comment + '''//
+//  Age table.''')
+    .include('"age.h"')
     .include('<seshat/unicode/version.h>')
     .open_ns('seshat').open_ns('unicode').open_ns('ucd'))
 
@@ -989,6 +1003,25 @@ def make_emoji_data_cpp():
     f.write(builder_emoji_data_cpp.build())
     f.close()
 
+def make_age_cpp():
+    table = DataTable('age_table', 'map', 'CodePointRange', 'Version')
+
+    data_dir = get_ucd_dir(UNICODE_VERSION_MAJOR, UNICODE_VERSION_MINOR,
+        UNICODE_VERSION_UPDATE)
+    parser = DerivedParser(data_dir + '/DerivedAge.txt')
+    for line in parser.txt:
+        parser.parse_line(line)
+        if parser.empty():
+            continue
+        table.append(parser.range, Age(parser.first))
+    (builder_age_cpp.push_content(version_assert())
+        .push_content(table.to_seshat())
+        .close_ns_all())
+
+    f = open('../src/ucd/age.cpp', 'w')
+    f.write(builder_age_cpp.build())
+    f.close()
+
 gen_args = {
     'all': {'desc': 'generate all source files', 'func': None},
     'gc': {'desc': 'gc.cpp', 'func': make_gc_cpp},
@@ -1003,6 +1036,7 @@ gen_args = {
     'block': {'desc': 'block.cpp', 'func': make_block_cpp},
     'core': {'desc': 'core.cpp', 'func': make_core_cpp},
     'gcb': {'desc': 'gcb.cpp', 'func': make_gcb_cpp},
+    'age': {'desc': 'age.cpp', 'func': make_age_cpp},
     'emoji_data': {'desc': 'emoji/data.cpp', 'func': make_emoji_data_cpp},
 }
 gen_help = 'generate source files\n'

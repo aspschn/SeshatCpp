@@ -13,6 +13,7 @@
 #include <seshat/unicode/hangul.h>
 #include <seshat/unicode/version.h>
 
+#include "age.h"
 #include "block.h"
 #include "ccc.h"
 #include "core.h"
@@ -25,6 +26,14 @@
 namespace seshat {
 namespace unicode {
 namespace ucd {
+
+Version age(uint32_t cp)
+{
+    auto found = ucd::age_table.find(CodePointRange(cp, cp));
+    if (found != ucd::age_table.end())
+        return Version { found->second.major, found->second.minor, 0 };
+    return Version { 0, 0, 0 };
+}
 
 Block block(uint32_t cp)
 {

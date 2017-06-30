@@ -37,6 +37,10 @@ Script script(uint32_t cp)
     return Script::Zzzz;
 }
 */
+Version age(uint32_t cp)
+{
+    return implementation::age(cp);
+}
 
 Gc gc(uint32_t cp)
 {
