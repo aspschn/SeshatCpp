@@ -134,6 +134,8 @@ enum class Script {
     Xsux, Yiii, // Cuneiform // Yi
     Zinh, Zyyy, Zzzz // Inherited ; Qaai // Common // Unknown
 };
+static_assert(static_cast<int>(Script::Zzzz) + 1 == 139,
+    "The number of Script property values do not match.");
 
 // Block (blk)
 enum class Block {
@@ -277,6 +279,8 @@ enum class Block {
     Yi_Radicals, Yi_Syllables,
     Yijing
 };
+static_assert(static_cast<int>(Block::Yijing) + 1 == 274,
+    "The number of Block property values do not match.");
 
 // Grapheme_Cluster_Break (GCB)
 enum class Gcb {

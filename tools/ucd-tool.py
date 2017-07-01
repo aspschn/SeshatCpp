@@ -13,6 +13,16 @@ EMOJI_VERSION_MINOR = 0
 UCD_URL = "http://www.unicode.org/Public/{}.{}.{}/ucd"
 EMOJI_URL = "http://www.unicode.org/Public/emoji/{}.{}"
 
+def set_unicode_version(v1, v2, v3):
+    global UNICODE_VERSION_MAJOR, UNICODE_VERSION_MINOR, UNICODE_VERSION_UPDATE
+    UNICODE_VERSION_MAJOR = v1
+    UNICODE_VERSION_MINOR = v2
+    UNICODE_VERSION_UPDATE = v3
+
+def set_emoji_version(v1, v2):
+    global EMOJI_VERSION_MAJOR, EMOJI_VERSION_MINOR
+    EMOJI_VERSION_MAJOR, EMOJI_VERSION_MINOR = (v1, v2)
+
 def get_ucd_url(v1, v2, v3):
     return UCD_URL.format(v1, v2, v3)
 
@@ -38,6 +48,7 @@ def download_data(uni_v1=UNICODE_VERSION_MAJOR, uni_v2=UNICODE_VERSION_MINOR,
         'Scripts.txt': '/',
         'ScriptExtensions.txt': '/',
         'Blocks.txt': '/',
+        'PropertyAliases.txt': '/',
         'PropertyValueAliases.txt': '/',
         'PropList.txt': '/',
         'GraphemeBreakProperty.txt': '/auxiliary/',
@@ -266,11 +277,64 @@ v: value type, if table type is `map`
         text = text.rstrip().rstrip(',') + '\n};'
         return text
 
+class PropertyAliases:
+    _long_map = {} # For loose mapping.
+    _aliases = [] # Unique properties.
+    _dict = {}
+    def init_data():
+        download_data(UNICODE_VERSION_MAJOR, UNICODE_VERSION_MINOR,
+            UNICODE_VERSION_UPDATE)
+        data_dir = get_ucd_dir(UNICODE_VERSION_MAJOR, UNICODE_VERSION_MINOR,
+            UNICODE_VERSION_UPDATE)
+        f = open(data_dir + '/PropertyAliases.txt', 'r')
+        txt = f.readlines()
+        f.close()
+
+        for line in txt:
+            if line[0] == '#' or line.strip() == '':
+                continue
+            cols = line.split(';')
+            alias, full = [s.strip() for s in cols[:2]]
+            others = [s.strip() for s in cols[2:]]
+            PropertyAliases._aliases.append(alias)
+            for prop in [full] + others:
+                PropertyAliases._dict[prop] = alias
+                loose = prop.replace('-', '').replace('_', '').replace(' ', '').upper()
+                PropertyAliases._long_map[loose] = prop
+    def init_if_not():
+        if len(PropertyAliases._dict) == 0:
+            PropertyAliases.init_data()
+            PropertyAliases.dict_assert()
+    def dict_assert():
+        P = PropertyAliases
+        if len(P._aliases) != len(set(P._dict.values())):
+            raise Exception('PropertyAliases.dict_assert() failed.')
+    def properties():
+        '''Returns (long name - alias) pairs as dict.'''
+        PropertyAliases.init_if_not()
+        return PropertyAliases._dict
+    def aliases():
+        '''Returns (alias - list of long names) pairs as dict.'''
+        PropertyAliases.init_if_not()
+        ret = {}
+        for long_name, alias in PropertyAliases._dict.items():
+            if alias not in ret.keys():
+                ret[alias] = []
+            ret[alias].append(long_name)
+        return ret
+    def alias(prop):
+        PropertyAliases.init_if_not()
+        prop = prop.replace('-', '').replace('_', '').replace(' ', '').upper()
+        return PropertyAliases._dict[PropertyAliases._long_map[prop]]
+
 class PropertyValueAliases:
     _dict = {}
     def init_data():
-        download_data()
-        f = open('data/PropertyValueAliases.txt', 'r')
+        download_data(UNICODE_VERSION_MAJOR, UNICODE_VERSION_MINOR,
+            UNICODE_VERSION_UPDATE)
+        data_dir = get_ucd_dir(UNICODE_VERSION_MAJOR, UNICODE_VERSION_MINOR,
+            UNICODE_VERSION_UPDATE)
+        f = open(data_dir + '/PropertyValueAliases.txt', 'r')
         txt = f.readlines()
         f.close()
 
@@ -283,9 +347,11 @@ class PropertyValueAliases:
             if prop not in PropertyValueAliases._dict:
                 PropertyValueAliases._dict[prop] = {}
             PropertyValueAliases._dict[prop][full] = cols[1].strip()
-    def alias(prop, val):
+    def init_if_not():
         if len(PropertyValueAliases._dict) == 0:
             PropertyValueAliases.init_data()
+    def alias(prop, val):
+        PropertyValueAliases.init_if_not()
         val = val.replace('-', '').replace('_', '').replace(' ', '').upper()
         return PropertyValueAliases._dict[prop][val]
 property_value_aliases = PropertyValueAliases
@@ -1067,11 +1133,9 @@ if __name__ == '__main__':
                 os.system('rm -rfv data/' + fname)
     elif args.command == 'gen':
         if args.unicode_version != None:
-            (UNICODE_VERSION_MAJOR, UNICODE_VERSION_MINOR,
-                UNICODE_VERSION_UPDATE) = args.unicode_version.split('.')
+            set_unicode_version(*args.unicode_version.split('.'))
         if args.emoji_version != None:
-            (EMOJI_VERSION_MAJOR,
-                EMOJI_VERSION_MINOR) = args.emoji_version.split('.')
+            set_emoji_version(*args.emoji_version.split('.'))
         download_data(UNICODE_VERSION_MAJOR,
             UNICODE_VERSION_MINOR, UNICODE_VERSION_UPDATE,
             EMOJI_VERSION_MAJOR, EMOJI_VERSION_MINOR)
