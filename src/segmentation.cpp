@@ -58,23 +58,23 @@ It grapheme_bound(It first, It last)
     return first + offset;
 #else
     // Alias enum class name scope for code readability.
-    using Gcb::CN;
-    using Gcb::CR;
-    using Gcb::EB;
-    using Gcb::EBG;
-    using Gcb::EM;
-    using Gcb::EX;
-    using Gcb::GAZ;
-    using Gcb::L;
-    using Gcb::LF;
-    using Gcb::LV;
-    using Gcb::LVT;
-    using Gcb::PP;
-    using Gcb::RI;
-    using Gcb::SM;
-    using Gcb::T;
-    using Gcb::V;
-    using Gcb::ZWJ;
+    constexpr Gcb CN = Gcb::CN;
+    constexpr Gcb CR = Gcb::CR;
+    constexpr Gcb EB = Gcb::EB;
+    constexpr Gcb EBG = Gcb::EBG;
+    constexpr Gcb EM = Gcb::EM;
+    constexpr Gcb EX = Gcb::EX;
+    constexpr Gcb GAZ = Gcb::GAZ;
+    constexpr Gcb L = Gcb::L;
+    constexpr Gcb LF = Gcb::LF;
+    constexpr Gcb LV = Gcb::LV;
+    constexpr Gcb LVT = Gcb::LVT;
+    constexpr Gcb PP = Gcb::PP;
+    constexpr Gcb RI = Gcb::RI;
+    constexpr Gcb SM = Gcb::SM;
+    constexpr Gcb T = Gcb::T;
+    constexpr Gcb V = Gcb::V;
+    constexpr Gcb ZWJ = Gcb::ZWJ;
 
     auto boundary = first;
     auto eot = last;
