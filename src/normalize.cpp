@@ -19,7 +19,7 @@ namespace unicode {
 
 bool starter(uint32_t cp)
 {
-    // Refer D107 in Starters, 3.11 (Unicode 9.0.0)
+    // Refer D107 in Starters, 3.11 (Unicode 9.0.0 & 10.0.0)
     auto cp_gc = gc(cp);
     auto cp_ccc = ccc(cp);
 
@@ -56,7 +56,7 @@ void canonical_ordering(CodePointSequence& sequence)
     while (sorted != last) {
         auto end = sorted;
         for (auto it = sequence.begin(); it != end - 1; ++it) {
-            if (reorderable(it[0].code(), it[1].code())) {
+            if (reorderable(it[0], it[1])) {
                 std::iter_swap(it, it + 1);
             }
         }
@@ -71,19 +71,19 @@ bool full_composition_exclusion(uint32_t cp)
 
 bool primary_composite(uint32_t cp)
 {
-    // According to D114 (Unicode 9.0.0), Primary composite is "A Canonical
-    // Decomposable Character which is not a Full Composition Exclusion."
+    // According to D114 (Unicode 9.0.0 & 10.0.0),
+    // Primary composite is "A Canonical Decomposable Character which
+    // is not a Full Composition Exclusion."
     return (full_composition_exclusion(cp)) && (dt(cp) == Dt::Can);
 }
 
 bool blocked(CodePointSequenceConstIter& first,
     CodePointSequenceConstIter& last)
 {
-    if ( !(ccc((*first).code()) == 0) ) return false;
+    if ( !(ccc(*first) == 0) ) return false;
     auto iter = last;
     if (--iter == first) return false;
-    if ( (ccc((*iter).code()) == 0) ||
-        (ccc((*iter).code()) >= ccc((*last).code())) ) {
+    if (ccc(*iter) == 0 || ccc(*iter) >= ccc(*last)) {
         return true;
     }
     return false;
@@ -95,10 +95,10 @@ CodePointSequence nfd(const CodePointSequence& sequence)
 
     // Decompose each code points
     for (auto cp: sequence) {
-        if (dt(cp.code()) == Dt::Can) {
+        if (dt(cp) == Dt::Can) {
             // For Hangul, using conjoining algorithm instead of search dm.
-            auto mapping = (block(cp.code()) != Block::Hangul) ?
-                dm(cp.code()) : hangul::decompose(cp.code());
+            auto mapping = (block(cp) != Block::Hangul) ?
+                dm(cp) : hangul::decompose(cp);
             for (auto each: mapping) {
                 decomp.append(each);
             }
