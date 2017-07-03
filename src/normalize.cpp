@@ -74,7 +74,7 @@ bool primary_composite(uint32_t cp)
     // According to D114 (Unicode 9.0.0 & 10.0.0),
     // Primary composite is "A Canonical Decomposable Character which
     // is not a Full Composition Exclusion."
-    return (full_composition_exclusion(cp)) && (dt(cp) == Dt::Can);
+    return (dt(cp) == Dt::Can && !full_composition_exclusion(cp));
 }
 
 bool blocked(CodePointSequenceConstIter& first,
