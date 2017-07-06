@@ -593,6 +593,13 @@ builder_dm_cpp = CodeBuilder()
     .include('<seshat/unicode/version.h>')
     .open_ns('seshat').open_ns('unicode').open_ns('ucd'))
 
+builder_rdm_cpp = CodeBuilder()
+(builder_rdm_cpp.comment(comment + '''//
+//  Reversed Decomposition_Mapping(dm) table.''')
+    .include('"rdm.h"')
+    .include('<seshat/unicode/version.h>')
+    .open_ns('seshat').open_ns('unicode').open_ns('ucd'))
+
 builder_script_cpp = CodeBuilder()
 (builder_script_cpp.comment(comment + '''//
 //  Script(sc) table.
@@ -945,6 +952,14 @@ def make_dm_cpp():
     table = '''
 const std::map<uint32_t, const char*> dm_table = {
     '''
+    rdm_table = '''
+const std::unordered_map<
+    const char*,
+    uint32_t,
+    std::hash<std::string>,
+    std::equal_to<std::string>
+> rdm_table = {
+    '''
 
     for udata in unicode_data_list:
         if udata.name in ranged_list or udata.name == '<control>':
@@ -960,14 +975,24 @@ const std::map<uint32_t, const char*> dm_table = {
             seq = ' '.join(l)
         table += '{ ' + cp + ', "' + seq + '" },'
         table += '\n    '
+        rdm_table += '{{ "{}", {} }},'.format(seq, cp)
+        rdm_table += '\n    '
     table =  table.rstrip().rstrip(',')
     table += '\n};'
+    rdm_table = rdm_table.rstrip().rstrip(',')
+    rdm_table += '\n};'
 
     (builder_dm_cpp.push_content(version_assert())
         .push_content(table).close_ns_all())
+    (builder_rdm_cpp.push_content(version_assert())
+        .push_content(rdm_table).close_ns_all())
 
     f = open('../src/ucd/dm.cpp', 'w')
     f.write(builder_dm_cpp.build())
+    f.close()
+
+    f = open('../src/ucd/rdm.cpp', 'w')
+    f.write(builder_rdm_cpp.build())
     f.close()
 
 def make_normalization_props_cpp():
@@ -1096,7 +1121,7 @@ gen_args = {
         'func': make_normalization_props_cpp},
     'ccc': {'desc': 'ccc.cpp', 'func': make_ccc_cpp},
     'dt': {'desc': 'dt.cpp', 'func': make_dt_cpp},
-    'dm': {'desc': 'dm.cpp', 'func': make_dm_cpp},
+    'dm': {'desc': 'dm.cpp, rdm.cpp', 'func': make_dm_cpp},
     # 'normalization_test': {'desc': 'normalization_test.cpp', 'func': },
     'script': {'desc': 'script.cpp', 'func': make_script_cpp},
     'block': {'desc': 'block.cpp', 'func': make_block_cpp},

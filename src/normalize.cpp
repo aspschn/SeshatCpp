@@ -77,8 +77,8 @@ bool primary_composite(uint32_t cp)
     return (dt(cp) == Dt::Can && !full_composition_exclusion(cp));
 }
 
-bool blocked(CodePointSequenceConstIter& first,
-    CodePointSequenceConstIter& last)
+bool blocked(CodePointSequenceConstIter first,
+    CodePointSequenceConstIter last)
 {
     if ( !(ccc(*first) == 0) ) return false;
     auto iter = last;
@@ -114,6 +114,35 @@ CodePointSequence nfd(const CodePointSequence& sequence)
         return nfd(decomp);
     }
     return decomp;
+}
+
+CodePointSequence nfc(const CodePointSequence& sequence)
+{
+    if (sequence.length() == 0) return sequence;
+
+    // Make NFD normalization form.
+    auto composed = nfd(sequence);
+    // Return immediately if a single character.
+    if (composed.length() == 1) return composed;
+
+    // Starting from the second character.
+    decltype(composed.begin())::difference_type offset = 1;
+    while (offset < composed.length()) {
+        // Find the last Starter.
+        auto it = composed.begin() + offset;
+        auto b_it = it - 1; // Back iterator.
+        while (b_it != composed.begin() && !starter(*b_it)) --b_it;
+        if (starter(*b_it) && !blocked(b_it, it)) {
+            auto mapped = rdm({ *b_it, *it });
+            if (mapped != 0x0 && primary_composite(mapped)) {
+                *b_it = mapped;
+                composed.erase(it);
+                --offset; // Move back because a code point deleted.
+            }
+        }
+        ++offset;
+    }
+    return composed;
 }
 
 } // namespace unicode

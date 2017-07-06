@@ -20,6 +20,14 @@ namespace unicode {
 
 const CodePointSequence dm(uint32_t cp);
 
+// uint32_t rdm() - Search reversed decomposition mapping.
+// Return value: Matching code point of the sequence.
+//  U+0000 will be returned if no matching.
+// Notes:
+//  NULL character chosen since it does not appears from normalization forms.
+//  This NOT meaning the composition mapping for given sequence is NULL.
+uint32_t rdm(const CodePointSequence& seq);
+
 } // namespace unicode
 } // namespace seshat
 

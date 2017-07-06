@@ -25,11 +25,12 @@ void canonical_ordering(CodePointSequence& sequence);
 // Canonical Composition Algorithm
 bool full_composition_exclusion(uint32_t cp);
 bool primary_composite(uint32_t cp);
-bool blocked(CodePointSequenceConstIter& first,
-    CodePointSequenceConstIter& last);
+bool blocked(CodePointSequenceConstIter first,
+    CodePointSequenceConstIter last);
 
 // Composition/Decomposition
 CodePointSequence nfd(const CodePointSequence& sequence);
+CodePointSequence nfc(const CodePointSequence& sequence);
 
 } // namespace unicode
 } // namespace seshat

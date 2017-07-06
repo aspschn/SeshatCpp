@@ -55,6 +55,15 @@ using CodePointRange = Range<uint32_t>;
 #define AT_DIGIT_32(code, digit) \
     ((code & (0x0000000F << ((digit - 1) * 4))) >> ((digit - 1) * 4))
 
+// CP_MAX_DIGIT(uint32_t) - Get maximum digit of code point in hexademical.
+// Only works with legal Unicode code points.
+#define CP_MAX_DIGIT(code) \
+    ((code) <= 0xf) ? 1 : \
+    (0x00010 <= (code) && (code) <= 0x000ff) ? 2 : \
+    (0x00100 <= (code) && (code) <= 0x00fff) ? 3 : \
+    (0x01000 <= (code) && (code) <= 0x0ffff) ? 4 : \
+    (0x10000 <= (code) && (code) <= 0xfffff) ? 5 : 6
+
 // HEX_CHAR[]
 static const char HEX_CHAR[16] = {
     '0', '1', '2', '3', '4', '5', '6', '7',

@@ -219,6 +219,14 @@ auto CodePointSequence::insert(const_iterator pos,
     return this->begin() + (ret - _codes.begin());
 }
 
+void CodePointSequence::erase(const_iterator pos)
+{
+    auto diff = pos - this->begin();
+    auto codes_pos = _codes.begin() + diff;
+
+    _codes.erase(codes_pos);
+}
+
 auto CodePointSequence::begin() -> iterator
 {
     iterator it = iterator(&*(_codes.begin()));

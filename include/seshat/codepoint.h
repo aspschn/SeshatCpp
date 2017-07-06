@@ -75,6 +75,7 @@ public:
     iterator insert(const_iterator pos, It first, It last);
     iterator insert(const_iterator pos,
         std::initializer_list<CodePoint> ilist);
+    void erase(const_iterator pos);
 
     iterator begin();
     const_iterator begin() const;
