@@ -13,7 +13,7 @@ static_assert(UnicodeVersion == (Version { 9, 0, 0 }), "Version error");
 
 
 
-const std::map<uint32_t, const char*> name_table = {
+const std::unordered_map<uint32_t, const char*> name_table = {
     { 0x0020, "SPACE" },
     { 0x0021, "EXCLAMATION MARK" },
     { 0x0022, "QUOTATION MARK" },

@@ -243,11 +243,11 @@ table = DataTable('script_table', 'map', 'CodePointRange', 'Script')
 table.to_seshat()
 '''
     def __init__(self, name, t, k, v=None):
-        '''t: type of table. `set` or `map`
+        '''t: type of table. `set` or `map` or `unordered_map`
 k: key type.
-v: value type, if table type is `map`
+v: value type, if table type is `map` or `unordered_map`
         '''
-        if t not in ('set', 'map'):
+        if t not in ('set', 'map', 'unordered_map'):
             raise TypeError(t + ' is not a valid table type')
         self.table_name = name
         self.table_type = t
@@ -265,12 +265,12 @@ v: value type, if table type is `map`
         }[self.key_type]
         v_type = self.val_type
         text = 'const std::' + self.table_type + '<' + k_type
-        if self.table_type == 'map':
+        if self.table_type in ('map', 'unordered_map'):
             text += ', ' + v_type
         text += '> ' + self.table_name + ' = {\n    '
         for r in self._data:
             text_append = '{ ' + r[0].to_seshat()
-            if self.table_type == 'map':
+            if self.table_type in ('map', 'unordered_map'):
                 text_append += ', ' + r[1].to_seshat()
             text_append += ' },\n    '
             text += text_append
@@ -924,7 +924,7 @@ def make_core_cpp():
 def make_name_cpp():
     # Make name.cpp
     name_cpp_table = '''
-const std::map<uint32_t, const char*> name_table = {
+const std::unordered_map<uint32_t, const char*> name_table = {
     '''
 
     for udata in unicode_data_list:
@@ -950,7 +950,7 @@ const std::map<uint32_t, const char*> name_table = {
 
 def make_dm_cpp():
     table = '''
-const std::map<uint32_t, const char*> dm_table = {
+const std::unordered_map<uint32_t, const char*> dm_table = {
     '''
     rdm_table = '''
 const std::unordered_map<

@@ -13,7 +13,7 @@ static_assert(UnicodeVersion == (Version { 9, 0, 0 }), "Version error");
 
 
 
-const std::map<uint32_t, const char*> dm_table = {
+const std::unordered_map<uint32_t, const char*> dm_table = {
     { 0x00A0, "20" },
     { 0x00A8, "20 308" },
     { 0x00AA, "61" },

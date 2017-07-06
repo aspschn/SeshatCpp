@@ -11,13 +11,13 @@
 #define _UCD_NAME_H
 
 #include <cstdint>
-#include <map>
+#include <unordered_map>
 
 namespace seshat {
 namespace unicode {
 namespace ucd {
 
-extern const std::map<uint32_t, const char*> name_table;
+extern const std::unordered_map<uint32_t, const char*> name_table;
 
 } // namespace ucd
 } // namespace unicode
