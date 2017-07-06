@@ -89,6 +89,21 @@ const CodePointSequence decompose(uint32_t cp)
     }
 }
 
+uint32_t compose(uint32_t first, uint32_t last)
+{
+    if (COMPOSABLE_L(first) && COMPOSABLE_V(last)) {
+        uint32_t l_index = first - L_BASE;
+        uint32_t v_index = last - V_BASE;
+        return S_BASE + (l_index * N_COUNT) + (v_index * T_COUNT);
+    }
+    if (hangul_syllable_type(first) == HangulSyllableType::LV &&
+            COMPOSABLE_T(last)) {
+        uint32_t t_index = last - T_BASE;
+        return first + t_index;
+    }
+    return 0x0; // Default: Not defined.
+}
+
 } // namespace hangul
 } // namespace unicode
 } // namespace seshat

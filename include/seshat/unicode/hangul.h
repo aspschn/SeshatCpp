@@ -66,7 +66,33 @@ extern const char* JAMO_T_TABLE[T_COUNT];
 std::string syllable_name(uint32_t syllab_code);
 
 // Conjoining
+//
+// COMPOSABLE_L(uint32_t) - Detect if given code point is in
+//  range which is canonically composable Hangul L Jamo.
+#define COMPOSABLE_L(code) \
+    ((0x1100 <= (code) && (code) <= 0x1112) ? true : false)
+// COMPOSABLE_V(uint32_t) - Detect if given code point is in
+//  range which is canonically composable Hangul V Jamo.
+#define COMPOSABLE_V(code) \
+    ((0x1161 <= (code) && (code) <= 0x1175) ? true : false)
+// COMPOSABLE_T(uint32_t) - Detect if given code point is in
+//  range which is canonically composable Hangul T Jamo.
+#define COMPOSABLE_T(code) \
+    ((0x11A8 <= (code) && (code) <= 0x11C2) ? true : false)
+// bool composable_pair(uint32_t, uint32_t) - If given code point
+//  pair is L-V or LV-T, the pair is composable hangul pair.
+inline bool composable_pair(uint32_t first, uint32_t last)
+{
+    return ((COMPOSABLE_L(first) && COMPOSABLE_V(last)) ||
+        (hangul_syllable_type(first) == HangulSyllableType::LV &&
+            COMPOSABLE_T(last)) ? true : false);
+}
 const CodePointSequence decompose(uint32_t cp);
+// uint32_t compose(first, last) - Canonical compose L and V type or
+//  LV and T type.
+// Return value: Canonical composed Hangul syllable.
+// Notes: Out of composable L-V or LV-T pair cause undefined behavior.
+uint32_t compose(uint32_t first, uint32_t last);
 
 } // namespace hangul
 } // namespace unicode

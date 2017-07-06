@@ -85,7 +85,7 @@ int main()
         for (auto cp: org)
             std::cout << cp.to_string() << " ";
         // Wrong NFD
-        if (str_to_seq(seqs[2]) != seshat_nfd) {
+        if (right_nfd != seshat_nfd) {
             std::cout << ": wrong nfd => ";
             for (auto cp: seshat_nfd)
                 std::cout << cp.to_string() << " ";
@@ -94,7 +94,7 @@ int main()
                 std::cout << cp.to_string() << " ";
         }
         // Wrong NFC
-        if (str_to_seq(seqs[1]) != seshat_nfc) {
+        if (right_nfc != seshat_nfc) {
             std::cout << ": wrong nfc => ";
             for (auto cp: seshat_nfc)
                 std::cout << cp.to_string() << " ";

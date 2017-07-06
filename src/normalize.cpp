@@ -133,7 +133,8 @@ CodePointSequence nfc(const CodePointSequence& sequence)
         auto b_it = it - 1; // Back iterator.
         while (b_it != composed.begin() && !starter(*b_it)) --b_it;
         if (starter(*b_it) && !blocked(b_it, it)) {
-            auto mapped = rdm({ *b_it, *it });
+            auto mapped = (hangul::composable_pair(*b_it, *it)) ?
+                hangul::compose(*b_it, *it) : rdm({ *b_it, *it });
             if (mapped != 0x0 && primary_composite(mapped)) {
                 *b_it = mapped;
                 composed.erase(it);
