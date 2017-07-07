@@ -9,6 +9,9 @@ namespace seshat {
 namespace unicode {
 namespace emoji {
 
+static_assert(UnicodeVersion == (Version { 9, 0, 0 }), "Version error");
+
+
 const std::set<CodePointRange> emoji_table = {
     { CodePointRange(0x0023, 0x0023) },
     { CodePointRange(0x002A, 0x002A) },
@@ -382,9 +385,6 @@ const std::set<CodePointRange> emoji_modifier_base_table = {
     { CodePointRange(0x1F933, 0x1F939) },
     { CodePointRange(0x1F93D, 0x1F93E) }
 };
-
-
-static_assert(UnicodeVersion == (Version { 9, 0, 0 }), "Version error");
 
 } // namespace emoji
 } // namespace unicode

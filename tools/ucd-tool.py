@@ -82,47 +82,6 @@ def download_data(uni_v1=UNICODE_VERSION_MAJOR, uni_v2=UNICODE_VERSION_MINOR,
         if fname not in data_dir(emoji_dir):
             os.system('wget ' + emoji_url + srcpath + fname + ' -O ' + emoji_dir + '/' + fname)
 
-class Gc:
-    '''General_Category'''
-    # C = 'Other'
-    Cc = 'Control' # 'cntrl'
-    Cf = 'Format'
-    Cn = 'Unassigned'
-    Co = 'Private_Use'
-    Cs = 'Surrogate'
-    # L = 'Letter'
-    # LC = 'Cased_Letter' # Ll | Lt | Lu
-    Ll = 'Lowercase_Letter'
-    Lm = 'Modifier_Letter'
-    Lo = 'Other_Letter'
-    Lt = 'Titlecase_Letter'
-    Lu = 'Uppercase_Letter'
-    # M = 'Mark' # 'Combining_Mark' # Mc | Me | Mn
-    Mc = 'Spacing_Mark'
-    Me = 'Enclosing_Mark'
-    Mn = 'Nonspacing_Mark'
-    # N = 'Number' # Nd | Nl | No
-    Nd = 'Decimal_Number' # 'digit'
-    Nl = 'Letter_Number'
-    No = 'Other_Number'
-    # P = 'Punctuation' # 'punct' # Pc | Pd | Pe | Pf | Pi | Po | Ps
-    Pc = 'Connector_Punctuation'
-    Pd = 'Dash_Punctuation'
-    Pe = 'Close_Punctuation'
-    Pf = 'Final_Punctuation'
-    Pi = 'Initial_Punctuation'
-    Po = 'Other_Punctuation'
-    Ps = 'Open_Punctuation'
-    # S = 'Symbol' # Sc | Sk | Sm | So
-    Sc = 'Currency_Symbol'
-    Sk = 'Modifier_Symbol'
-    Sm = 'Math_Symbol'
-    So = 'Other_Symbol'
-    # Z = 'Separator' # Zl | Zp | Zs
-    Zl = 'Line_Separator'
-    Zp = 'Paragraph_Separator'
-    Zs = 'Space_Separator'
-
 # Table 8. Property Type Key
 #
 # Property Type | Symbol | Examples
@@ -264,10 +223,10 @@ v: value type, if table type is `map` or `unordered_map`
             'CodePointRange': 'CodePointRange'
         }[self.key_type]
         v_type = self.val_type
-        text = 'const std::' + self.table_type + '<' + k_type
+        text = 'const std::{}<{}'.format(self.table_type, k_type)
         if self.table_type in ('map', 'unordered_map'):
             text += ', ' + v_type
-        text += '> ' + self.table_name + ' = {\n    '
+        text += '> {} = {{\n    '.format(self.table_name)
         for r in self._data:
             text_append = '{ ' + r[0].to_seshat()
             if self.table_type in ('map', 'unordered_map'):
@@ -511,9 +470,10 @@ class CodeBuilder:
     def close_ns_all(self):
         self._current_ns = self._root
         return self
-    def include(self, header):
-        '''e.g. include('"gc.h"')'''
-        self._includes.append(header)
+    def include(self, *headers):
+        '''e.g. include('"gc.h"') or include('"gc.h"', '<map>')'''
+        for header in headers:
+            self._includes.append(header)
         return self
     def push_content(self, content):
         self._current_ns.append(content)
@@ -553,73 +513,63 @@ def version_assert():
 builder_gc_cpp = CodeBuilder()
 (builder_gc_cpp.comment(comment + '''//
 //  General_Category(gc) data table.''')
-    .include('"gc.h"')
-    .include('<seshat/unicode/version.h>')
+    .include('"gc.h"', '<seshat/unicode/version.h>')
     .open_ns('seshat').open_ns('unicode').open_ns('ucd'))
 
 builder_name_cpp = CodeBuilder()
 (builder_name_cpp.comment(comment + '''//
 //  Name for individual code points.''')
-    .include('"name.h"')
-    .include('<seshat/unicode/version.h>')
+    .include('"name.h"', '<seshat/unicode/version.h>')
     .open_ns('seshat').open_ns('unicode').open_ns('ucd'))
 
 builder_normalization_props_cpp = CodeBuilder()
 (builder_normalization_props_cpp.comment(comment + '''//
 //  Normalization properties tables.''')
-    .include('"normalization_props.h"')
-    .include('<seshat/unicode/version.h>')
+    .include('"normalization_props.h"', '<seshat/unicode/version.h>')
     .open_ns('seshat').open_ns('unicode').open_ns('ucd'))
 
 builder_ccc_cpp = CodeBuilder()
 (builder_ccc_cpp.comment(comment + '''//
 //  Canonical_Combining_Class(ccc) property table.
 //  ccc=0 omitted in this table.''')
-    .include('"ccc.h"')
-    .include('<seshat/unicode/version.h>')
+    .include('"ccc.h"', '<seshat/unicode/version.h>')
     .open_ns('seshat').open_ns('unicode').open_ns('ucd'))
 
 builder_dt_cpp = CodeBuilder()
 (builder_dt_cpp.comment(comment + '''//
 //  Decomposition_Type(dt) table.''')
-    .include('"dt.h"')
-    .include('<seshat/unicode/version.h>')
+    .include('"dt.h"', '<seshat/unicode/version.h>')
     .open_ns('seshat').open_ns('unicode').open_ns('ucd'))
 
 builder_dm_cpp = CodeBuilder()
 (builder_dm_cpp.comment(comment + '''//
 //  Decomposition_Mapping(dm) table.''')
-    .include('"dm.h"')
-    .include('<seshat/unicode/version.h>')
+    .include('"dm.h"', '<seshat/unicode/version.h>')
     .open_ns('seshat').open_ns('unicode').open_ns('ucd'))
 
 builder_rdm_cpp = CodeBuilder()
 (builder_rdm_cpp.comment(comment + '''//
 //  Reversed Decomposition_Mapping(dm) table.''')
-    .include('"rdm.h"')
-    .include('<seshat/unicode/version.h>')
+    .include('"rdm.h"', '<seshat/unicode/version.h>')
     .open_ns('seshat').open_ns('unicode').open_ns('ucd'))
 
 builder_script_cpp = CodeBuilder()
 (builder_script_cpp.comment(comment + '''//
 //  Script(sc) table.
 //  TODO: Add Script_Extensions(scx) table too.''')
-    .include('"script.h"')
-    .include('<seshat/unicode/version.h>')
+    .include('"script.h"', '<seshat/unicode/version.h>')
     .open_ns('seshat').open_ns('unicode').open_ns('ucd'))
 
 builder_block_cpp = CodeBuilder()
 (builder_block_cpp.comment(comment + '''//
 //  Block(blk) table.''')
-    .include('"block.h"')
-    .include('<seshat/unicode/version.h>')
+    .include('"block.h"', '<seshat/unicode/version.h>')
     .open_ns('seshat').open_ns('unicode').open_ns('ucd'))
 
 builder_emoji_data_cpp = CodeBuilder()
 (builder_emoji_data_cpp.comment(comment + '''//
 //  Emoji property tables.''')
-    .include('"data.h"')
-    .include('<seshat/unicode/version.h>')
+    .include('"data.h"', '<seshat/unicode/version.h>')
     .open_ns('seshat').open_ns('unicode').open_ns('emoji'))
 
 builder_core_cpp = CodeBuilder()
@@ -630,8 +580,7 @@ builder_core_cpp = CodeBuilder()
 // Other_Grapheme_Extend (OGr_Ext)
 // Other_Default_Ignorable_Code_Point (ODI)
 // Prepended_Concatenation_Mark (PCM)''')
-    .include('"core.h"')
-    .include('<seshat/unicode/version.h>')
+    .include('"core.h"', '<seshat/unicode/version.h>')
     .open_ns('seshat').open_ns('unicode').open_ns('ucd'))
 
 builder_gcb_cpp = CodeBuilder()
@@ -646,15 +595,13 @@ builder_gcb_cpp = CodeBuilder()
 //  - ZWJ (ZWJ): U+200D only
 //  - L, V, T, LV, LVT: Hangul_Syllable_Type
 //  - E_Modifier (EM): Emoji_Modifier = Yes''')
-    .include('"gcb.h"')
-    .include('<seshat/unicode/version.h>')
+    .include('"gcb.h"', '<seshat/unicode/version.h>')
     .open_ns('seshat').open_ns('unicode').open_ns('ucd'))
 
 builder_age_cpp = CodeBuilder()
 (builder_age_cpp.comment(comment + '''//
 //  Age table.''')
-    .include('"age.h"')
-    .include('<seshat/unicode/version.h>')
+    .include('"age.h"', '<seshat/unicode/version.h>')
     .open_ns('seshat').open_ns('unicode').open_ns('ucd'))
 
 def parse_unicode_data():
@@ -1066,9 +1013,9 @@ const std::map<CodePointRange, {}> {} = '''.format(val_type, name)
 
 def make_emoji_data_cpp():
     data_dir = get_emoji_dir(EMOJI_VERSION_MAJOR, EMOJI_VERSION_MINOR)
-    txt = DerivedParser.readlines(data_dir + '/emoji-data.txt')
+    parser = DerivedParser(data_dir + '/emoji-data.txt')
     def table_open(name):
-        return 'const std::set<CodePointRange> ' + name + ' = {\n    '
+        return DataTable(name, 'set', 'CodePointRange')
     tables = {
         'Emoji': table_open('emoji_table'),
         'Emoji_Presentation': table_open('emoji_presentation_table'),
@@ -1076,19 +1023,16 @@ def make_emoji_data_cpp():
         'Emoji_Modifier_Base': table_open('emoji_modifier_base_table')
     }
 
-    parser = DerivedParser()
-    for line in txt:
+    for line in parser.txt:
         parser.parse_line(line)
         if parser.empty():
             continue
-        tables[parser.first] += ('{ ' + parser.range.to_seshat() + ' },\n    ')
-    for k in tables.keys():
-        tables[k] = tables[k].rstrip().rstrip(',') + '\n};'
+        tables[parser.first].append(parser.range)
 
+    builder_emoji_data_cpp.push_content(version_assert())
     for t in tables.values():
-        builder_emoji_data_cpp.push_content(t)
-    (builder_emoji_data_cpp.push_content(version_assert())
-        .close_ns_all())
+        builder_emoji_data_cpp.push_content(t.to_seshat())
+    builder_emoji_data_cpp.close_ns_all()
 
     f = open('../src/emoji/data.cpp', 'w')
     f.write(builder_emoji_data_cpp.build())
