@@ -450,7 +450,9 @@ class CodeBuilder:
         def append(self, content):
             self._contents.append(content)
 
-    def __init__(self):
+    def __init__(self, outfile, outpath='../src/ucd'):
+        self._fname = outfile
+        self._path = outpath
         self._comment = ''
         self._includes = []
         self._root = CodeBuilder.Namespace(parent=None, name='')
@@ -488,6 +490,11 @@ class CodeBuilder:
         code += '\n'
         code += CodeBuilder.write_namespace(self._root, '')
         return code
+    def write(self):
+        '''Build code and write to file.'''
+        f = open(os.path.join(self._path, self._fname), 'w')
+        f.write(self.build())
+        f.close()
     def write_namespace(ns, text):
         if ns._name != '':
             text += 'namespace ' + ns._name + ' {\n'
@@ -510,69 +517,69 @@ def version_assert():
             UNICODE_VERSION_UPDATE)
         + ' }), "Version error");')
 
-builder_gc_cpp = CodeBuilder()
+builder_gc_cpp = CodeBuilder('gc.cpp')
 (builder_gc_cpp.comment(comment + '''//
 //  General_Category(gc) data table.''')
     .include('"gc.h"', '<seshat/unicode/version.h>')
     .open_ns('seshat').open_ns('unicode').open_ns('ucd'))
 
-builder_name_cpp = CodeBuilder()
+builder_name_cpp = CodeBuilder('name.cpp')
 (builder_name_cpp.comment(comment + '''//
 //  Name for individual code points.''')
     .include('"name.h"', '<seshat/unicode/version.h>')
     .open_ns('seshat').open_ns('unicode').open_ns('ucd'))
 
-builder_normalization_props_cpp = CodeBuilder()
+builder_normalization_props_cpp = CodeBuilder('normalization_props.cpp')
 (builder_normalization_props_cpp.comment(comment + '''//
 //  Normalization properties tables.''')
     .include('"normalization_props.h"', '<seshat/unicode/version.h>')
     .open_ns('seshat').open_ns('unicode').open_ns('ucd'))
 
-builder_ccc_cpp = CodeBuilder()
+builder_ccc_cpp = CodeBuilder('ccc.cpp')
 (builder_ccc_cpp.comment(comment + '''//
 //  Canonical_Combining_Class(ccc) property table.
 //  ccc=0 omitted in this table.''')
     .include('"ccc.h"', '<seshat/unicode/version.h>')
     .open_ns('seshat').open_ns('unicode').open_ns('ucd'))
 
-builder_dt_cpp = CodeBuilder()
+builder_dt_cpp = CodeBuilder('dt.cpp')
 (builder_dt_cpp.comment(comment + '''//
 //  Decomposition_Type(dt) table.''')
     .include('"dt.h"', '<seshat/unicode/version.h>')
     .open_ns('seshat').open_ns('unicode').open_ns('ucd'))
 
-builder_dm_cpp = CodeBuilder()
+builder_dm_cpp = CodeBuilder('dm.cpp')
 (builder_dm_cpp.comment(comment + '''//
 //  Decomposition_Mapping(dm) table.''')
     .include('"dm.h"', '<seshat/unicode/version.h>')
     .open_ns('seshat').open_ns('unicode').open_ns('ucd'))
 
-builder_rdm_cpp = CodeBuilder()
+builder_rdm_cpp = CodeBuilder('rdm.cpp')
 (builder_rdm_cpp.comment(comment + '''//
 //  Reversed Decomposition_Mapping(dm) table.''')
     .include('"rdm.h"', '<seshat/unicode/version.h>')
     .open_ns('seshat').open_ns('unicode').open_ns('ucd'))
 
-builder_script_cpp = CodeBuilder()
+builder_script_cpp = CodeBuilder('script.cpp')
 (builder_script_cpp.comment(comment + '''//
 //  Script(sc) table.
 //  TODO: Add Script_Extensions(scx) table too.''')
     .include('"script.h"', '<seshat/unicode/version.h>')
     .open_ns('seshat').open_ns('unicode').open_ns('ucd'))
 
-builder_block_cpp = CodeBuilder()
+builder_block_cpp = CodeBuilder('block.cpp')
 (builder_block_cpp.comment(comment + '''//
 //  Block(blk) table.''')
     .include('"block.h"', '<seshat/unicode/version.h>')
     .open_ns('seshat').open_ns('unicode').open_ns('ucd'))
 
-builder_emoji_data_cpp = CodeBuilder()
+builder_emoji_data_cpp = CodeBuilder('data.cpp', '../src/emoji')
 (builder_emoji_data_cpp.comment(comment + '''//
 //  Emoji property tables.''')
     .include('"data.h"', '<seshat/unicode/version.h>')
     .open_ns('seshat').open_ns('unicode').open_ns('emoji'))
 
-builder_core_cpp = CodeBuilder()
+builder_core_cpp = CodeBuilder('core.cpp')
 (builder_core_cpp.comment(comment + '''//
 // Properties from PropList.txt
 //
@@ -583,7 +590,7 @@ builder_core_cpp = CodeBuilder()
     .include('"core.h"', '<seshat/unicode/version.h>')
     .open_ns('seshat').open_ns('unicode').open_ns('ucd'))
 
-builder_gcb_cpp = CodeBuilder()
+builder_gcb_cpp = CodeBuilder('gcb.cpp')
 (builder_gcb_cpp.comment(comment + '''//
 //  Grapheme_Cluster_Break (GCB) table.
 //
@@ -598,7 +605,7 @@ builder_gcb_cpp = CodeBuilder()
     .include('"gcb.h"', '<seshat/unicode/version.h>')
     .open_ns('seshat').open_ns('unicode').open_ns('ucd'))
 
-builder_age_cpp = CodeBuilder()
+builder_age_cpp = CodeBuilder('age.cpp')
 (builder_age_cpp.comment(comment + '''//
 //  Age table.''')
     .include('"age.h"', '<seshat/unicode/version.h>')
@@ -629,12 +636,13 @@ def remove_ucd_comment(a_line):
     return a_line
 
 class DerivedParser:
-    def __init__(self, filepath=None):
+    def __init__(self, filepath=None, exclude=[]):
         self.range = None
         self.first = ''
         self.second = ''
         self._empty = False
         self.txt = None
+        self._exclude = exclude
 
         if filepath != None:
             self.txt = DerivedParser.readlines(filepath)
@@ -651,6 +659,14 @@ class DerivedParser:
         if len(fields) > 2:
             self.second = fields[2]
         self._empty = False
+    def parse_all(self, handler):
+        '''Parse all lines except exclude values.
+handler: function(range, first, second)'''
+        for line in self.txt:
+            self.parse_line(line)
+            if self.empty() or self.first in self._exclude:
+                continue
+            handler(self.range, self.first, self.second)
     def readlines(filepath):
         f = open(filepath, 'r')
         txt = f.readlines()
@@ -681,25 +697,18 @@ def print_help():
 
 def make_gc_cpp():
     # Make gc.cpp
-    data_dir = get_ucd_dir(UNICODE_VERSION_MAJOR, UNICODE_VERSION_MINOR,
-        UNICODE_VERSION_UPDATE)
-    parser = DerivedParser(data_dir + '/DerivedGeneralCategory.txt')
-
     table = DataTable('gc_table', 'map', 'CodePointRange', 'Gc')
 
-    for line in parser.txt:
-        parser.parse_line(line)
-        if parser.empty():
-            continue
-        if parser.first == 'Cn': # Unassigned
-            continue
-        table.append(parser.range, EnumClass('Gc', parser.first))
+    data_dir = get_ucd_dir(UNICODE_VERSION_MAJOR, UNICODE_VERSION_MINOR,
+        UNICODE_VERSION_UPDATE)
+    parser = DerivedParser(data_dir + '/DerivedGeneralCategory.txt',
+        exclude=['Cn'])
+    parser.parse_all(lambda r, f, s: table.append(r, EnumClass('Gc', f)))
+
     (builder_gc_cpp.push_content(version_assert())
         .push_content(table.to_seshat()).close_ns_all())
 
-    f = open('../src/ucd/gc.cpp', 'w')
-    f.write(builder_gc_cpp.build())
-    f.close()
+    builder_gc_cpp.write()
 
 def make_ccc_cpp():
     data_dir = get_ucd_dir(UNICODE_VERSION_MAJOR, UNICODE_VERSION_MINOR,
@@ -718,30 +727,25 @@ def make_ccc_cpp():
     (builder_ccc_cpp.push_content(version_assert())
         .push_content(table.to_seshat()).close_ns_all())
 
-    f = open('../src/ucd/ccc.cpp', 'w')
-    f.write(builder_ccc_cpp.build())
-    f.close()
+    builder_ccc_cpp.write()
 
 def make_dt_cpp():
     def dt_alias(val):
         return property_value_aliases.alias('dt', val)
+
+    table = DataTable('dt_table', 'map', 'CodePointRange', 'Dt')
+
     data_dir = get_ucd_dir(UNICODE_VERSION_MAJOR, UNICODE_VERSION_MINOR,
         UNICODE_VERSION_UPDATE)
     parser = DerivedParser(data_dir + '/DerivedDecompositionType.txt')
 
-    table = DataTable('dt_table', 'map', 'CodePointRange', 'Dt')
+    fn = lambda r, f, s: table.append(r, EnumClass('Dt', dt_alias(f)))
+    parser.parse_all(fn)
 
-    for line in parser.txt:
-        parser.parse_line(line)
-        if parser.empty():
-            continue
-        table.append(parser.range, EnumClass('Dt', dt_alias(parser.first)))
     (builder_dt_cpp.push_content(version_assert())
         .push_content(table.to_seshat()).close_ns_all())
 
-    f = open('../src/ucd/dt.cpp', 'w')
-    f.write(builder_dt_cpp.build())
-    f.close()
+    builder_dt_cpp.write()
 
 def make_script_cpp():
     def alias(val):
@@ -751,18 +755,13 @@ def make_script_cpp():
     data_dir = get_ucd_dir(UNICODE_VERSION_MAJOR, UNICODE_VERSION_MINOR,
         UNICODE_VERSION_UPDATE)
     parser = DerivedParser(data_dir + '/Scripts.txt')
-    for line in parser.txt:
-        parser.parse_line(line)
-        if parser.empty():
-            continue
-        table.append(
-            parser.range, EnumClass('Script', alias(parser.first)))
+    fn = lambda r, f, s: table.append(r, EnumClass('Script', alias(f)))
+    parser.parse_all(fn)
+
     (builder_script_cpp.push_content(version_assert())
         .push_content(table.to_seshat()).close_ns_all())
 
-    f = open('../src/ucd/script.cpp', 'w')
-    f.write(builder_script_cpp.build())
-    f.close()
+    builder_script_cpp.write()
 
 def make_block_cpp():
     def alias(val):
@@ -772,18 +771,13 @@ def make_block_cpp():
     data_dir = get_ucd_dir(UNICODE_VERSION_MAJOR, UNICODE_VERSION_MINOR,
         UNICODE_VERSION_UPDATE)
     parser = DerivedParser(data_dir + '/Blocks.txt')
-    for line in parser.txt:
-        parser.parse_line(line)
-        if parser.empty():
-            continue
-        table.append(
-            parser.range, EnumClass('Block', alias(parser.first)))
+    fn = lambda r, f, s: table.append(r, EnumClass('Block', alias(f)))
+    parser.parse_all(fn)
+
     (builder_block_cpp.push_content(version_assert())
         .push_content(table.to_seshat()).close_ns_all())
 
-    f = open('../src/ucd/block.cpp', 'w')
-    f.write(builder_block_cpp.build())
-    f.close()
+    builder_block_cpp.write()
 
 def make_gcb_cpp():
     def alias(val):
@@ -792,21 +786,16 @@ def make_gcb_cpp():
 
     data_dir = get_ucd_dir(UNICODE_VERSION_MAJOR, UNICODE_VERSION_MINOR,
         UNICODE_VERSION_UPDATE)
-    parser = DerivedParser(data_dir + '/GraphemeBreakProperty.txt')
-    for line in parser.txt:
-        parser.parse_line(line)
-        if parser.empty():
-            continue
-        if parser.first in ('CR', 'LF', 'Extend', 'ZWJ', 'L', 'V', 'T', 'LV', 'LVT', 'E_Modifier'):
-            continue
-        table.append(
-            parser.range, EnumClass('Gcb', alias(parser.first)))
+    parser = DerivedParser(data_dir + '/GraphemeBreakProperty.txt',
+        exclude=['CR', 'LF', 'Extend', 'ZWJ', 'L', 'V', 'T', 'LV', 'LVT',
+            'E_Modifier'])
+    fn = lambda r, f, s: table.append(r, EnumClass('Gcb', alias(f)))
+    parser.parse_all(fn)
+
     (builder_gcb_cpp.push_content(version_assert())
         .push_content(table.to_seshat()).close_ns_all())
 
-    f = open('../src/ucd/gcb.cpp', 'w')
-    f.write(builder_gcb_cpp.build())
-    f.close()
+    builder_gcb_cpp.write()
 
 def make_core_cpp():
     data_dir = get_ucd_dir(UNICODE_VERSION_MAJOR, UNICODE_VERSION_MINOR,
@@ -864,9 +853,7 @@ def make_core_cpp():
         .push_content(table_pcm)
         .close_ns_all())
 
-    f = open('../src/ucd/core.cpp', 'w')
-    f.write(builder_core_cpp.build())
-    f.close()
+    builder_core_cpp.write()
 
 def make_name_cpp():
     # Make name.cpp
@@ -891,9 +878,7 @@ const std::unordered_map<uint32_t, const char*> name_table = {
     (builder_name_cpp.push_content(version_assert())
         .push_content(name_cpp_table).close_ns_all())
 
-    f = open('../src/ucd/name.cpp', 'w')
-    f.write(builder_name_cpp.build())
-    f.close()
+    builder_name_cpp.write()
 
 def make_dm_cpp():
     table = '''
@@ -934,13 +919,8 @@ const std::unordered_map<
     (builder_rdm_cpp.push_content(version_assert())
         .push_content(rdm_table).close_ns_all())
 
-    f = open('../src/ucd/dm.cpp', 'w')
-    f.write(builder_dm_cpp.build())
-    f.close()
-
-    f = open('../src/ucd/rdm.cpp', 'w')
-    f.write(builder_rdm_cpp.build())
-    f.close()
+    builder_dm_cpp.write()
+    builder_rdm_cpp.write()
 
 def make_normalization_props_cpp():
     def empty_or_comment(a_line):
@@ -1007,9 +987,7 @@ const std::map<CodePointRange, {}> {} = '''.format(val_type, name)
         .push_content(nfkc_qc_table)
         .close_ns_all())
 
-    f = open('../src/ucd/normalization_props.cpp', 'w')
-    f.write(builder_normalization_props_cpp.build())
-    f.close()
+    builder_normalization_props_cpp.write()
 
 def make_emoji_data_cpp():
     data_dir = get_emoji_dir(EMOJI_VERSION_MAJOR, EMOJI_VERSION_MINOR)
@@ -1023,20 +1001,14 @@ def make_emoji_data_cpp():
         'Emoji_Modifier_Base': table_open('emoji_modifier_base_table')
     }
 
-    for line in parser.txt:
-        parser.parse_line(line)
-        if parser.empty():
-            continue
-        tables[parser.first].append(parser.range)
+    parser.parse_all(lambda r, f, s: tables[f].append(r))
 
     builder_emoji_data_cpp.push_content(version_assert())
     for t in tables.values():
         builder_emoji_data_cpp.push_content(t.to_seshat())
     builder_emoji_data_cpp.close_ns_all()
 
-    f = open('../src/emoji/data.cpp', 'w')
-    f.write(builder_emoji_data_cpp.build())
-    f.close()
+    builder_emoji_data_cpp.write()
 
 def make_age_cpp():
     table = DataTable('age_table', 'map', 'CodePointRange', 'Version')
@@ -1044,18 +1016,13 @@ def make_age_cpp():
     data_dir = get_ucd_dir(UNICODE_VERSION_MAJOR, UNICODE_VERSION_MINOR,
         UNICODE_VERSION_UPDATE)
     parser = DerivedParser(data_dir + '/DerivedAge.txt')
-    for line in parser.txt:
-        parser.parse_line(line)
-        if parser.empty():
-            continue
-        table.append(parser.range, Age(parser.first))
+    parser.parse_all(lambda r, f, s: table.append(r, Age(f)))
+
     (builder_age_cpp.push_content(version_assert())
         .push_content(table.to_seshat())
         .close_ns_all())
 
-    f = open('../src/ucd/age.cpp', 'w')
-    f.write(builder_age_cpp.build())
-    f.close()
+    builder_age_cpp.write()
 
 gen_args = {
     'all': {'desc': 'generate all source files', 'func': None},
