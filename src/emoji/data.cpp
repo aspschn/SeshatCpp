@@ -9,7 +9,10 @@ namespace seshat {
 namespace unicode {
 namespace emoji {
 
-static_assert(UnicodeVersion == (Version { 9, 0, 0 }), "Version error");
+static_assert(UnicodeVersion == (Version { 10, 0, 0 }), "Version error");
+
+
+static_assert(EmojiVersion == (Version { 5, 0, 0 }), "Version error");
 
 
 const std::set<CodePointRange> emoji_table = {
@@ -211,18 +214,26 @@ const std::set<CodePointRange> emoji_table = {
     { CodePointRange(0x1F6F0, 0x1F6F0) },
     { CodePointRange(0x1F6F3, 0x1F6F3) },
     { CodePointRange(0x1F6F4, 0x1F6F6) },
+    { CodePointRange(0x1F6F7, 0x1F6F8) },
     { CodePointRange(0x1F910, 0x1F918) },
     { CodePointRange(0x1F919, 0x1F91E) },
+    { CodePointRange(0x1F91F, 0x1F91F) },
     { CodePointRange(0x1F920, 0x1F927) },
+    { CodePointRange(0x1F928, 0x1F92F) },
     { CodePointRange(0x1F930, 0x1F930) },
+    { CodePointRange(0x1F931, 0x1F932) },
     { CodePointRange(0x1F933, 0x1F93A) },
     { CodePointRange(0x1F93C, 0x1F93E) },
     { CodePointRange(0x1F940, 0x1F945) },
     { CodePointRange(0x1F947, 0x1F94B) },
+    { CodePointRange(0x1F94C, 0x1F94C) },
     { CodePointRange(0x1F950, 0x1F95E) },
+    { CodePointRange(0x1F95F, 0x1F96B) },
     { CodePointRange(0x1F980, 0x1F984) },
     { CodePointRange(0x1F985, 0x1F991) },
-    { CodePointRange(0x1F9C0, 0x1F9C0) }
+    { CodePointRange(0x1F992, 0x1F997) },
+    { CodePointRange(0x1F9C0, 0x1F9C0) },
+    { CodePointRange(0x1F9D0, 0x1F9E6) }
 };
 
 
@@ -328,18 +339,26 @@ const std::set<CodePointRange> emoji_presentation_table = {
     { CodePointRange(0x1F6D1, 0x1F6D2) },
     { CodePointRange(0x1F6EB, 0x1F6EC) },
     { CodePointRange(0x1F6F4, 0x1F6F6) },
+    { CodePointRange(0x1F6F7, 0x1F6F8) },
     { CodePointRange(0x1F910, 0x1F918) },
     { CodePointRange(0x1F919, 0x1F91E) },
+    { CodePointRange(0x1F91F, 0x1F91F) },
     { CodePointRange(0x1F920, 0x1F927) },
+    { CodePointRange(0x1F928, 0x1F92F) },
     { CodePointRange(0x1F930, 0x1F930) },
+    { CodePointRange(0x1F931, 0x1F932) },
     { CodePointRange(0x1F933, 0x1F93A) },
     { CodePointRange(0x1F93C, 0x1F93E) },
     { CodePointRange(0x1F940, 0x1F945) },
     { CodePointRange(0x1F947, 0x1F94B) },
+    { CodePointRange(0x1F94C, 0x1F94C) },
     { CodePointRange(0x1F950, 0x1F95E) },
+    { CodePointRange(0x1F95F, 0x1F96B) },
     { CodePointRange(0x1F980, 0x1F984) },
     { CodePointRange(0x1F985, 0x1F991) },
-    { CodePointRange(0x1F9C0, 0x1F9C0) }
+    { CodePointRange(0x1F992, 0x1F997) },
+    { CodePointRange(0x1F9C0, 0x1F9C0) },
+    { CodePointRange(0x1F9D0, 0x1F9E6) }
 };
 
 
@@ -380,10 +399,22 @@ const std::set<CodePointRange> emoji_modifier_base_table = {
     { CodePointRange(0x1F918, 0x1F918) },
     { CodePointRange(0x1F919, 0x1F91C) },
     { CodePointRange(0x1F91E, 0x1F91E) },
+    { CodePointRange(0x1F91F, 0x1F91F) },
     { CodePointRange(0x1F926, 0x1F926) },
     { CodePointRange(0x1F930, 0x1F930) },
+    { CodePointRange(0x1F931, 0x1F932) },
     { CodePointRange(0x1F933, 0x1F939) },
-    { CodePointRange(0x1F93D, 0x1F93E) }
+    { CodePointRange(0x1F93D, 0x1F93E) },
+    { CodePointRange(0x1F9D1, 0x1F9DD) }
+};
+
+
+const std::set<CodePointRange> emoji_component_table = {
+    { CodePointRange(0x0023, 0x0023) },
+    { CodePointRange(0x002A, 0x002A) },
+    { CodePointRange(0x0030, 0x0039) },
+    { CodePointRange(0x1F1E6, 0x1F1FF) },
+    { CodePointRange(0x1F3FB, 0x1F3FF) }
 };
 
 } // namespace emoji

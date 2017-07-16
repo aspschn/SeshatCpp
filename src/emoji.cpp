@@ -39,6 +39,12 @@ bool emoji_modifier_base(uint32_t cp)
     return (found != emoji_modifier_base_table.end()) ? true : false;
 }
 
+bool emoji_component(uint32_t cp)
+{
+    auto found = emoji_component_table.find(CodePointRange(cp, cp));
+    return (found != emoji_component_table.end()) ? true : false;
+}
+
 } // namespace emoji
 } // namespace unicode
 } // namespace seshat

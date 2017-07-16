@@ -22,6 +22,7 @@ extern const std::set<CodePointRange> emoji_table;
 extern const std::set<CodePointRange> emoji_presentation_table;
 extern const std::set<CodePointRange> emoji_modifier_table;
 extern const std::set<CodePointRange> emoji_modifier_base_table;
+extern const std::set<CodePointRange> emoji_component_table;
 
 } // namespace emoji
 } // namespace unicode

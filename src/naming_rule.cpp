@@ -167,6 +167,10 @@ UnicodeNamingRulePtr naming_rule(UnicodeArea area)
         return UnicodeNamingRulePtr(
             new PrefixDashCodePoint(PREFIX_TANGUT_IDEOGRAPH)
         );
+    case UnicodeArea::NushuCharacter:
+        return UnicodeNamingRulePtr(
+            new PrefixDashCodePoint(PREFIX_NUSHU_CHARACTER)
+        );
     case UnicodeArea::MusicalSymbol:
         return UnicodeNamingRulePtr(
             new PrefixSpaceUniqueName(PREFIX_MUSICAL_SYMBOL)

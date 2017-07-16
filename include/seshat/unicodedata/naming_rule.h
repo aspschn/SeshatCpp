@@ -37,6 +37,7 @@ namespace seshat {
 #define PREFIX_HANGUL_SYLLABLE "HANGUL SYLLABLE"
 #define PREFIX_ANATOLIAN_HIEROGLYPH "ANATOLIAN HIEROGLYPH"
 #define PREFIX_MUSICAL_SYMBOL "MUSICAL SYMBOL"
+#define PREFIX_NUSHU_CHARACTER "NUSHU CHARACTER"
 
 // Unicode Area
 enum class UnicodeArea {
@@ -53,6 +54,7 @@ enum class UnicodeArea {
     BamumLetterPhaseF,
     TangutIdeograph,
     TangutComponent,
+    NushuCharacter,
     MusicalSymbol,
     CjkCompatibilityIdeograph,
     CjkUnifiedIdeograph
@@ -67,6 +69,7 @@ const std::map<CodePointRange, UnicodeArea> range_table {
     { CodePointRange(0x2A700, 0x2B734), UnicodeArea::CjkUnifiedIdeograph },
     { CodePointRange(0x2B740, 0x2B81D), UnicodeArea::CjkUnifiedIdeograph },
     { CodePointRange(0x2B820, 0x2CEA1), UnicodeArea::CjkUnifiedIdeograph },
+    { CodePointRange(0x2CEB0, 0x2EBE0), UnicodeArea::CjkUnifiedIdeograph },
     { CodePointRange(0x1400, 0x167F), UnicodeArea::CanadianSyllabics },
     { CodePointRange(0x18B0, 0x18F5), UnicodeArea::CanadianSyllabics },
     { CodePointRange(0xA000, 0xA48C), UnicodeArea::YiSyllable },
@@ -83,6 +86,7 @@ const std::map<CodePointRange, UnicodeArea> range_table {
     { CodePointRange(0x16A03, 0x16A38), UnicodeArea::BamumLetterPhaseF },
     { CodePointRange(0x17000, 0x187EC), UnicodeArea::TangutIdeograph },
     { CodePointRange(0x18800, 0x18AF2), UnicodeArea::TangutComponent },
+    { CodePointRange(0x1B170, 0x1B2FB), UnicodeArea::NushuCharacter },
     { CodePointRange(0x1D100, 0x1D126), UnicodeArea::MusicalSymbol },
     { CodePointRange(0x1D129, 0x1D1E8), UnicodeArea::MusicalSymbol },
     { CodePointRange(0x2F800, 0x2FA1D), UnicodeArea::CjkCompatibilityIdeograph }

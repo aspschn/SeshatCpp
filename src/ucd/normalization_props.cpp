@@ -9,7 +9,7 @@ namespace seshat {
 namespace unicode {
 namespace ucd {
 
-static_assert(UnicodeVersion == (Version { 9, 0, 0 }), "Version error");
+static_assert(UnicodeVersion == (Version { 10, 0, 0 }), "Version error");
 
 
 

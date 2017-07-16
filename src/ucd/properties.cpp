@@ -81,11 +81,12 @@ Gc gc(uint32_t cp)
 
 Gcb gcb(uint32_t cp)
 {
-    static_assert(UnicodeVersion == (Version { 9, 0, 0 }), "Version error.");
+    static_assert(UnicodeVersion == (Version { 10, 0, 0 }), "Version error.");
 
     using hangul::HangulSyllableType;
     using hangul::hangul_syllable_type;
 
+    // http://www.unicode.org/reports/tr29/#Grapheme_Cluster_Break_Property_Values
     if (cp == 0x000D)
         return Gcb::CR;
     if (cp == 0x000A)
@@ -141,7 +142,7 @@ Gcb gcb(uint32_t cp)
 
 bool grapheme_extend(uint32_t cp)
 {
-    static_assert(UnicodeVersion == (Version { 9, 0, 0 }), "Version error.");
+    static_assert(UnicodeVersion == (Version { 10, 0, 0 }), "Version error.");
     // # Derived Property: Grapheme_Extend
     // #  Generated from: Me + Mn + Other_Grapheme_Extend
     if (gc(cp) == Gc::Me || gc(cp) == Gc::Mn || ogr_ext(cp) == true)
@@ -151,7 +152,8 @@ bool grapheme_extend(uint32_t cp)
 
 bool default_ignorable_code_point(uint32_t cp)
 {
-    static_assert(UnicodeVersion == (Version { 9, 0, 0 }), "Version error.");
+    static_assert(UnicodeVersion == (Version { 10, 0, 0 }), "Version error.");
+    // From DerivedCoreProperties.txt (Unicode 10.0.0)
     // # Derived Property: Default_Ignorable_Code_Point
     // #  Generated from
     // #    Other_Default_Ignorable_Code_Point
@@ -159,11 +161,10 @@ bool default_ignorable_code_point(uint32_t cp)
     // #  + Variation_Selector
     // #  - White_Space
     // #  - FFF9..FFFB (Annotation Characters)
-    // #  - 0600..0605, 06DD, 070F, 08E2, 110BD (exceptional Cf characters that should be visible)
+    // #  - Prepended_Concatenation_Mark (Exceptional format characters that should be visible)
     if (odi(cp) || gc(cp) == Gc::Cf || variation_selector(cp)) {
         if (!(white_space(cp)) && !(0xFFF9 <= cp && cp <= 0xFFFB) &&
-            !(cp == 0x0600) && !(cp == 0x0605) && !(cp == 0x06DD) &&
-            !(cp == 0x070F) && !(cp == 0x08E2) && !(cp == 0x110BD)) {
+            !(prepended_concatenation_mark(cp))) {
             return true;
         }
     }
@@ -172,8 +173,8 @@ bool default_ignorable_code_point(uint32_t cp)
 
 bool variation_selector(uint32_t cp)
 {
-    static_assert(UnicodeVersion == (Version { 9, 0, 0 }), "Version error.");
-    // From PropList.txt (Unicode 9.0.0)
+    static_assert(UnicodeVersion == (Version { 10, 0, 0 }), "Version error.");
+    // From PropList.txt (Unicode 10.0.0)
     // 180B..180D    ; Variation_Selector # Mn   [3]
     // FE00..FE0F    ; Variation_Selector # Mn  [16]
     // E0100..E01EF  ; Variation_Selector # Mn [240]

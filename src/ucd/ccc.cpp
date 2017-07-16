@@ -10,7 +10,7 @@ namespace seshat {
 namespace unicode {
 namespace ucd {
 
-static_assert(UnicodeVersion == (Version { 9, 0, 0 }), "Version error");
+static_assert(UnicodeVersion == (Version { 10, 0, 0 }), "Version error");
 
 
 const std::map<CodePointRange, uint8_t> ccc_table = {
@@ -46,6 +46,7 @@ const std::map<CodePointRange, uint8_t> ccc_table = {
     { CodePointRange(0x114C3, 0x114C3), 7 },
     { CodePointRange(0x115C0, 0x115C0), 7 },
     { CodePointRange(0x116B7, 0x116B7), 7 },
+    { CodePointRange(0x11D42, 0x11D42), 7 },
     { CodePointRange(0x1E94A, 0x1E94A), 7 },
     { CodePointRange(0x3099, 0x309A), 8 },
     { CodePointRange(0x094D, 0x094D), 9 },
@@ -56,6 +57,7 @@ const std::map<CodePointRange, uint8_t> ccc_table = {
     { CodePointRange(0x0BCD, 0x0BCD), 9 },
     { CodePointRange(0x0C4D, 0x0C4D), 9 },
     { CodePointRange(0x0CCD, 0x0CCD), 9 },
+    { CodePointRange(0x0D3B, 0x0D3C), 9 },
     { CodePointRange(0x0D4D, 0x0D4D), 9 },
     { CodePointRange(0x0DCA, 0x0DCA), 9 },
     { CodePointRange(0x0E3A, 0x0E3A), 9 },
@@ -91,7 +93,11 @@ const std::map<CodePointRange, uint8_t> ccc_table = {
     { CodePointRange(0x1163F, 0x1163F), 9 },
     { CodePointRange(0x116B6, 0x116B6), 9 },
     { CodePointRange(0x1172B, 0x1172B), 9 },
+    { CodePointRange(0x11A34, 0x11A34), 9 },
+    { CodePointRange(0x11A47, 0x11A47), 9 },
+    { CodePointRange(0x11A99, 0x11A99), 9 },
     { CodePointRange(0x11C3F, 0x11C3F), 9 },
+    { CodePointRange(0x11D44, 0x11D45), 9 },
     { CodePointRange(0x05B0, 0x05B0), 10 },
     { CodePointRange(0x05B1, 0x05B1), 11 },
     { CodePointRange(0x05B2, 0x05B2), 12 },
@@ -202,6 +208,7 @@ const std::map<CodePointRange, uint8_t> ccc_table = {
     { CodePointRange(0x1DC2, 0x1DC2), 220 },
     { CodePointRange(0x1DCA, 0x1DCA), 220 },
     { CodePointRange(0x1DCF, 0x1DCF), 220 },
+    { CodePointRange(0x1DF9, 0x1DF9), 220 },
     { CodePointRange(0x1DFD, 0x1DFD), 220 },
     { CodePointRange(0x1DFF, 0x1DFF), 220 },
     { CodePointRange(0x20E8, 0x20E8), 220 },
@@ -225,6 +232,7 @@ const std::map<CodePointRange, uint8_t> ccc_table = {
     { CodePointRange(0x1D16D, 0x1D16D), 226 },
     { CodePointRange(0x05AE, 0x05AE), 228 },
     { CodePointRange(0x18A9, 0x18A9), 228 },
+    { CodePointRange(0x1DF7, 0x1DF8), 228 },
     { CodePointRange(0x302B, 0x302B), 228 },
     { CodePointRange(0x0300, 0x0314), 230 },
     { CodePointRange(0x033D, 0x0344), 230 },
@@ -339,6 +347,7 @@ const std::map<CodePointRange, uint8_t> ccc_table = {
     { CodePointRange(0x0315, 0x0315), 232 },
     { CodePointRange(0x031A, 0x031A), 232 },
     { CodePointRange(0x0358, 0x0358), 232 },
+    { CodePointRange(0x1DF6, 0x1DF6), 232 },
     { CodePointRange(0x302C, 0x302C), 232 },
     { CodePointRange(0x035C, 0x035C), 233 },
     { CodePointRange(0x035F, 0x035F), 233 },

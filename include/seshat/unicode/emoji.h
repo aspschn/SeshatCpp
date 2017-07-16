@@ -16,13 +16,14 @@ namespace seshat {
 namespace unicode {
 namespace emoji {
 
-#define EMOJI_VERSION_MAJOR 4
+#define EMOJI_VERSION_MAJOR 5
 #define EMOJI_VERSION_MINOR 0
 
 bool emoji(uint32_t cp);
 bool emoji_presentation(uint32_t cp);
 bool emoji_modifier(uint32_t cp);
 bool emoji_modifier_base(uint32_t cp);
+bool emoji_component(uint32_t cp);
 
 } // namespace emoji
 } // namespace unicode

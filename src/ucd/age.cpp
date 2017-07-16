@@ -9,7 +9,7 @@ namespace seshat {
 namespace unicode {
 namespace ucd {
 
-static_assert(UnicodeVersion == (Version { 9, 0, 0 }), "Version error");
+static_assert(UnicodeVersion == (Version { 10, 0, 0 }), "Version error");
 
 
 const std::map<CodePointRange, Version> age_table = {
@@ -1400,7 +1400,47 @@ const std::map<CodePointRange, Version> age_table = {
     { CodePointRange(0x1F933, 0x1F93E), { 9, 0, 0 } },
     { CodePointRange(0x1F940, 0x1F94B), { 9, 0, 0 } },
     { CodePointRange(0x1F950, 0x1F95E), { 9, 0, 0 } },
-    { CodePointRange(0x1F985, 0x1F991), { 9, 0, 0 } }
+    { CodePointRange(0x1F985, 0x1F991), { 9, 0, 0 } },
+    { CodePointRange(0x0860, 0x086A), { 10, 0, 0 } },
+    { CodePointRange(0x09FC, 0x09FD), { 10, 0, 0 } },
+    { CodePointRange(0x0AFA, 0x0AFF), { 10, 0, 0 } },
+    { CodePointRange(0x0D00, 0x0D00), { 10, 0, 0 } },
+    { CodePointRange(0x0D3B, 0x0D3C), { 10, 0, 0 } },
+    { CodePointRange(0x1CF7, 0x1CF7), { 10, 0, 0 } },
+    { CodePointRange(0x1DF6, 0x1DF9), { 10, 0, 0 } },
+    { CodePointRange(0x20BF, 0x20BF), { 10, 0, 0 } },
+    { CodePointRange(0x23FF, 0x23FF), { 10, 0, 0 } },
+    { CodePointRange(0x2BD2, 0x2BD2), { 10, 0, 0 } },
+    { CodePointRange(0x2E45, 0x2E49), { 10, 0, 0 } },
+    { CodePointRange(0x312E, 0x312E), { 10, 0, 0 } },
+    { CodePointRange(0x9FD6, 0x9FEA), { 10, 0, 0 } },
+    { CodePointRange(0x1032D, 0x1032F), { 10, 0, 0 } },
+    { CodePointRange(0x11A00, 0x11A47), { 10, 0, 0 } },
+    { CodePointRange(0x11A50, 0x11A83), { 10, 0, 0 } },
+    { CodePointRange(0x11A86, 0x11A9C), { 10, 0, 0 } },
+    { CodePointRange(0x11A9E, 0x11AA2), { 10, 0, 0 } },
+    { CodePointRange(0x11D00, 0x11D06), { 10, 0, 0 } },
+    { CodePointRange(0x11D08, 0x11D09), { 10, 0, 0 } },
+    { CodePointRange(0x11D0B, 0x11D36), { 10, 0, 0 } },
+    { CodePointRange(0x11D3A, 0x11D3A), { 10, 0, 0 } },
+    { CodePointRange(0x11D3C, 0x11D3D), { 10, 0, 0 } },
+    { CodePointRange(0x11D3F, 0x11D47), { 10, 0, 0 } },
+    { CodePointRange(0x11D50, 0x11D59), { 10, 0, 0 } },
+    { CodePointRange(0x16FE1, 0x16FE1), { 10, 0, 0 } },
+    { CodePointRange(0x1B002, 0x1B11E), { 10, 0, 0 } },
+    { CodePointRange(0x1B170, 0x1B2FB), { 10, 0, 0 } },
+    { CodePointRange(0x1F260, 0x1F265), { 10, 0, 0 } },
+    { CodePointRange(0x1F6D3, 0x1F6D4), { 10, 0, 0 } },
+    { CodePointRange(0x1F6F7, 0x1F6F8), { 10, 0, 0 } },
+    { CodePointRange(0x1F900, 0x1F90B), { 10, 0, 0 } },
+    { CodePointRange(0x1F91F, 0x1F91F), { 10, 0, 0 } },
+    { CodePointRange(0x1F928, 0x1F92F), { 10, 0, 0 } },
+    { CodePointRange(0x1F931, 0x1F932), { 10, 0, 0 } },
+    { CodePointRange(0x1F94C, 0x1F94C), { 10, 0, 0 } },
+    { CodePointRange(0x1F95F, 0x1F96B), { 10, 0, 0 } },
+    { CodePointRange(0x1F992, 0x1F997), { 10, 0, 0 } },
+    { CodePointRange(0x1F9D0, 0x1F9E6), { 10, 0, 0 } },
+    { CodePointRange(0x2CEB0, 0x2EBE0), { 10, 0, 0 } }
 };
 
 } // namespace ucd

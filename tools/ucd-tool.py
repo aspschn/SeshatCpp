@@ -4,10 +4,10 @@
 import sys
 import os
 
-UNICODE_VERSION_MAJOR = 9
+UNICODE_VERSION_MAJOR = 10
 UNICODE_VERSION_MINOR = 0
 UNICODE_VERSION_UPDATE = 0
-EMOJI_VERSION_MAJOR = 4
+EMOJI_VERSION_MAJOR = 5
 EMOJI_VERSION_MINOR = 0
 
 UCD_URL = "http://www.unicode.org/Public/{}.{}.{}/ucd"
@@ -354,6 +354,9 @@ CJK_Ideograph_Ext_D_Last = '<CJK Ideograph Extension D, Last>'
 # 2B820-2CEA1: CJK Ideograph Extension E (Lo)
 CJK_Ideograph_Ext_E_First = '<CJK Ideograph Extension E, First>'
 CJK_Ideograph_Ext_E_Last = '<CJK Ideograph Extension E, Last>'
+# 2CEB0-2EBE0: CJK Ideograph Extension F (Lo)
+CJK_Ideograph_Ext_F_First = '<CJK Ideograph Extension F, First>'
+CJK_Ideograph_Ext_F_Last = '<CJK Ideograph Extension F, Last>'
 # F0000-FFFFD: Plane 15 Private Use (Co)
 Plane_15_PU_First = '<Plane 15 Private Use, First>'
 Plane_15_PU_Last = '<Plane 15 Private Use, Last>'
@@ -373,6 +376,7 @@ ranged_list = (
     CJK_Ideograph_Ext_C_First, CJK_Ideograph_Ext_C_Last,
     CJK_Ideograph_Ext_D_First, CJK_Ideograph_Ext_D_Last,
     CJK_Ideograph_Ext_E_First, CJK_Ideograph_Ext_E_Last,
+    CJK_Ideograph_Ext_F_First, CJK_Ideograph_Ext_F_Last,
     Plane_15_PU_First, Plane_15_PU_Last, Plane_16_PU_First, Plane_16_PU_Last
 )
 
@@ -437,6 +441,9 @@ def is_skip(code_point):
     # Tangut Component 18800-18AF2
     if (0x18800 <= code_point and code_point <= 0x18AF2) or \
         (is_cjk_compat(code_point)):
+        return True
+    # Nushu Character
+    elif CodePointRange(0x1B170, 0x1B2FB).contains(code_point):
         return True
     else:
         return False
@@ -511,11 +518,16 @@ class CodeBuilder:
 comment = '''//  This file generated automatically using 'ucd-tool.py'.
 //  You can find the author and the copyright in file 'tools/ucd-tool.py'.
 '''
-def version_assert():
-    return ('static_assert(UnicodeVersion == (Version { '
-        + '{}, {}, {}'.format(UNICODE_VERSION_MAJOR, UNICODE_VERSION_MINOR,
-            UNICODE_VERSION_UPDATE)
-        + ' }), "Version error");')
+def version_assert(option='unicode'):
+    if option == 'unicode':
+        return ('static_assert(UnicodeVersion == (Version { '
+            + '{}, {}, {}'.format(UNICODE_VERSION_MAJOR, UNICODE_VERSION_MINOR,
+                UNICODE_VERSION_UPDATE)
+            + ' }), "Version error");')
+    elif option == 'emoji':
+        return ('static_assert(EmojiVersion == (Version { '
+            + '{}, {}, {}'.format(EMOJI_VERSION_MAJOR, EMOJI_VERSION_MINOR, 0)
+            + ' }), "Version error");')
 
 builder_gc_cpp = CodeBuilder('gc.cpp')
 (builder_gc_cpp.comment(comment + '''//
@@ -998,12 +1010,14 @@ def make_emoji_data_cpp():
         'Emoji': table_open('emoji_table'),
         'Emoji_Presentation': table_open('emoji_presentation_table'),
         'Emoji_Modifier': table_open('emoji_modifier_table'),
-        'Emoji_Modifier_Base': table_open('emoji_modifier_base_table')
+        'Emoji_Modifier_Base': table_open('emoji_modifier_base_table'),
+        'Emoji_Component': table_open('emoji_component_table')
     }
 
     parser.parse_all(lambda r, f, s: tables[f].append(r))
 
     builder_emoji_data_cpp.push_content(version_assert())
+    builder_emoji_data_cpp.push_content(version_assert('emoji'))
     for t in tables.values():
         builder_emoji_data_cpp.push_content(t.to_seshat())
     builder_emoji_data_cpp.close_ns_all()

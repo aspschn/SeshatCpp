@@ -21,7 +21,7 @@ struct Version {
     uint8_t update;
 };
 
-constexpr uint8_t UnicodeVersionMajor = 9;
+constexpr uint8_t UnicodeVersionMajor = 10;
 constexpr uint8_t UnicodeVersionMinor = 0;
 constexpr uint8_t UnicodeVersionUpdate = 0;
 
@@ -34,11 +34,11 @@ constexpr Version UnicodeVersion = {
 // Do not use the below macro constants since these are not intended
 // to use currently.
 // It could be deprecated in future version.
-#define UNICODE_VERSION_MAJOR 9;
+#define UNICODE_VERSION_MAJOR 10;
 #define UNICODE_VERSION_MINOR 0;
 #define UNICODE_VERSION_UPDATE 0;
 namespace emoji {
-    constexpr uint8_t EmojiVersionMajor = 4;
+    constexpr uint8_t EmojiVersionMajor = 5;
     constexpr uint8_t EmojiVersionMinor = 0;
 
     constexpr Version EmojiVersion = {

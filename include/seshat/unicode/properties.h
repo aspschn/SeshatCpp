@@ -132,9 +132,21 @@ enum class Script {
     Ugar, Vaii, // Ugaritic // Vai
     Wara, Xpeo, // Warang_Citi // Old_Persian
     Xsux, Yiii, // Cuneiform // Yi
+    // New in Unicode 10.0.0
+    Gonm, // Masaram_Gondi
+    Nshu, // Nushu
+    Soyo, // Soyombo
+    Zanb, // Zanabazar_Square
+    // Other values
     Zinh, Zyyy, Zzzz // Inherited ; Qaai // Common // Unknown
 };
-static_assert(static_cast<int>(Script::Zzzz) + 1 == 139,
+static_assert(
+    /* if */ (UnicodeVersion == (Version { 9, 0, 0 })) ?
+        (static_cast<int>(Script::Zzzz) + 1 == 139)
+    : /* else if */ (UnicodeVersion == (Version { 10, 0, 0 })) ?
+        (static_cast<int>(Script::Zzzz) + 1 == 143)
+    : /* else */
+        false,
     "The number of Script property values do not match.");
 
 // Block (blk)
@@ -234,7 +246,7 @@ enum class Block {
     Mro, Multani, Music,
     Myanmar, Myanmar_Ext_A, Myanmar_Ext_B,
     // N
-    Nabataean, NB, New_Tai_Lue, Newa, NKo, Number_Forms,
+    Nabataean, New_Tai_Lue, Newa, NKo, Number_Forms,
     // O
     OCR,
     Ogham,
@@ -277,9 +289,25 @@ enum class Block {
     Warang_Citi,
     // X, Y, Z
     Yi_Radicals, Yi_Syllables,
-    Yijing
+    Yijing,
+    // New in Unicode 10.0.0
+    CJK_Ext_F,
+    Kana_Ext_A,
+    Masaram_Gondi,
+    Nushu,
+    Soyombo,
+    Syriac_Sup,
+    Zanabazar_Square,
+    // Default value
+    NB // None block
 };
-static_assert(static_cast<int>(Block::Yijing) + 1 == 274,
+static_assert(
+    /* if */ (UnicodeVersion == (Version { 9, 0, 0 })) ?
+        (static_cast<int>(Block::NB) + 1 == 274)
+    : /* else if */ (UnicodeVersion == (Version { 10, 0, 0 })) ?
+        (static_cast<int>(Block::NB) + 1 == 281)
+    : /* else */
+        false,
     "The number of Block property values do not match.");
 
 // Grapheme_Cluster_Break (GCB)

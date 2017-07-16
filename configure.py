@@ -8,6 +8,7 @@ import xml.etree.ElementTree
 import subprocess
 
 ICU_MIN_VERSION = "59.1"
+UNICODE_VERSION = "10.0"
 
 options = {
     'SESHAT_ICU_BACKEND': False,
@@ -82,11 +83,17 @@ def detect_icu():
 
         icu_version = icu_info['version'].split('.')
         min_version = ICU_MIN_VERSION.split('.')
+        uni_version = icu_info['version.unicode'].split('.')
+        min_uni_version = UNICODE_VERSION.split('.')
         if icu_version < min_version:
             if options['SESHAT_IGNORE_ICU_VERSION']:
                 return
             print('Seshat requires ICU version {} or later, but version installed your system is {}'.format(ICU_MIN_VERSION, icu_info['version']))
             exit(1)
+        if uni_version < min_uni_version:
+            if options['SESHAT_IGNORE_ICU_VERSION']:
+                return
+            print('Seshat requires ICU which supports Unicode version {} or later, but ICU installed your system supports until {}'.format(UNICODE_VERSION, icu_info['version.unicode']))
     else:
         print('icuinfo: command not found.')
         exit(1)

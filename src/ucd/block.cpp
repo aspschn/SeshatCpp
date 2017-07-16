@@ -9,7 +9,7 @@ namespace seshat {
 namespace unicode {
 namespace ucd {
 
-static_assert(UnicodeVersion == (Version { 9, 0, 0 }), "Version error");
+static_assert(UnicodeVersion == (Version { 10, 0, 0 }), "Version error");
 
 
 const std::map<CodePointRange, Block> block_table = {
@@ -32,6 +32,7 @@ const std::map<CodePointRange, Block> block_table = {
     { CodePointRange(0x07C0, 0x07FF), Block::NKo },
     { CodePointRange(0x0800, 0x083F), Block::Samaritan },
     { CodePointRange(0x0840, 0x085F), Block::Mandaic },
+    { CodePointRange(0x0860, 0x086F), Block::Syriac_Sup },
     { CodePointRange(0x08A0, 0x08FF), Block::Arabic_Ext_A },
     { CodePointRange(0x0900, 0x097F), Block::Devanagari },
     { CodePointRange(0x0980, 0x09FF), Block::Bengali },
@@ -234,9 +235,12 @@ const std::map<CodePointRange, Block> block_table = {
     { CodePointRange(0x11680, 0x116CF), Block::Takri },
     { CodePointRange(0x11700, 0x1173F), Block::Ahom },
     { CodePointRange(0x118A0, 0x118FF), Block::Warang_Citi },
+    { CodePointRange(0x11A00, 0x11A4F), Block::Zanabazar_Square },
+    { CodePointRange(0x11A50, 0x11AAF), Block::Soyombo },
     { CodePointRange(0x11AC0, 0x11AFF), Block::Pau_Cin_Hau },
     { CodePointRange(0x11C00, 0x11C6F), Block::Bhaiksuki },
     { CodePointRange(0x11C70, 0x11CBF), Block::Marchen },
+    { CodePointRange(0x11D00, 0x11D5F), Block::Masaram_Gondi },
     { CodePointRange(0x12000, 0x123FF), Block::Cuneiform },
     { CodePointRange(0x12400, 0x1247F), Block::Cuneiform_Numbers },
     { CodePointRange(0x12480, 0x1254F), Block::Early_Dynastic_Cuneiform },
@@ -251,6 +255,8 @@ const std::map<CodePointRange, Block> block_table = {
     { CodePointRange(0x17000, 0x187FF), Block::Tangut },
     { CodePointRange(0x18800, 0x18AFF), Block::Tangut_Components },
     { CodePointRange(0x1B000, 0x1B0FF), Block::Kana_Sup },
+    { CodePointRange(0x1B100, 0x1B12F), Block::Kana_Ext_A },
+    { CodePointRange(0x1B170, 0x1B2FF), Block::Nushu },
     { CodePointRange(0x1BC00, 0x1BC9F), Block::Duployan },
     { CodePointRange(0x1BCA0, 0x1BCAF), Block::Shorthand_Format_Controls },
     { CodePointRange(0x1D000, 0x1D0FF), Block::Byzantine_Music },
@@ -281,6 +287,7 @@ const std::map<CodePointRange, Block> block_table = {
     { CodePointRange(0x2A700, 0x2B73F), Block::CJK_Ext_C },
     { CodePointRange(0x2B740, 0x2B81F), Block::CJK_Ext_D },
     { CodePointRange(0x2B820, 0x2CEAF), Block::CJK_Ext_E },
+    { CodePointRange(0x2CEB0, 0x2EBEF), Block::CJK_Ext_F },
     { CodePointRange(0x2F800, 0x2FA1F), Block::CJK_Compat_Ideographs_Sup },
     { CodePointRange(0xE0000, 0xE007F), Block::Tags },
     { CodePointRange(0xE0100, 0xE01EF), Block::VS_Sup },
