@@ -80,8 +80,12 @@ int main()
         CodePointSequence org = str_to_seq(seqs[0]);
         CodePointSequence seshat_nfd = seshat::unicode::nfd(org);
         CodePointSequence seshat_nfc = seshat::unicode::nfc(org);
+        CodePointSequence seshat_nfkd = seshat::unicode::nfkd(org);
+        CodePointSequence seshat_nfkc = seshat::unicode::nfkc(org);
         CodePointSequence right_nfd = str_to_seq(seqs[2]);
         CodePointSequence right_nfc = str_to_seq(seqs[1]);
+        CodePointSequence right_nfkd = str_to_seq(seqs[4]);
+        CodePointSequence right_nfkc = str_to_seq(seqs[3]);
         for (auto cp: org)
             std::cout << cp.to_string() << " ";
         // Wrong NFD
@@ -100,6 +104,24 @@ int main()
                 std::cout << cp.to_string() << " ";
             std::cout << ", but should ";
             for (auto cp: right_nfc)
+                std::cout << cp.to_string() << " ";
+        }
+        // Wrong NFKD
+        if (right_nfkd != seshat_nfkd) {
+            std::cout << ": wrong nfkd => ";
+            for (auto cp: seshat_nfkd)
+                std::cout << cp.to_string() << " ";
+            std::cout << ", but should ";
+            for (auto cp: right_nfkd)
+                std::cout << cp.to_string() << " ";
+        }
+        // Wrong NFKC
+        if (right_nfkc != seshat_nfkc) {
+            std::cout << ": wrong nfkc => ";
+            for (auto cp: seshat_nfkc)
+                std::cout << cp.to_string() << " ";
+            std::cout << ", but should ";
+            for (auto cp: right_nfkc)
                 std::cout << cp.to_string() << " ";
         }
         std::cout << std::endl;

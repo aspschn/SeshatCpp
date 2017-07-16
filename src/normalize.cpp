@@ -116,34 +116,81 @@ CodePointSequence nfd(const CodePointSequence& sequence)
     return decomp;
 }
 
-CodePointSequence nfc(const CodePointSequence& sequence)
+// void compose(CodePointSequence&) - Compose the sequence that decomposed.
+//  Used for NFC or NFKC composition. The input sequence should be already
+//  decomposed with NFD or NFKD.
+static void compose(CodePointSequence& sequence)
 {
-    if (sequence.length() == 0) return sequence;
-
-    // Make NFD normalization form.
-    auto composed = nfd(sequence);
     // Return immediately if a single character.
-    if (composed.length() == 1) return composed;
+    if (sequence.length() == 1) return;
 
     // Starting from the second character.
-    decltype(composed.begin())::difference_type offset = 1;
-    while (offset < composed.length()) {
+    decltype(sequence.begin())::difference_type offset = 1;
+    while (offset < sequence.length()) {
         // Find the last Starter.
-        auto it = composed.begin() + offset;
+        auto it = sequence.begin() + offset;
         auto b_it = it - 1; // Back iterator.
-        while (b_it != composed.begin() && !starter(*b_it)) --b_it;
+        while (b_it != sequence.begin() && !starter(*b_it)) --b_it;
         if (starter(*b_it) && !blocked(b_it, it)) {
             auto mapped = (hangul::composable_pair(*b_it, *it)) ?
                 hangul::compose(*b_it, *it) : rdm({ *b_it, *it });
             if (mapped != 0x0 && primary_composite(mapped)) {
                 *b_it = mapped;
-                composed.erase(it);
+                sequence.erase(it);
                 --offset; // Move back because a code point deleted.
             }
         }
         ++offset;
     }
-    return composed;
+    // return sequence;
+}
+
+CodePointSequence nfc(const CodePointSequence& sequence)
+{
+    if (sequence.length() == 0) return sequence;
+
+    // Make NFD normalization form.
+    auto ret = nfd(sequence);
+
+    compose(ret);
+    return ret;
+}
+
+CodePointSequence nfkd(const CodePointSequence& sequence)
+{
+    CodePointSequence decomp;
+
+    // Decompose each code points.
+    for (auto cp: sequence) {
+        auto mapping = dm(cp);
+        // Using Hangul decomposition if Hangul syllable.
+        if (block(cp) == Block::Hangul && dt(cp) == Dt::Can)
+            mapping = hangul::decompose(cp);
+        if (mapping.length() > 0) {
+            decomp.insert(decomp.end(), mapping.begin(), mapping.end());
+        } else {
+            decomp.append(cp);
+        }
+    }
+    // Re-order the decomposed sequence
+    canonical_ordering(decomp);
+
+    // Do recursively until pass quick check
+    if (nfkd_qc(decomp) != QcValue::Yes) {
+        return nfkd(decomp);
+    }
+    return decomp;
+}
+
+CodePointSequence nfkc(const CodePointSequence& sequence)
+{
+    if (sequence.length() == 0) return sequence;
+
+    // Make NFKD normalization form.
+    auto ret = nfkd(sequence);
+
+    compose(ret);
+    return ret;
 }
 
 } // namespace unicode

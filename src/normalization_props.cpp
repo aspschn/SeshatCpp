@@ -64,6 +64,16 @@ QcValue nfkd_qc(uint32_t cp)
     }
 }
 
+QcValue nfkd_qc(const CodePointSequence& seq)
+{
+    for (auto cp: seq) {
+        if (nfkd_qc(cp.code()) == QcValue::No) {
+            return QcValue::No;
+        }
+    }
+    return QcValue::Yes;
+}
+
 QcValue nfkc_qc(uint32_t cp)
 {
     auto found = ucd::nfkc_qc_table.find(CodePointRange(cp, cp));

@@ -31,6 +31,8 @@ bool blocked(CodePointSequenceConstIter first,
 // Composition/Decomposition
 CodePointSequence nfd(const CodePointSequence& sequence);
 CodePointSequence nfc(const CodePointSequence& sequence);
+CodePointSequence nfkd(const CodePointSequence& sequence);
+CodePointSequence nfkc(const CodePointSequence& sequence);
 
 } // namespace unicode
 } // namespace seshat

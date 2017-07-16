@@ -31,7 +31,7 @@ QcValue nfd_qc(const CodePointSequence& seq);
 QcValue nfc_qc(uint32_t cp);
 // QcValue nfc_qc(const CodePointSequence& seq);
 QcValue nfkd_qc(uint32_t cp);
-// QcValue nfkd_qc(const CodePointSequence& seq);
+QcValue nfkd_qc(const CodePointSequence& seq);
 QcValue nfkc_qc(uint32_t cp);
 // QcValue nfkc_qc(const CodePointSequence& seq);
 
