@@ -38,60 +38,6 @@ uint32_t CodePoint::code() const
     return _code;
 }
 
-/*
-Gc CodePoint::gc() const
-{
-    auto category = gc_table.find(_code);
-    if (category != gc_table.end()) {
-        return category->second;
-    } else {
-        if (CJK_IDEO_EXT_A_FRST <= _code && _code <= CJK_IDEO_EXT_A_LAST) {
-            return Gc::Lo;
-        }
-        if (CJK_IDEO_FRST <= _code && _code <= CJK_IDEO_LAST) {
-            return Gc::Lo;
-        }
-        if (HANGUL_SYLLAB_FRST <= _code && _code <= HANGUL_SYLLAB_LAST) {
-            return Gc::Lo;
-        }
-        if (NON_PU_HIGH_SRG_FRST <= _code && _code <= NON_PU_HIGH_SRG_LAST) {
-            return Gc::Cs;
-        }
-        if (PU_HIGH_SRG_FRST <= _code && _code <= PU_HIGH_SRG_LAST) {
-            return Gc::Cs;
-        }
-        if (LOW_SRG_FRST <= _code && _code <= LOW_SRG_LAST) {
-            return Gc::Cs;
-        }
-        if (PU_FRST <= _code && _code <= PU_LAST) {
-            return Gc::Co;
-        }
-        if (TANGUT_IDEO_FRST <= _code && _code <= TANGUT_IDEO_LAST) {
-            return Gc::Lo;
-        }
-        if (CJK_IDEO_EXT_B_FRST <= _code && _code <= CJK_IDEO_EXT_B_LAST) {
-            return Gc::Lo;
-        }
-        if (CJK_IDEO_EXT_C_FRST <= _code && _code <= CJK_IDEO_EXT_C_LAST) {
-            return Gc::Lo;
-        }
-        if (CJK_IDEO_EXT_D_FRST <= _code && _code <= CJK_IDEO_EXT_D_LAST) {
-            return Gc::Lo;
-        }
-        if (CJK_IDEO_EXT_E_FRST <= _code && _code <= CJK_IDEO_EXT_E_LAST) {
-            return Gc::Lo;
-        }
-        if (PLANE_15_PU_FRST <= _code && _code <= PLANE_15_PU_LAST) {
-            return Gc::Co;
-        }
-        if (PLANE_16_PU_FRST <= _code && _code <= PLANE_16_PU_LAST) {
-            return Gc::Co;
-        }
-        return Gc::Cn;
-    }
-}
-*/
-
 std::string CodePoint::to_string() const
 {
     return code_point_to_string(_code);
