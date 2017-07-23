@@ -56,6 +56,8 @@ public:
     using size_type = decltype(_codes)::size_type;
     using iterator = CodePointSequenceIter;
     using const_iterator = CodePointSequenceConstIter;
+    using reverse_iterator = std::reverse_iterator<iterator>;
+    using const_reverse_iterator = std::reverse_iterator<const_iterator>;
 
     CodePointSequence();
     CodePointSequence(const CodePointSequence& origin);
@@ -81,6 +83,10 @@ public:
     const_iterator begin() const;
     iterator end();
     const_iterator end() const;
+    reverse_iterator rbegin();
+    const_reverse_iterator rbegin() const;
+    reverse_iterator rend();
+    const_reverse_iterator rend() const;
 
     CodePointSequence& operator=(const CodePointSequence& origin);
     CodePointSequence& operator=(CodePointSequence&& origin);

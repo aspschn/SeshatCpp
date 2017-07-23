@@ -251,6 +251,26 @@ auto CodePointSequence::end() const -> const_iterator
     return it;
 }
 
+auto CodePointSequence::rbegin() -> reverse_iterator
+{
+    return std::reverse_iterator<iterator>(this->end());
+}
+
+auto CodePointSequence::rbegin() const -> const_reverse_iterator
+{
+    return std::reverse_iterator<const_iterator>(this->end());
+}
+
+auto CodePointSequence::rend() -> reverse_iterator
+{
+    return std::reverse_iterator<iterator>(this->begin());
+}
+
+auto CodePointSequence::rend() const -> const_reverse_iterator
+{
+    return std::reverse_iterator<const_iterator>(this->begin());
+}
+
 CodePointSequence& CodePointSequence::operator=(
     const CodePointSequence& origin)
 {
