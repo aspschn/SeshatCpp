@@ -14,6 +14,7 @@
 #ifndef _UNICODE_PROPERTIES_H
 #define _UNICODE_PROPERTIES_H
 
+#include <seshat/codepoint.h>
 #include <seshat/unicode/version.h> // struct Version (for age() function)
 #include <seshat/utils.h>
 
@@ -400,10 +401,10 @@ enum class Gcb {
 /// Version.update always 0.\n
 /// Given code point for value Unassigned(NA) will returns
 /// all 0 members. (== Version { 0, 0, 0 })
-Version age(uint32_t cp);
+Version age(CodePoint cp);
 // Block (blk)
 /// \brief  Get the Block property value.
-Block block(uint32_t cp);
+Block block(CodePoint cp);
 // Script (sc)
 // Script script(uint32_t cp);
 
@@ -415,17 +416,17 @@ Block block(uint32_t cp);
 // Bidi_Paired_Bracket_Type (bpt)
 // Canonical_Combining_Class (ccc)
 /// \brief  Get the Canonical_Combining_Class (ccc) property value.
-uint8_t ccc(uint32_t cp);
+uint8_t ccc(CodePoint cp);
 // Decomposition_Type (dt)
 /// \brief  Get the Decomposition_Type (dt) property value.
-Dt dt(uint32_t cp);
+Dt dt(CodePoint cp);
 // East_Asian_Width (ea)
 // General_Category (gc)
 /// \brief  Get the General_Category (gc) property value.
-Gc gc(uint32_t cp);
+Gc gc(CodePoint cp);
 // Grapheme_Cluster_Break (GCB)
 /// \brief  Get the Grapheme_Cluster_Break property value.
-Gcb gcb(uint32_t cp);
+Gcb gcb(CodePoint cp);
 // ! Hangul_Syllable_Type (hst) - @hangul.h
 // Indic_Positional_Category (InPC)
 // Indic_Syllabic_Category (InSC)
@@ -462,13 +463,13 @@ Gcb gcb(uint32_t cp);
 // Deprecated (Dep)
 // Default_Ignorable_Code_Point (DI)
 /// \brief  Get the Default_Ignorable_Code_Point property value.
-bool default_ignorable_code_point(uint32_t cp);
+bool default_ignorable_code_point(CodePoint cp);
 // Diacritic (Dia)
 // Extender (Ext)
 // Grapheme_Base (Gr_Base)
 // Grapheme_Extend (Gr_Ext)
 /// \brief  Get the Grapheme_Extend property value.
-bool grapheme_extend(uint32_t cp);
+bool grapheme_extend(CodePoint cp);
 // Grapheme_Link (Gr_Link)
 // Hex_Digit (Hex)
 // Hyphen (Hyphen)
@@ -485,10 +486,10 @@ bool grapheme_extend(uint32_t cp);
 // Other_Alphabetic (OAlpha)
 // Other_Default_Ignorable_Code_Point (ODI)
 /// \brief  Get the Other_Default_Ignorable_Code_Point property value.
-bool odi(uint32_t cp);
+bool odi(CodePoint cp);
 // Other_Grapheme_Extend (OGr_Ext)
 /// \brief  Get the Other_Grapheme_Extend property value.
-bool ogr_ext(uint32_t cp);
+bool ogr_ext(CodePoint cp);
 // Other_ID_Continue (OIDC)
 // Other_ID_Start (OIDS)
 // Other_Lowercase (OLower)
@@ -498,7 +499,7 @@ bool ogr_ext(uint32_t cp);
 // Pattern_White_Space (Pat_WS)
 // Prepended_Concatenation_Mark (PCM)
 /// \brief  Get the Prepended_Concatenation_Mark property value.
-bool prepended_concatenation_mark(uint32_t cp);
+bool prepended_concatenation_mark(CodePoint cp);
 // Quotation_Mark (QMark)
 // Radical (Radical)
 // Soft_Dotted (SD)
@@ -508,10 +509,10 @@ bool prepended_concatenation_mark(uint32_t cp);
 // Uppercase (Upper)
 // Variation_Selector (VS)
 /// \brief  Get the Variation_Selector (VS) property value.
-bool variation_selector(uint32_t cp);
+bool variation_selector(CodePoint cp);
 // White_Space (WSpace) ; space
 /// \brief  Get the White_Space (WSpace) property value.
-bool white_space(uint32_t cp);
+bool white_space(CodePoint cp);
 // XID_Continue (XIDC)
 // XID_Start (XIDS)
 // Expands_On_NFC (XO_NFC)

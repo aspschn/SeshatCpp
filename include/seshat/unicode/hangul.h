@@ -57,7 +57,7 @@ enum class HangulSyllableType {
 
 // Unicode character property
 /// \brief  Get Hangul_Syllable_Type property value of given code point.
-HangulSyllableType hangul_syllable_type(uint32_t cp);
+HangulSyllableType hangul_syllable_type(CodePoint cp);
 
 // Hangul jamo name mapping
 //

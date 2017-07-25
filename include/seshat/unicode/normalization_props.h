@@ -28,27 +28,27 @@ enum class QcValue {
 };
 
 /// \brief  Get the Unicode property Full_Composition_Exclusion (comp_ex).
-bool comp_ex(uint32_t cp);
+bool comp_ex(CodePoint cp);
 
 /// \brief  Get the Unicode character property NFD_QC.
-QcValue nfd_qc(uint32_t cp);
+QcValue nfd_qc(CodePoint cp);
 
 /// \brief  Do NFD_QC for all code points in the sequence.
 QcValue nfd_qc(const CodePointSequence& seq);
 
 /// \brief  Get the Unicode character property NFC_QC.
-QcValue nfc_qc(uint32_t cp);
+QcValue nfc_qc(CodePoint cp);
 
 // QcValue nfc_qc(const CodePointSequence& seq);
 
 /// \brief  Get the Unicode character property NFKD_QC.
-QcValue nfkd_qc(uint32_t cp);
+QcValue nfkd_qc(CodePoint cp);
 
 /// \brief  Do NFKD_QC for all code points in the sequence.
 QcValue nfkd_qc(const CodePointSequence& seq);
 
 /// \brief  Get the Unicode character property NFKC_QC.
-QcValue nfkc_qc(uint32_t cp);
+QcValue nfkc_qc(CodePoint cp);
 
 // QcValue nfkc_qc(const CodePointSequence& seq);
 

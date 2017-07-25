@@ -13,7 +13,7 @@ namespace seshat {
 namespace unicode {
 namespace hangul {
 
-HangulSyllableType hangul_syllable_type(uint32_t cp)
+HangulSyllableType hangul_syllable_type(CodePoint cp)
 {
     if (S_BASE <= cp && cp <= S_BASE + S_COUNT - 1) {
         uint32_t s_index = S_INDEX(cp);

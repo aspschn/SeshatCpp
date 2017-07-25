@@ -11,6 +11,8 @@
 #ifndef _UNICODE_NAME_H
 #define _UNICODE_NAME_H
 
+#include <seshat/codepoint.h>
+
 #include <cstdint>
 #include <exception>
 #include <string>
@@ -19,7 +21,7 @@ namespace seshat {
 namespace unicode {
 
 /// \brief  Get the Unicode property character property Name if exists.
-const std::string name(uint32_t cp);
+const std::string name(CodePoint cp);
 
 /// \brief  Thrown when there is no Name property for certain code point.
 class NoName : public std::exception {

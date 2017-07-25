@@ -14,7 +14,7 @@
 namespace seshat {
 namespace unicode {
 
-bool comp_ex(uint32_t cp)
+bool comp_ex(CodePoint cp)
 {
     auto found = ucd::comp_ex_table.find(CodePointRange(cp, cp));
     if (found != ucd::comp_ex_table.end()) {
@@ -24,7 +24,7 @@ bool comp_ex(uint32_t cp)
     }
 }
 
-QcValue nfd_qc(uint32_t cp)
+QcValue nfd_qc(CodePoint cp)
 {
     auto found = ucd::nfd_qc_table.find(CodePointRange(cp, cp));
     if (found != ucd::nfd_qc_table.end()) {
@@ -44,7 +44,7 @@ QcValue nfd_qc(const CodePointSequence& seq)
     return QcValue::Yes;
 }
 
-QcValue nfc_qc(uint32_t cp)
+QcValue nfc_qc(CodePoint cp)
 {
     auto found = ucd::nfc_qc_table.find(CodePointRange(cp, cp));
     if (found != ucd::nfc_qc_table.end()) {
@@ -54,7 +54,7 @@ QcValue nfc_qc(uint32_t cp)
     }
 }
 
-QcValue nfkd_qc(uint32_t cp)
+QcValue nfkd_qc(CodePoint cp)
 {
     auto found = ucd::nfkd_qc_table.find(CodePointRange(cp, cp));
     if (found != ucd::nfkd_qc_table.end()) {
@@ -74,7 +74,7 @@ QcValue nfkd_qc(const CodePointSequence& seq)
     return QcValue::Yes;
 }
 
-QcValue nfkc_qc(uint32_t cp)
+QcValue nfkc_qc(CodePoint cp)
 {
     auto found = ucd::nfkc_qc_table.find(CodePointRange(cp, cp));
     if (found != ucd::nfkc_qc_table.end()) {

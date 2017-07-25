@@ -21,7 +21,7 @@
 namespace seshat {
 namespace unicode {
 
-const std::string name(uint32_t cp)
+const std::string name(CodePoint cp)
 {
 #ifndef SESHAT_ICU_BACKEND
     std::string unicode_name;

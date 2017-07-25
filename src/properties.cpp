@@ -37,69 +37,69 @@ Script script(uint32_t cp)
     return Script::Zzzz;
 }
 */
-Version age(uint32_t cp)
+Version age(CodePoint cp)
 {
     return implementation::age(cp);
 }
 
-Gc gc(uint32_t cp)
+Gc gc(CodePoint cp)
 {
     return implementation::gc(cp);
 }
 
-uint8_t ccc(uint32_t cp)
+uint8_t ccc(CodePoint cp)
 {
     return implementation::ccc(cp);
 }
 
-Dt dt(uint32_t cp)
+Dt dt(CodePoint cp)
 {
     return implementation::dt(cp);
 }
 
-Block block(uint32_t cp)
+Block block(CodePoint cp)
 {
     return implementation::block(cp);
 }
 
-Gcb gcb(uint32_t cp)
+Gcb gcb(CodePoint cp)
 {
     return implementation::gcb(cp);
 }
 
 #ifndef SESHAT_ICU_BACKEND
-bool odi(uint32_t cp)
+bool odi(CodePoint cp)
 {
     return ucd::odi(cp);
 }
 
-bool ogr_ext(uint32_t cp)
+bool ogr_ext(CodePoint cp)
 {
     return ucd::ogr_ext(cp);
 }
 
-bool prepended_concatenation_mark(uint32_t cp)
+bool prepended_concatenation_mark(CodePoint cp)
 {
     return ucd::prepended_concatenation_mark(cp);
 }
 #endif // SESHAT_ICU_BACKEND
 
-bool grapheme_extend(uint32_t cp)
+bool grapheme_extend(CodePoint cp)
 {
     return implementation::grapheme_extend(cp);
 }
 
-bool default_ignorable_code_point(uint32_t cp)
+bool default_ignorable_code_point(CodePoint cp)
 {
     return implementation::default_ignorable_code_point(cp);
 }
 
-bool variation_selector(uint32_t cp)
+bool variation_selector(CodePoint cp)
 {
     return implementation::variation_selector(cp);
 }
 
-bool white_space(uint32_t cp)
+bool white_space(CodePoint cp)
 {
     return implementation::white_space(cp);
 }
