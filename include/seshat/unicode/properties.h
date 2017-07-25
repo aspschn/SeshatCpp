@@ -1,14 +1,16 @@
-/*
+//
 //  unicode/properties.h
 //
 //  Author:     Sophia Lee
 //  Created:    2017. 05. 11. 16:30
 //  Copyright (c) 2016 Sophia Lee. All rights reserved.
 //
-//  Unicode properties enums and functions.
-//  Currently not fully contains. It may split to or merge with other
-//  property types.
-*/
+
+/// \file
+/// \brief  Unicode properties enums and functions.
+///
+/// Currently not fully contains. It may split to or merge with other
+/// property types.
 #ifndef _UNICODE_PROPERTIES_H
 #define _UNICODE_PROPERTIES_H
 
@@ -20,7 +22,7 @@
 namespace seshat {
 namespace unicode {
 
-// General_Category (gc)
+/// \brief  Unicode character property General_Category (gc).
 enum class Gc {
     // C - Other
     Cc, Cf, Cn, Co, Cs,
@@ -39,8 +41,9 @@ enum class Gc {
     Zl, Zp, Zs,
 };
 
-// Decomposition_Type (dt)
-// Aliases from PropertyValueAliases.txt
+/// \brief  Unicode character property Decomposition_Type (dt).
+///
+/// Aliases from PropertyValueAliases.txt
 enum class Dt {
     Can,    // Canonical
     Com,    // Compat
@@ -62,7 +65,7 @@ enum class Dt {
     Wide    // Wide
 };
 
-// Script (sc)
+/// \brief  Unicode character property Script (sc).
 enum class Script {
     Adlm, Aghb, // Adlam // Caucasian_Albanian
     Ahom, Arab, // Ahom // Arabic
@@ -149,7 +152,7 @@ static_assert(
         false,
     "The number of Script property values do not match.");
 
-// Block (blk)
+/// \brief  Unicode character property Block (blk).
 enum class Block {
     // A
     Adlam, Aegean_Numbers, Ahom, Alchemical, Alphabetic_PF,
@@ -310,7 +313,7 @@ static_assert(
         false,
     "The number of Block property values do not match.");
 
-// Grapheme_Cluster_Break (GCB)
+/// \brief  Unicode character property Grapheme_Cluster_Break (GCB).
 enum class Gcb {
     CN,     // Control
     CR,     // CR
@@ -391,13 +394,15 @@ enum class Gcb {
 // ==============================
 //
 // Age (age)
-// Version age(uint32_t) - Get first assigned Unicode version.
-// Notes:
-// Version.update always 0.
-// Given code point for value Unassigned(NA) will returns
-// all 0 members. (== Version { 0, 0, 0 })
+/// \brief  Get first assigned Unicode version.
+///
+/// Notes:
+/// Version.update always 0.\n
+/// Given code point for value Unassigned(NA) will returns
+/// all 0 members. (== Version { 0, 0, 0 })
 Version age(uint32_t cp);
 // Block (blk)
+/// \brief  Get the Block property value.
 Block block(uint32_t cp);
 // Script (sc)
 // Script script(uint32_t cp);
@@ -409,13 +414,17 @@ Block block(uint32_t cp);
 // Bidi_Class (bc)
 // Bidi_Paired_Bracket_Type (bpt)
 // Canonical_Combining_Class (ccc)
+/// \brief  Get the Canonical_Combining_Class (ccc) property value.
 uint8_t ccc(uint32_t cp);
 // Decomposition_Type (dt)
+/// \brief  Get the Decomposition_Type (dt) property value.
 Dt dt(uint32_t cp);
 // East_Asian_Width (ea)
 // General_Category (gc)
+/// \brief  Get the General_Category (gc) property value.
 Gc gc(uint32_t cp);
 // Grapheme_Cluster_Break (GCB)
+/// \brief  Get the Grapheme_Cluster_Break property value.
 Gcb gcb(uint32_t cp);
 // ! Hangul_Syllable_Type (hst) - @hangul.h
 // Indic_Positional_Category (InPC)
@@ -452,11 +461,13 @@ Gcb gcb(uint32_t cp);
 // Dash (Dash)
 // Deprecated (Dep)
 // Default_Ignorable_Code_Point (DI)
+/// \brief  Get the Default_Ignorable_Code_Point property value.
 bool default_ignorable_code_point(uint32_t cp);
 // Diacritic (Dia)
 // Extender (Ext)
 // Grapheme_Base (Gr_Base)
 // Grapheme_Extend (Gr_Ext)
+/// \brief  Get the Grapheme_Extend property value.
 bool grapheme_extend(uint32_t cp);
 // Grapheme_Link (Gr_Link)
 // Hex_Digit (Hex)
@@ -473,8 +484,10 @@ bool grapheme_extend(uint32_t cp);
 // Noncharacter_Code_Point (NChar)
 // Other_Alphabetic (OAlpha)
 // Other_Default_Ignorable_Code_Point (ODI)
+/// \brief  Get the Other_Default_Ignorable_Code_Point property value.
 bool odi(uint32_t cp);
 // Other_Grapheme_Extend (OGr_Ext)
+/// \brief  Get the Other_Grapheme_Extend property value.
 bool ogr_ext(uint32_t cp);
 // Other_ID_Continue (OIDC)
 // Other_ID_Start (OIDS)
@@ -484,6 +497,7 @@ bool ogr_ext(uint32_t cp);
 // Pattern_Syntax (Pat_Syn)
 // Pattern_White_Space (Pat_WS)
 // Prepended_Concatenation_Mark (PCM)
+/// \brief  Get the Prepended_Concatenation_Mark property value.
 bool prepended_concatenation_mark(uint32_t cp);
 // Quotation_Mark (QMark)
 // Radical (Radical)
@@ -493,8 +507,10 @@ bool prepended_concatenation_mark(uint32_t cp);
 // Unified_Ideograph (UIdeo)
 // Uppercase (Upper)
 // Variation_Selector (VS)
+/// \brief  Get the Variation_Selector (VS) property value.
 bool variation_selector(uint32_t cp);
 // White_Space (WSpace) ; space
+/// \brief  Get the White_Space (WSpace) property value.
 bool white_space(uint32_t cp);
 // XID_Continue (XIDC)
 // XID_Start (XIDS)

@@ -1,13 +1,16 @@
- /*
+//
 //  unicode/segmentation.h
 //
 //  Author:     Sophia Lee
 //  Created:    2017. 05. 19. 18:03
 //  Copyright (c) 2016 Sophia Lee. All rights reserved.
 //
-//  Unicode text segmentation functions such as Grapheme Cluster Boundary,
-//  Word Boundary, Sentence Boundary.
-*/
+
+/// \file
+/// \brief  Unicode segmentation functions.
+///
+/// Unicode text segmentation functions such as Grapheme Cluster Boundary,
+/// Word Boundary, Sentence Boundary.
 #ifndef _UNICODE_SEGMENTATION_H
 #define _UNICODE_SEGMENTATION_H
 

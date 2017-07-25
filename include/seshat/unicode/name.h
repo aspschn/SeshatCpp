@@ -1,12 +1,13 @@
-/*
+//
 //  unicode/name.h
 //
 //  Author:     Sophia Lee
 //  Created:    2017. 04. 25. 23:25
 //  Copyright (c) 2016 Sophia Lee. All rights reserved.
 //
-//  Name property of unicode code points.
-*/
+
+/// \file
+/// \brief  Name property of unicode code points.
 #ifndef _UNICODE_NAME_H
 #define _UNICODE_NAME_H
 
@@ -17,8 +18,10 @@
 namespace seshat {
 namespace unicode {
 
+/// \brief  Get the Unicode property character property Name if exists.
 const std::string name(uint32_t cp);
 
+/// \brief  Thrown when there is no Name property for certain code point.
 class NoName : public std::exception {
 public:
     const char* what() const noexcept

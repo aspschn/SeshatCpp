@@ -1,4 +1,4 @@
-/*
+//
 //  unicodedata/naming_rule.h
 //
 //  Author:     Sophia Lee
@@ -6,7 +6,6 @@
 //  Copyright (c) 2016 Sophia Lee. All rights reserved.
 //
 //
-*/
 #ifndef _UNICODEDATA_NAMING_RULE_H
 #define _UNICODEDATA_NAMING_RULE_H
 

@@ -9,3 +9,4 @@ src/emoji/*.o
 src/icu/*.o
 lib/
 Makefile
+docs/html
