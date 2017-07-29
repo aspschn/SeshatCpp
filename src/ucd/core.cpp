@@ -82,6 +82,39 @@ const std::set<CodePointRange> pcm_table = {
     { CodePointRange(0x110BD, 0x110BD) }
 };
 
+
+const std::set<CodePointRange> olower_table = {
+    { CodePointRange(0x00AA, 0x00AA) },
+    { CodePointRange(0x00BA, 0x00BA) },
+    { CodePointRange(0x02B0, 0x02B8) },
+    { CodePointRange(0x02C0, 0x02C1) },
+    { CodePointRange(0x02E0, 0x02E4) },
+    { CodePointRange(0x0345, 0x0345) },
+    { CodePointRange(0x037A, 0x037A) },
+    { CodePointRange(0x1D2C, 0x1D6A) },
+    { CodePointRange(0x1D78, 0x1D78) },
+    { CodePointRange(0x1D9B, 0x1DBF) },
+    { CodePointRange(0x2071, 0x2071) },
+    { CodePointRange(0x207F, 0x207F) },
+    { CodePointRange(0x2090, 0x209C) },
+    { CodePointRange(0x2170, 0x217F) },
+    { CodePointRange(0x24D0, 0x24E9) },
+    { CodePointRange(0x2C7C, 0x2C7D) },
+    { CodePointRange(0xA69C, 0xA69D) },
+    { CodePointRange(0xA770, 0xA770) },
+    { CodePointRange(0xA7F8, 0xA7F9) },
+    { CodePointRange(0xAB5C, 0xAB5F) }
+};
+
+
+const std::set<CodePointRange> oupper_table = {
+    { CodePointRange(0x2160, 0x216F) },
+    { CodePointRange(0x24B6, 0x24CF) },
+    { CodePointRange(0x1F130, 0x1F149) },
+    { CodePointRange(0x1F150, 0x1F169) },
+    { CodePointRange(0x1F170, 0x1F189) }
+};
+
 } // namespace ucd
 } // namespace unicode
 } // namespace seshat

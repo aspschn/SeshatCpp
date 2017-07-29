@@ -67,6 +67,12 @@ Gcb gcb(CodePoint cp)
     return implementation::gcb(cp);
 }
 
+bool lowercase(CodePoint cp)
+{
+    return implementation::lowercase(cp);
+}
+
+// Public property functions that not supported in ICU backend version.
 #ifndef SESHAT_ICU_BACKEND
 bool odi(CodePoint cp)
 {
@@ -82,6 +88,16 @@ bool prepended_concatenation_mark(CodePoint cp)
 {
     return ucd::prepended_concatenation_mark(cp);
 }
+
+bool other_lowercase(CodePoint cp)
+{
+    return ucd::other_lowercase(cp);
+}
+
+bool other_uppercase(CodePoint cp)
+{
+    return ucd::other_uppercase(cp);
+}
 #endif // SESHAT_ICU_BACKEND
 
 bool grapheme_extend(CodePoint cp)
@@ -94,6 +110,11 @@ bool default_ignorable_code_point(CodePoint cp)
     return implementation::default_ignorable_code_point(cp);
 }
 
+bool uppercase(CodePoint cp)
+{
+    return implementation::uppercase(cp);
+}
+
 bool variation_selector(CodePoint cp)
 {
     return implementation::variation_selector(cp);
@@ -102,6 +123,21 @@ bool variation_selector(CodePoint cp)
 bool white_space(CodePoint cp)
 {
     return implementation::white_space(cp);
+}
+
+uint32_t simple_lowercase_mapping(CodePoint cp)
+{
+    return implementation::simple_lowercase_mapping(cp);
+}
+
+uint32_t simple_titlecase_mapping(CodePoint cp)
+{
+    return implementation::simple_titlecase_mapping(cp);
+}
+
+uint32_t simple_uppercase_mapping(CodePoint cp)
+{
+    return implementation::simple_uppercase_mapping(cp);
 }
 
 } // namespace unicode

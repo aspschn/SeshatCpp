@@ -211,6 +211,62 @@ bool white_space(uint32_t cp)
     return (found != ucd::wspace_table.end()) ? true : false;
 }
 
+bool other_lowercase(uint32_t cp)
+{
+    auto found = ucd::olower_table.find(CodePointRange(cp, cp));
+    return (found != ucd::olower_table.end()) ? true : false;
+}
+
+bool other_uppercase(uint32_t cp)
+{
+    auto found = ucd::oupper_table.find(CodePointRange(cp, cp));
+    return (found != ucd::oupper_table.end()) ? true : false;
+}
+
+bool lowercase(uint32_t cp)
+{
+    // From DerivedCoreProperties.txt (Unicode 10.0.0)
+    // # Derived Property: Lowercase
+    // #  Generated from: Ll + Other_Lowercase
+    if (gc(cp) == Gc::Ll || other_lowercase(cp))
+        return true;
+    return false;
+}
+
+bool uppercase(uint32_t cp)
+{
+    // From DerivedCoreProperties.txt (Unicode 10.0.0)
+    // # Derived Property: Uppercase
+    // #  Generated from: Lu + Other_Uppercase
+    if (gc(cp) == Gc::Lu || other_uppercase(cp))
+        return true;
+    return false;
+}
+
+uint32_t simple_lowercase_mapping(uint32_t cp)
+{
+    auto found = ucd::slc_table.find(CodePointRange(cp, cp));
+    if (found != ucd::slc_table.end())
+        return found->second;
+    return cp;
+}
+
+uint32_t simple_uppercase_mapping(uint32_t cp)
+{
+    auto found = ucd::suc_table.find(CodePointRange(cp, cp));
+    if (found != ucd::suc_table.end())
+        return found->second;
+    return cp;
+}
+
+uint32_t simple_titlecase_mapping(uint32_t cp)
+{
+    auto found = ucd::stc_table.find(CodePointRange(cp, cp));
+    if (found != ucd::stc_table.end())
+        return found->second;
+    return cp;
+}
+
 } // namespace ucd
 } // namespace unicode
 } // namespace seshat

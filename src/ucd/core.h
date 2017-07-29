@@ -22,6 +22,8 @@ extern const std::set<CodePointRange> wspace_table;
 extern const std::set<CodePointRange> ogr_ext_table;
 extern const std::set<CodePointRange> odi_table;
 extern const std::set<CodePointRange> pcm_table;
+extern const std::set<CodePointRange> olower_table;
+extern const std::set<CodePointRange> oupper_table;
 
 } // namespace ucd
 } // namespace unicode

@@ -30,6 +30,13 @@ bool odi(uint32_t cp);
 bool ogr_ext(uint32_t cp);
 bool prepended_concatenation_mark(uint32_t cp);
 bool white_space(uint32_t cp);
+bool other_lowercase(uint32_t cp);
+bool other_uppercase(uint32_t cp);
+bool lowercase(uint32_t cp);
+bool uppercase(uint32_t cp);
+uint32_t simple_lowercase_mapping(uint32_t cp);
+uint32_t simple_uppercase_mapping(uint32_t cp);
+uint32_t simple_titlecase_mapping(uint32_t cp);
 
 } // namespace ucd
 } // namespace unicode

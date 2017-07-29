@@ -53,6 +53,8 @@ def download_data(uni_v1=UNICODE_VERSION_MAJOR, uni_v2=UNICODE_VERSION_MINOR,
         'PropList.txt': '/',
         'GraphemeBreakProperty.txt': '/auxiliary/',
         'DerivedAge.txt': '/',
+        'SpecialCasing.txt': '/',
+        'CaseFolding.txt': '/',
         'DerivedDecompositionType.txt': '/extracted/'
     }
     emoji_data_files = {
@@ -623,6 +625,12 @@ builder_age_cpp = CodeBuilder('age.cpp')
     .include('"age.h"', '<seshat/unicode/version.h>')
     .open_ns('seshat').open_ns('unicode').open_ns('ucd'))
 
+builder_case_mapping_cpp = CodeBuilder('case_mapping.cpp')
+(builder_case_mapping_cpp.comment(comment + '''//
+//  Tables for case mapping.''')
+    .include('"case_mapping.h"', '<seshat/unicode/version.h>')
+    .open_ns('seshat').open_ns('unicode').open_ns('ucd'))
+
 def parse_unicode_data():
     unicode_data_list = []
     data_dir = get_ucd_dir(UNICODE_VERSION_MAJOR, UNICODE_VERSION_MINOR,
@@ -826,8 +834,8 @@ def make_core_cpp():
     # table_IDEOGRAPHIC
     # table_DIACRITIC
     # table_EXTENDER
-    # table_OTHER_LOWERCASE
-    # table_OTHER_UPPERCASE
+    table_olower = 'const std::set<CodePointRange> olower_table = {\n    '
+    table_oupper = 'const std::set<CodePointRange> oupper_table = {\n    '
     # table_NONCHARACTER_CODE_POINT
     table_ogr_ext = 'const std::set<CodePointRange> ogr_ext_table = {\n    '
     # table_IDS_BINARY_OPERATOR
@@ -851,18 +859,26 @@ def make_core_cpp():
             table_odi += ('{ ' + parser.range.to_seshat() + ' },\n    ')
         elif parser.first == 'Prepended_Concatenation_Mark':
             table_pcm += ('{ ' + parser.range.to_seshat() + ' },\n    ')
+        elif parser.first == 'Other_Lowercase':
+            table_olower += ('{ ' + parser.range.to_seshat() + ' },\n    ')
+        elif parser.first == 'Other_Uppercase':
+            table_oupper += ('{ ' + parser.range.to_seshat() + ' },\n    ')
         else:
             pass
     table_wspace = table_wspace.rstrip().rstrip(',') + '\n};'
     table_ogr_ext = table_ogr_ext.rstrip().rstrip(',') + '\n};'
     table_odi = table_odi.rstrip().rstrip(',') + '\n};'
     table_pcm = table_pcm.rstrip().rstrip(',') + '\n};'
+    table_olower = table_olower.rstrip().rstrip(',') + '\n};'
+    table_oupper = table_oupper.rstrip().rstrip(',') + '\n};'
 
     (builder_core_cpp.push_content(version_assert())
         .push_content(table_wspace)
         .push_content(table_ogr_ext)
         .push_content(table_odi)
         .push_content(table_pcm)
+        .push_content(table_olower)
+        .push_content(table_oupper)
         .close_ns_all())
 
     builder_core_cpp.write()
@@ -1038,6 +1054,96 @@ def make_age_cpp():
 
     builder_age_cpp.write()
 
+def make_case_mapping():
+    slc_table = DataTable('slc_table', 'unordered_map', 'UInt', 'UInt')
+    suc_table = DataTable('suc_table', 'unordered_map', 'UInt', 'UInt')
+    stc_table = DataTable('stc_table', 'unordered_map', 'UInt', 'UInt')
+
+    for udata in unicode_data_list:
+        if udata.simple_uppercase_mapping != '':
+            suc_table.append(UInt(udata.code),
+                UInt(udata.simple_uppercase_mapping))
+        if udata.simple_lowercase_mapping != '':
+            slc_table.append(UInt(udata.code),
+                UInt(udata.simple_lowercase_mapping))
+        if udata.simple_titlecase_mapping != '':
+            stc_table.append(UInt(udata.code),
+                UInt(udata.simple_titlecase_mapping))
+
+    # Special casing tables.
+    sp_lower_table = '''
+const std::unordered_map<uint32_t, const char*> sp_lower_table = {
+    '''
+    sp_upper_table = '''
+const std::unordered_map<uint32_t, const char*> sp_upper_table = {
+    '''
+    sp_title_table = '''
+const std::unordered_map<uint32_t, const char*> sp_title_table = {
+    '''
+    conditional_table = '''
+const std::unordered_set<uint32_t> conditional_table = {
+    '''
+    lang_sensitive_table = '''
+const std::unordered_set<uint32_t> lang_sensitive_table = {
+    '''
+
+    data_dir = get_ucd_dir(UNICODE_VERSION_MAJOR, UNICODE_VERSION_MINOR,
+        UNICODE_VERSION_UPDATE)
+    sp_parser = DerivedParser(data_dir + '/SpecialCasing.txt')
+
+    # For duplication check
+    conditional_list = []
+    lang_sensitive_list = []
+    for line in sp_parser.txt:
+        sp_parser.parse_line(line)
+        if sp_parser.empty():
+            continue
+        line = remove_ucd_comment(line)
+        line = line.rstrip(';')
+        columns = [itm.strip() for itm in line.split(';')]
+        cp = UInt(columns[0]).to_seshat()
+        if len(columns) < 5:
+            sp_lower_table += '{{ {cp}, "{map}" }},\n    '.format(cp=cp,
+                map=columns[1])
+            sp_title_table += '{{ {cp}, "{map}" }},\n    '.format(cp=cp,
+                map=columns[2])
+            sp_upper_table += '{{ {cp}, "{map}" }},\n    '.format(cp=cp,
+                map=columns[3])
+        # Conditional mappings.
+        if len(columns) == 5:
+            if cp not in conditional_list:
+                conditional_table += '{{ {cp} }},\n    '.format(cp=cp)
+                conditional_list.append(cp)
+            # Language sensitive mappings.
+            # Language code starts two lower case alphabet.
+            if columns[4][:2] == columns[4][:2].lower():
+                if cp not in lang_sensitive_list:
+                    lang_sensitive_table += '{{ {cp} }},\n    '.format(cp=cp)
+                    lang_sensitive_list.append(cp)
+    sp_lower_table = sp_lower_table.rstrip()
+    sp_title_table = sp_title_table.rstrip()
+    sp_upper_table = sp_upper_table.rstrip()
+    conditional_table = conditional_table.rstrip()
+    lang_sensitive_table = lang_sensitive_table.rstrip()
+    sp_lower_table += '\n};'
+    sp_title_table += '\n};'
+    sp_upper_table += '\n};'
+    conditional_table += '\n};'
+    lang_sensitive_table += '\n};'
+
+    (builder_case_mapping_cpp.push_content(version_assert())
+        .push_content(slc_table.to_seshat())
+        .push_content(suc_table.to_seshat())
+        .push_content(stc_table.to_seshat())
+        .push_content(sp_lower_table)
+        .push_content(sp_title_table)
+        .push_content(sp_upper_table)
+        .push_content(conditional_table)
+        .push_content(lang_sensitive_table)
+        .close_ns_all())
+
+    builder_case_mapping_cpp.write()
+
 gen_args = {
     'all': {'desc': 'generate all source files', 'func': None},
     'gc': {'desc': 'gc.cpp', 'func': make_gc_cpp},
@@ -1054,6 +1160,7 @@ gen_args = {
     'gcb': {'desc': 'gcb.cpp', 'func': make_gcb_cpp},
     'age': {'desc': 'age.cpp', 'func': make_age_cpp},
     'emoji_data': {'desc': 'emoji/data.cpp', 'func': make_emoji_data_cpp},
+    'case_mapping': {'desc': 'case_mapping.cpp', 'func': make_case_mapping},
 }
 gen_help = 'generate source files\n'
 for gen in gen_args:

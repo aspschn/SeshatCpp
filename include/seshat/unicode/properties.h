@@ -361,8 +361,20 @@ enum class Gcb {
 // NFKC_Casefold (NFKC_CF)
 // Simple_Case_Folding  (scf) ; sfc
 // Simple_Lowercase_Mapping (slc)
+/// \brief  Get the Simple_Lowercase_Mapping property value.
+///
+/// If there is no mapping for the code point, it returns code point it self.
+CodePoint simple_lowercase_mapping(CodePoint cp);
 // Simple_Titlecase_Mapping (stc)
+/// \brief  Get the Simple_Titlecase_Mapping property value.
+///
+/// If there is no mapping for the code point, it returns code point it self.
+CodePoint simple_titlecase_mapping(CodePoint cp);
 // Simple_Uppercase_Mapping (suc)
+/// \brief  Get the Simple_Uppercase_Mapping property value.
+///
+/// If there is no mapping for the code point, it returns code point it self.
+CodePoint simple_uppercase_mapping(CodePoint cp);
 // Titlecase_Mapping (tc)
 // Uppercase_Mapping (uc)
 
@@ -481,6 +493,8 @@ bool grapheme_extend(CodePoint cp);
 // Join_Control (Join_C)
 // Logical_Order_Exception (LOE)
 // Lowercase (Lower)
+/// \brief  Get the Lowercase (Lower) property value.
+bool lowercase(CodePoint cp);
 // Math (Math)
 // Noncharacter_Code_Point (NChar)
 // Other_Alphabetic (OAlpha)
@@ -493,8 +507,12 @@ bool ogr_ext(CodePoint cp);
 // Other_ID_Continue (OIDC)
 // Other_ID_Start (OIDS)
 // Other_Lowercase (OLower)
+/// \brief  Get the Other_Lowercase (OLower) property value.
+bool other_lowercase(CodePoint cp);
 // Other_Math (OMath)
 // Other_Uppercase (OUpper)
+/// \brief  Get the Other_Uppercase (OUpper) property value.
+bool other_uppercase(CodePoint cp);
 // Pattern_Syntax (Pat_Syn)
 // Pattern_White_Space (Pat_WS)
 // Prepended_Concatenation_Mark (PCM)
@@ -507,6 +525,8 @@ bool prepended_concatenation_mark(CodePoint cp);
 // Terminal_Punctuation (Term)
 // Unified_Ideograph (UIdeo)
 // Uppercase (Upper)
+/// \brief  Get the Uppercase (Upper) property value.
+bool uppercase(CodePoint cp);
 // Variation_Selector (VS)
 /// \brief  Get the Variation_Selector (VS) property value.
 bool variation_selector(CodePoint cp);
