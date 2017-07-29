@@ -3974,7 +3974,6 @@ const std::unordered_map<uint32_t, UInt> stc_table = {
 };
 
 
-
 const std::unordered_map<uint32_t, const char*> sp_lower_table = {
     { 0x00DF, "00DF" },
     { 0x0130, "0069 0307" },
@@ -4078,9 +4077,8 @@ const std::unordered_map<uint32_t, const char*> sp_lower_table = {
     { 0x1FF4, "1FF4" },
     { 0x1FB7, "1FB7" },
     { 0x1FC7, "1FC7" },
-    { 0x1FF7, "1FF7" },
+    { 0x1FF7, "1FF7" }
 };
-
 
 
 const std::unordered_map<uint32_t, const char*> sp_title_table = {
@@ -4186,9 +4184,8 @@ const std::unordered_map<uint32_t, const char*> sp_title_table = {
     { 0x1FF4, "038F 0345" },
     { 0x1FB7, "0391 0342 0345" },
     { 0x1FC7, "0397 0342 0345" },
-    { 0x1FF7, "03A9 0342 0345" },
+    { 0x1FF7, "03A9 0342 0345" }
 };
-
 
 
 const std::unordered_map<uint32_t, const char*> sp_upper_table = {
@@ -4294,9 +4291,8 @@ const std::unordered_map<uint32_t, const char*> sp_upper_table = {
     { 0x1FF4, "038F 0399" },
     { 0x1FB7, "0391 0342 0399" },
     { 0x1FC7, "0397 0342 0399" },
-    { 0x1FF7, "03A9 0342 0399" },
+    { 0x1FF7, "03A9 0342 0399" }
 };
-
 
 
 const std::unordered_set<uint32_t> conditional_table = {
@@ -4309,9 +4305,8 @@ const std::unordered_set<uint32_t> conditional_table = {
     { 0x00CD },
     { 0x0128 },
     { 0x0130 },
-    { 0x0069 },
+    { 0x0069 }
 };
-
 
 
 const std::unordered_set<uint32_t> lang_sensitive_table = {
@@ -4323,7 +4318,7 @@ const std::unordered_set<uint32_t> lang_sensitive_table = {
     { 0x00CD },
     { 0x0128 },
     { 0x0130 },
-    { 0x0069 },
+    { 0x0069 }
 };
 
 } // namespace ucd

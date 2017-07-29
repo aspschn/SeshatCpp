@@ -138,6 +138,12 @@ class UnicodeData:
         self.simple_lowercase_mapping = li[13]
         self.simple_titlecase_mapping = li[14]
 
+##==------------------------------------------------------
+## C types
+##==------------------------------------------------------
+## Should have 'to_seshat' method which returns string that can be used
+## directly in C++ code.
+##==------------------------------------------------------
 class UInt:
     def __init__(self, arg1, base=16):
         self._base = base
@@ -197,6 +203,12 @@ class Age:
     def to_seshat(self):
         return '{{ {}, {}, 0 }}'.format(self._major, self._minor)
 
+class CString:
+    def __init__(self, text):
+        self._str = text
+    def to_seshat(self):
+        return '"{s}"'.format(s=self._str)
+
 class DataTable:
     '''DataTable(table_name, type, key_type, value_type)
 Example:
@@ -208,7 +220,7 @@ table.to_seshat()
 k: key type.
 v: value type, if table type is `map` or `unordered_map`
         '''
-        if t not in ('set', 'map', 'unordered_map'):
+        if t not in ('set', 'map', 'unordered_set', 'unordered_map'):
             raise TypeError(t + ' is not a valid table type')
         self.table_name = name
         self.table_type = t
@@ -656,10 +668,16 @@ def remove_ucd_comment(a_line):
     return a_line
 
 class DerivedParser:
-    def __init__(self, filepath=None, exclude=[]):
+    def __init__(self, filepath=None, exclude=[], ranged=True, cols=2):
         self.range = None
+        self._ranged = ranged
+        self.cols = cols
         self.first = ''
         self.second = ''
+        self.third = ''
+        self.fourth = ''
+        self.fifth = ''
+        self.sixth = ''
         self._empty = False
         self.txt = None
         self._exclude = exclude
@@ -674,19 +692,43 @@ class DerivedParser:
             self._empty = True
             return None
         fields = [itm.strip() for itm in line.split(';')]
-        self.range = CodePointRange(fields[0])
+        if self._ranged == True:
+            self.range = CodePointRange(fields[0])
+        elif self._ranged == False:
+            self.range = UInt(fields[0])
         self.first = fields[1]
         if len(fields) > 2:
             self.second = fields[2]
+        if len(fields) > 3:
+            self.third = fields[3]
+        if len(fields) > 4:
+            self.fourth = fields[4]
+        if len(fields) > 5:
+            self.fifth = fields[5]
+        if len(fields) > 6:
+            self.sixth = fields[6]
         self._empty = False
     def parse_all(self, handler):
         '''Parse all lines except exclude values.
-handler: function(range, first, second)'''
+handler: function(range, first, second, [third, [fourth, [fifth, [sixth]]]])
+         It depends on cols property.'''
         for line in self.txt:
             self.parse_line(line)
             if self.empty() or self.first in self._exclude:
                 continue
-            handler(self.range, self.first, self.second)
+            if self.cols < 3:
+                handler(self.range, self.first, self.second)
+            if self.cols == 3:
+                handler(self.range, self.first, self.second, self.third)
+            if self.cols == 4:
+                handler(self.range, self.first, self.second, self.third,
+                    self.fourth)
+            if self.cols == 5:
+                handler(self.range, self.first, self.second, self.third,
+                    self.fourth, self.fifth)
+            if self.cols == 6:
+                handler(self.range, self.first, self.second, self.third,
+                    self.fourth, self.fifth, self.sixth)
     def readlines(filepath):
         f = open(filepath, 'r')
         txt = f.readlines()
@@ -1071,75 +1113,52 @@ def make_case_mapping():
                 UInt(udata.simple_titlecase_mapping))
 
     # Special casing tables.
-    sp_lower_table = '''
-const std::unordered_map<uint32_t, const char*> sp_lower_table = {
-    '''
-    sp_upper_table = '''
-const std::unordered_map<uint32_t, const char*> sp_upper_table = {
-    '''
-    sp_title_table = '''
-const std::unordered_map<uint32_t, const char*> sp_title_table = {
-    '''
-    conditional_table = '''
-const std::unordered_set<uint32_t> conditional_table = {
-    '''
-    lang_sensitive_table = '''
-const std::unordered_set<uint32_t> lang_sensitive_table = {
-    '''
+    sp_lower_table = DataTable(
+        'sp_lower_table', 'unordered_map', 'UInt', 'const char*')
+    sp_upper_table = DataTable(
+        'sp_upper_table', 'unordered_map', 'UInt', 'const char*')
+    sp_title_table = DataTable(
+        'sp_title_table', 'unordered_map', 'UInt', 'const char*')
+    conditional_table = DataTable(
+        'conditional_table', 'unordered_set', 'UInt')
+    lang_sensitive_table = DataTable(
+        'lang_sensitive_table', 'unordered_set', 'UInt')
 
     data_dir = get_ucd_dir(UNICODE_VERSION_MAJOR, UNICODE_VERSION_MINOR,
         UNICODE_VERSION_UPDATE)
-    sp_parser = DerivedParser(data_dir + '/SpecialCasing.txt')
+    sp_parser = DerivedParser(data_dir + '/SpecialCasing.txt',
+        ranged=False, cols=4)
 
     # For duplication check
     conditional_list = []
     lang_sensitive_list = []
-    for line in sp_parser.txt:
-        sp_parser.parse_line(line)
-        if sp_parser.empty():
-            continue
-        line = remove_ucd_comment(line)
-        line = line.rstrip(';')
-        columns = [itm.strip() for itm in line.split(';')]
-        cp = UInt(columns[0]).to_seshat()
-        if len(columns) < 5:
-            sp_lower_table += '{{ {cp}, "{map}" }},\n    '.format(cp=cp,
-                map=columns[1])
-            sp_title_table += '{{ {cp}, "{map}" }},\n    '.format(cp=cp,
-                map=columns[2])
-            sp_upper_table += '{{ {cp}, "{map}" }},\n    '.format(cp=cp,
-                map=columns[3])
-        # Conditional mappings.
-        if len(columns) == 5:
-            if cp not in conditional_list:
-                conditional_table += '{{ {cp} }},\n    '.format(cp=cp)
-                conditional_list.append(cp)
+    def handler(r, first, second, third, fourth):
+        if fourth == '': # Conditional mapping not exists.
+            sp_lower_table.append(r, CString(first))
+            sp_title_table.append(r, CString(second))
+            sp_upper_table.append(r, CString(third))
+        else: # For conditional mappings.
+            if r.to_seshat() not in conditional_list:
+                conditional_table.append(r)
+                conditional_list.append(r.to_seshat())
             # Language sensitive mappings.
             # Language code starts two lower case alphabet.
-            if columns[4][:2] == columns[4][:2].lower():
-                if cp not in lang_sensitive_list:
-                    lang_sensitive_table += '{{ {cp} }},\n    '.format(cp=cp)
-                    lang_sensitive_list.append(cp)
-    sp_lower_table = sp_lower_table.rstrip()
-    sp_title_table = sp_title_table.rstrip()
-    sp_upper_table = sp_upper_table.rstrip()
-    conditional_table = conditional_table.rstrip()
-    lang_sensitive_table = lang_sensitive_table.rstrip()
-    sp_lower_table += '\n};'
-    sp_title_table += '\n};'
-    sp_upper_table += '\n};'
-    conditional_table += '\n};'
-    lang_sensitive_table += '\n};'
+            if fourth[:2] == fourth[:2].lower():
+                if r.to_seshat() not in lang_sensitive_list:
+                    lang_sensitive_table.append(r)
+                    lang_sensitive_list.append(r.to_seshat())
+
+    sp_parser.parse_all(handler)
 
     (builder_case_mapping_cpp.push_content(version_assert())
         .push_content(slc_table.to_seshat())
         .push_content(suc_table.to_seshat())
         .push_content(stc_table.to_seshat())
-        .push_content(sp_lower_table)
-        .push_content(sp_title_table)
-        .push_content(sp_upper_table)
-        .push_content(conditional_table)
-        .push_content(lang_sensitive_table)
+        .push_content(sp_lower_table.to_seshat())
+        .push_content(sp_title_table.to_seshat())
+        .push_content(sp_upper_table.to_seshat())
+        .push_content(conditional_table.to_seshat())
+        .push_content(lang_sensitive_table.to_seshat())
         .close_ns_all())
 
     builder_case_mapping_cpp.write()
