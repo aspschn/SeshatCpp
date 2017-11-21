@@ -735,6 +735,66 @@ handler: function(range, first, second, [third, [fourth, [fifth, [sixth]]]])
         f.close()
         return txt
 
+class Properties:
+    def __init__(self, enum_type):
+        self._table = []
+
+    def append(self, cp, value):
+        self.append_range((CodePointRange(cp, cp), value))
+
+    def append_range(self, range, value):
+        self._table.append((range, value))
+
+    def table(self):
+        return sorted(self._table)
+
+# About 2-Stage table(Multi stage table) and the example source code from:
+# https://www.strchr.com/multi-stage_tables
+class TwoStageTable:
+    def __init__(self, enum_type, enum_bytes=4, block_size=256):
+        '''enum_type: C++11 enum class scope name
+enum_bytes: Size of enum type bytes
+block_size: Size of a block. Must be a power of 2
+'''
+        self.enum_type = enum_type
+        self.enum_bytes = enum_bytes
+        self.block_size = block_size
+
+        self._stage_1 = [] # Integer(index) array.
+        self._stage_2 = [] # List of tuples.
+        self._cur_block = []
+        self._blocks = {}
+
+    def add_char(self, cp, value):
+        self._cur_block.append(value)
+
+        if len(self._cur_block) == self.block_size:
+            block_tuple = tuple(self._cur_block)
+            idx = self._blocks.get(block_tuple)
+            # If not exist, add to stage 2.
+            if idx == None:
+                idx = len(self._stage_2)
+                self._blocks[block_tuple] = idx
+                self._stage_2.append(block_tuple)
+            self._stage_1.append(idx)
+            self._cur_block = []
+
+    def blocks_bytes(self):
+        '''Count blocks size in bytes.'''
+        return (len(self._stage_2) * self.block_size) * self.enum_bytes
+
+    def stage_1_bytes(self):
+        int_size = 1
+        if len(self._stage_2) <= 256:
+            int_size = 1
+        elif len(self._stage_2) <= (2 ** 16):
+            int_size = 2
+        elif len(self._stage_2) <= (2 ** 32):
+            int_size = 4
+        elif len(self._stage_2) <= (2 ** 64):
+            int_size = 8
+        return (len(self._stage_1) * int_size)
+
 def print_help():
     print('Usage: ./ucd-tool.py [--help] <command>')
     print('Commands')
@@ -757,6 +817,7 @@ def print_help():
     print('  --help   print this help')
     exit()
 
+# import time
 def make_gc_cpp():
     # Make gc.cpp
     table = DataTable('gc_table', 'map', 'CodePointRange', 'Gc')
@@ -771,6 +832,31 @@ def make_gc_cpp():
         .push_content(table.to_seshat()).close_ns_all())
 
     builder_gc_cpp.write()
+
+    # TEST CODE FOR 2-STAGE TABLE
+    prop = Properties('Gc')
+    tst_parser = DerivedParser(data_dir + '/DerivedGeneralCategory.txt')
+    def prop_add(r, f, s):
+        prop.append_range(r, f)
+    print('parsing ...')
+    tst_parser.parse_all(prop_add)
+    print('done.')
+
+    for bsize in (64, 128, 256, 512):
+        tst = TwoStageTable('Gc', enum_bytes=1, block_size=bsize)
+        print('adding to 2-stage table ...')
+        # beg = time.time()
+        for ranges in sorted(prop._table, key=lambda x: x[0]):
+            for i in range(ranges[0]._from, ranges[0]._to + 1):
+                tst.add_char(i, ranges[1])
+        # end = time.time()
+        # print('done. {}'.format(end - beg))
+        print('done.')
+
+        print('Block size: ' + str(tst.block_size))
+        print('Stage-1: {} items, {} bytes'.format(len(tst._stage_1), tst.stage_1_bytes()))
+        print('Stage-2: {} blocks, {} bytes'.format(len(tst._stage_2), tst.blocks_bytes()))
+        print('Total: {} bytes'.format(tst.stage_1_bytes() + tst.blocks_bytes()))
 
 def make_ccc_cpp():
     data_dir = get_ucd_dir(UNICODE_VERSION_MAJOR, UNICODE_VERSION_MINOR,
