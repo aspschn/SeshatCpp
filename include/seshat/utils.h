@@ -11,6 +11,7 @@
 #ifndef _SESHAT_UTILS_H
 #define _SESHAT_UTILS_H
 
+#include <cstddef>
 #include <string>
 #include <utility>
 
@@ -71,6 +72,56 @@ struct Range {
 
 /// \brief  Alias to Range<uint32_t>.
 using CodePointRange = Range<uint32_t>;
+
+/// \brief  Template class for 2-stage table.
+/// \tparam T
+///         Property type. Specifically, enum class type.
+/// \tparam IndexT
+///         Integer type used for index in stage-1.
+/// \tparam N
+///         Block size.
+///
+/// 2-stage table is an optimized data structure for storing Unicode
+/// property values.
+template <typename T, typename IndexT, size_t N>
+class TwoStageTable {
+public:
+    /// \brief  Type alias for array of blocks.
+    using BlockArray = T[N];
+    /// \brief  Type alias for property enum type.
+    using PropertyType = T;
+private:
+    const IndexT *_stage_1;
+    size_t _stage_1_size;
+    const BlockArray *_stage_2;
+    size_t _stage_2_size;
+public:
+    /// \brief  Default constructor.
+    /// \param  stage_1
+    ///         Stage-1 that contains index of blocks.
+    /// \param  n_stage_1
+    ///         Array length of stage-1.
+    /// \param  stage_2
+    ///         Stage-2 that contains blocks.
+    /// \param  n_stage_2
+    ///         Array length of stage-2.
+    TwoStageTable(const IndexT *stage_1, size_t n_stage_1,
+        const BlockArray *stage_2, size_t n_stage_2)
+        : _stage_1(stage_1), _stage_1_size(n_stage_1),
+          _stage_2(stage_2), _stage_2_size(n_stage_2)
+    {}
+    /// \brief  Get property value of given character.
+    /// \param  cp
+    ///         Code point in integer to get property.
+    ///
+    /// \p cp should be a valid Unicode code point.
+    /// \p cp out of 0 <= cp <= 0x10FFFF range will cause undefined behaviour.
+    PropertyType at(uint32_t cp) const
+    {
+        auto offset = cp % N;
+        return _stage_2[_stage_1[cp / N]][offset];
+    }
+};
 
 /// \brief  Select a hexademical digit from given number (in hexademical).
 /*!
