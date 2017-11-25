@@ -15,6 +15,7 @@
 
 #include "age.h"
 #include "block.h"
+#include "case_mapping.h"
 #include "ccc.h"
 #include "core.h"
 #include "dt.h"
@@ -245,7 +246,7 @@ bool uppercase(uint32_t cp)
 
 uint32_t simple_lowercase_mapping(uint32_t cp)
 {
-    auto found = ucd::slc_table.find(CodePointRange(cp, cp));
+    auto found = ucd::slc_table.find(cp);
     if (found != ucd::slc_table.end())
         return found->second;
     return cp;
@@ -253,7 +254,7 @@ uint32_t simple_lowercase_mapping(uint32_t cp)
 
 uint32_t simple_uppercase_mapping(uint32_t cp)
 {
-    auto found = ucd::suc_table.find(CodePointRange(cp, cp));
+    auto found = ucd::suc_table.find(cp);
     if (found != ucd::suc_table.end())
         return found->second;
     return cp;
@@ -261,7 +262,7 @@ uint32_t simple_uppercase_mapping(uint32_t cp)
 
 uint32_t simple_titlecase_mapping(uint32_t cp)
 {
-    auto found = ucd::stc_table.find(CodePointRange(cp, cp));
+    auto found = ucd::stc_table.find(cp);
     if (found != ucd::stc_table.end())
         return found->second;
     return cp;

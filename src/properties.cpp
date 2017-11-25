@@ -125,17 +125,17 @@ bool white_space(CodePoint cp)
     return implementation::white_space(cp);
 }
 
-uint32_t simple_lowercase_mapping(CodePoint cp)
+CodePoint simple_lowercase_mapping(CodePoint cp)
 {
     return implementation::simple_lowercase_mapping(cp);
 }
 
-uint32_t simple_titlecase_mapping(CodePoint cp)
+CodePoint simple_titlecase_mapping(CodePoint cp)
 {
     return implementation::simple_titlecase_mapping(cp);
 }
 
-uint32_t simple_uppercase_mapping(CodePoint cp)
+CodePoint simple_uppercase_mapping(CodePoint cp)
 {
     return implementation::simple_uppercase_mapping(cp);
 }

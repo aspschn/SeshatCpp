@@ -1097,9 +1097,9 @@ def make_age_cpp():
     builder_age_cpp.write()
 
 def make_case_mapping():
-    slc_table = DataTable('slc_table', 'unordered_map', 'UInt', 'UInt')
-    suc_table = DataTable('suc_table', 'unordered_map', 'UInt', 'UInt')
-    stc_table = DataTable('stc_table', 'unordered_map', 'UInt', 'UInt')
+    slc_table = DataTable('slc_table', 'unordered_map', 'UInt', 'uint32_t')
+    suc_table = DataTable('suc_table', 'unordered_map', 'UInt', 'uint32_t')
+    stc_table = DataTable('stc_table', 'unordered_map', 'UInt', 'uint32_t')
 
     for udata in unicode_data_list:
         if udata.simple_uppercase_mapping != '':

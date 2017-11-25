@@ -12,7 +12,7 @@ namespace ucd {
 static_assert(UnicodeVersion == (Version { 10, 0, 0 }), "Version error");
 
 
-const std::unordered_map<uint32_t, UInt> slc_table = {
+const std::unordered_map<uint32_t, uint32_t> slc_table = {
     { 0x0041, 0x0061 },
     { 0x0042, 0x0062 },
     { 0x0043, 0x0063 },
@@ -1320,7 +1320,7 @@ const std::unordered_map<uint32_t, UInt> slc_table = {
 };
 
 
-const std::unordered_map<uint32_t, UInt> suc_table = {
+const std::unordered_map<uint32_t, uint32_t> suc_table = {
     { 0x0061, 0x0041 },
     { 0x0062, 0x0042 },
     { 0x0063, 0x0043 },
@@ -2645,7 +2645,7 @@ const std::unordered_map<uint32_t, UInt> suc_table = {
 };
 
 
-const std::unordered_map<uint32_t, UInt> stc_table = {
+const std::unordered_map<uint32_t, uint32_t> stc_table = {
     { 0x0061, 0x0041 },
     { 0x0062, 0x0042 },
     { 0x0063, 0x0043 },
