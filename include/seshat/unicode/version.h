@@ -42,9 +42,9 @@ constexpr Version UnicodeVersion = {
 // Do not use the below macro constants since these are not intended
 // to use currently.
 // It could be deprecated in future version.
-#define UNICODE_VERSION_MAJOR 10;
-#define UNICODE_VERSION_MINOR 0;
-#define UNICODE_VERSION_UPDATE 0;
+#define UNICODE_VERSION_MAJOR 10
+#define UNICODE_VERSION_MINOR 0
+#define UNICODE_VERSION_UPDATE 0
 namespace emoji {
     /// \brief  Emoji major version.
     constexpr uint8_t EmojiVersionMajor = 5;
