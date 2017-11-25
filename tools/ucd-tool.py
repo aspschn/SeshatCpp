@@ -738,6 +738,7 @@ handler: function(range, first, second, [third, [fourth, [fifth, [sixth]]]])
 class Properties:
     def __init__(self, enum_type):
         self._table = []
+        self.enum_type = enum_type
 
     def append(self, cp, value):
         self.append_range((CodePointRange(cp, cp), value))
@@ -751,11 +752,13 @@ class Properties:
 # About 2-Stage table(Multi stage table) and the example source code from:
 # https://www.strchr.com/multi-stage_tables
 class TwoStageTable:
-    def __init__(self, enum_type, enum_bytes=4, block_size=256):
-        '''enum_type: C++11 enum class scope name
+    def __init__(self, name, enum_type, enum_bytes=4, block_size=256):
+        '''name: C++ variable name
+enum_type: C++11 enum class scope name
 enum_bytes: Size of enum type bytes
 block_size: Size of a block. Must be a power of 2
 '''
+        self.varname = name
         self.enum_type = enum_type
         self.enum_bytes = enum_bytes
         self.block_size = block_size
@@ -764,6 +767,47 @@ block_size: Size of a block. Must be a power of 2
         self._stage_2 = [] # List of tuples.
         self._cur_block = []
         self._blocks = {}
+
+    def _int_size(self):
+        '''Get minimal integer size for index of stage-2.
+Same as sizeof(INT_TYPE) in C.'''
+        int_size = 1
+        if len(self._stage_2) <= 256:
+            int_size = 1
+        elif len(self._stage_2) <= (2 ** 16):
+            int_size = 2
+        elif len(self._stage_2) <= (2 ** 32):
+            int_size = 4
+        elif len(self._stage_2) <= (2 ** 64):
+            int_size = 8
+        return int_size
+
+    def _index_type(self):
+        '''Returns string of C integer type defined in <stdint.h>.'''
+        int_size = self._int_size()
+        return {1: 'uint8_t',
+            2: 'uint16_t',
+            4: 'uint32_t',
+            8: 'uint64_t'}[int_size]
+
+    def _join(self, l, indent_level):
+        '''Join list with indentation and fixed number per line.'''
+        indent = ' ' * indent_level
+        text = ''
+        for i, v in enumerate(l):
+            if i != 0 and i % 8 == 0:
+                text += indent
+            text += str(v) + (', ' if i % 8 != 7 else ',\n')
+        text = text.rstrip('\n')
+        return text
+
+    def build_prop_func(self, func_name):
+        template = '''{rt_type} {func_name}(uint32_t cp)
+{{
+    return {table_name}.at(cp);
+}}'''
+        return template.format(rt_type=self.enum_type, func_name=func_name,
+            table_name=self.varname)
 
     def add_char(self, cp, value):
         self._cur_block.append(value)
@@ -784,16 +828,59 @@ block_size: Size of a block. Must be a power of 2
         return (len(self._stage_2) * self.block_size) * self.enum_bytes
 
     def stage_1_bytes(self):
-        int_size = 1
-        if len(self._stage_2) <= 256:
-            int_size = 1
-        elif len(self._stage_2) <= (2 ** 16):
-            int_size = 2
-        elif len(self._stage_2) <= (2 ** 32):
-            int_size = 4
-        elif len(self._stage_2) <= (2 ** 64):
-            int_size = 8
+        int_size = self._int_size()
         return (len(self._stage_1) * int_size)
+
+    def to_seshat(self):
+        index_t = self._index_type()
+
+        stage_1_text = '''static const {index_t} stage_1[] = {{
+    {indices}
+}};'''.format(index_t=index_t, indices=self._join(self._stage_1, 4))
+
+        block_str_list = [self._join(
+                            map((self.enum_type+'::{}').format, block),
+                            4
+            ) for block in self._stage_2]
+        blocks_str = ''
+        for i, block_str in enumerate(block_str_list):
+            blocks_str += '  // Block {}\n'.format(i)
+            blocks_str += '  {\n    ' + block_str + ',\n  },\n'
+        stage_2_text = \
+            '''static const TwoStageTable<{t}, {index_t}, {n}>::BlockArray stage_2[] = {{
+{blocks}
+}};'''.format(t=self.enum_type, index_t=index_t, n=self.block_size,
+            blocks=blocks_str)
+
+        table_text = \
+            'const TwoStageTable<{t}, {index_t}, {n}> {varname}'.format(
+                t=self.enum_type, index_t=index_t, n=self.block_size,
+                varname=self.varname)
+        table_text += '(\n    stage_1, {}, // {}\n    stage_2, {}); // {}'.format(
+            'sizeof(stage_1) / sizeof(' + self._index_type() + ')',
+            len(self._stage_1),
+            'sizeof(stage_2) / (' + str(self.block_size) + ' * sizeof(' + self.enum_type + ')))',
+            len(self._stage_2))
+
+        return stage_1_text + '\n\n' + stage_2_text + '\n\n' + table_text
+
+def select_minimal_table(prop, varname, enum_bytes):
+    tables = {64: None, 128: None, 256: None, 512: None}
+    for bsize in tables.keys():
+        tst = TwoStageTable(varname, prop.enum_type, enum_bytes=enum_bytes,
+            block_size=bsize)
+        for ranges in sorted(prop._table, key=lambda x: x[0]):
+            for i in range(ranges[0]._from, ranges[0]._to + 1):
+                tst.add_char(i, ranges[1])
+        tables[bsize] = tst
+        print(' * {}: Block size: '.format(prop.enum_type) + str(tst.block_size))
+        print('Stage-1: {} items, {} bytes'.format(len(tst._stage_1), tst.stage_1_bytes()))
+        print('Stage-2: {} blocks, {} bytes'.format(len(tst._stage_2), tst.blocks_bytes()))
+        print('Total: {} bytes'.format(tst.stage_1_bytes() + tst.blocks_bytes()))
+        print('')
+    table = min(tables.values(), key=lambda x: x.stage_1_bytes() + x.blocks_bytes())
+    print('Table with block size {} is selected.'.format(table.block_size))
+    return table
 
 def print_help():
     print('Usage: ./ucd-tool.py [--help] <command>')
@@ -838,25 +925,10 @@ def make_gc_cpp():
     tst_parser = DerivedParser(data_dir + '/DerivedGeneralCategory.txt')
     def prop_add(r, f, s):
         prop.append_range(r, f)
-    print('parsing ...')
     tst_parser.parse_all(prop_add)
-    print('done.')
 
-    for bsize in (64, 128, 256, 512):
-        tst = TwoStageTable('Gc', enum_bytes=1, block_size=bsize)
-        print('adding to 2-stage table ...')
-        # beg = time.time()
-        for ranges in sorted(prop._table, key=lambda x: x[0]):
-            for i in range(ranges[0]._from, ranges[0]._to + 1):
-                tst.add_char(i, ranges[1])
-        # end = time.time()
-        # print('done. {}'.format(end - beg))
-        print('done.')
-
-        print('Block size: ' + str(tst.block_size))
-        print('Stage-1: {} items, {} bytes'.format(len(tst._stage_1), tst.stage_1_bytes()))
-        print('Stage-2: {} blocks, {} bytes'.format(len(tst._stage_2), tst.blocks_bytes()))
-        print('Total: {} bytes'.format(tst.stage_1_bytes() + tst.blocks_bytes()))
+    tst = select_minimal_table(prop, 'gc_table', 1)
+    # print(tst.to_seshat())
 
 def make_ccc_cpp():
     data_dir = get_ucd_dir(UNICODE_VERSION_MAJOR, UNICODE_VERSION_MINOR,
