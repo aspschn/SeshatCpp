@@ -45,7 +45,7 @@ enum class Gc : uint8_t {
 /// \brief  Unicode character property Decomposition_Type (dt).
 ///
 /// Aliases from PropertyValueAliases.txt
-enum class Dt {
+enum class Dt : uint8_t {
     Can,    // Canonical
     Com,    // Compat
     Enc,    // Circle
@@ -67,7 +67,7 @@ enum class Dt {
 };
 
 /// \brief  Unicode character property Script (sc).
-enum class Script {
+enum class Script : uint8_t {
     Adlm, Aghb, // Adlam // Caucasian_Albanian
     Ahom, Arab, // Ahom // Arabic
     Armi, Armn, // Imperial_Aramaic // Armenian
@@ -154,7 +154,7 @@ static_assert(
     "The number of Script property values do not match.");
 
 /// \brief  Unicode character property Block (blk).
-enum class Block {
+enum class Block : uint16_t {
     // A
     Adlam, Aegean_Numbers, Ahom, Alchemical, Alphabetic_PF,
     Anatolian_Hieroglyphs,
@@ -315,7 +315,7 @@ static_assert(
     "The number of Block property values do not match.");
 
 /// \brief  Unicode character property Grapheme_Cluster_Break (GCB).
-enum class Gcb {
+enum class Gcb : uint8_t {
     CN,     // Control
     CR,     // CR
     EB,     // E_Base
