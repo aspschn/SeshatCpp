@@ -9,11 +9,18 @@
 //  Character total can get from extracted/DerivedGeneralCategory.txt
 */
 #include <seshat/codepoint.h>
-#include <seshat/unicode/gc.h>
+#include <seshat/unicode/version.h>
+#include <seshat/unicode/properties.h>
 
 #include <cassert>
 #include <cstdint>
+#include <chrono>
+#include <iostream>
 
+using seshat::unicode::Version;
+using seshat::unicode::UnicodeVersion;
+
+#if (UNICODE_VERSION_MAJOR == 9)
 #define CN_TOTAL 846359
 #define LU_TOTAL 1702
 #define LL_TOTAL 2063
@@ -44,6 +51,38 @@
 #define SO_TOTAL 5777
 #define PI_TOTAL 12
 #define PF_TOTAL 10
+#elif (UNICODE_VERSION_MAJOR == 10)
+#define CN_TOTAL 837841
+#define LU_TOTAL 1702
+#define LL_TOTAL 2063
+#define LT_TOTAL 31
+#define LM_TOTAL 250
+#define LO_TOTAL 121047
+#define MN_TOTAL 1763
+#define ME_TOTAL 13
+#define MC_TOTAL 401
+#define ND_TOTAL 590
+#define NL_TOTAL 236
+#define NO_TOTAL 676
+#define ZS_TOTAL 17
+#define ZL_TOTAL 1
+#define ZP_TOTAL 1
+#define CC_TOTAL 65
+#define CF_TOTAL 151
+#define CO_TOTAL 137468
+#define CS_TOTAL 2048
+#define PD_TOTAL 24
+#define PS_TOTAL 75
+#define PE_TOTAL 73
+#define PC_TOTAL 10
+#define PO_TOTAL 566
+#define SM_TOTAL 948
+#define SC_TOTAL 54
+#define SK_TOTAL 121
+#define SO_TOTAL 5855
+#define PI_TOTAL 12
+#define PF_TOTAL 10
+#endif
 #define UNICODE_MAX 0x110000
 
 static_assert(
@@ -91,6 +130,8 @@ void unicode_count_total()
     uint32_t so_count = 0;
     uint32_t pi_count = 0;
     uint32_t pf_count = 0;
+
+    auto start = std::chrono::steady_clock::now();
 
     for (uint32_t i = 0; i < UNICODE_MAX; ++i) {
         CodePoint cp = CodePoint(i);
@@ -219,6 +260,14 @@ void unicode_count_total()
     assert(so_count == SO_TOTAL);
     assert(pi_count == PI_TOTAL);
     assert(pf_count == PF_TOTAL);
+
+    auto end = std::chrono::steady_clock::now();
+
+    auto diff = end - start;
+
+    std::cout << "Test passed in "
+        << std::chrono::duration<double>(diff).count() << " sec"
+        << std::endl;
 } // unicode_count_total
 
 int main()
