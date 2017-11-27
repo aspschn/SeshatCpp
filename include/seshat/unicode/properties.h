@@ -24,7 +24,7 @@ namespace seshat {
 namespace unicode {
 
 /// \brief  Unicode character property General_Category (gc).
-enum class Gc {
+enum class Gc : uint8_t {
     // C - Other
     Cc, Cf, Cn, Co, Cs,
     // L - Letter

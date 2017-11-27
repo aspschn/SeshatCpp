@@ -19,7 +19,7 @@
 #include "ccc.h"
 #include "core.h"
 #include "dt.h"
-#include "gc.h"
+// #include "gc.h"
 #include "gcb.h"
 #include "normalization_props.h"
 #include "script.h"
@@ -67,6 +67,7 @@ Dt dt(uint32_t cp)
     return Dt::None;
 }
 
+/*
 Gc gc(uint32_t cp)
 {
     // Find the gc matching the range that code point belongs
@@ -79,6 +80,7 @@ Gc gc(uint32_t cp)
         return Gc::Cn;
     }
 }
+*/
 
 Gcb gcb(uint32_t cp)
 {

@@ -546,7 +546,7 @@ def version_assert(option='unicode'):
 builder_gc_cpp = CodeBuilder('gc.cpp')
 (builder_gc_cpp.comment(comment + '''//
 //  General_Category(gc) data table.''')
-    .include('"gc.h"', '<seshat/unicode/version.h>')
+    .include('"gc.h"', '<seshat/unicode/version.h>', '<seshat/utils.h>')
     .open_ns('seshat').open_ns('unicode').open_ns('ucd'))
 
 builder_name_cpp = CodeBuilder('name.cpp')
@@ -905,12 +905,10 @@ def print_help():
     exit()
 
 # import time
-def make_gc_cpp():
-    # Make gc.cpp
+def _make_gc_cpp_ranged(data_dir):
+    # Make gc.cpp with ranged data structure.
     table = DataTable('gc_table', 'map', 'CodePointRange', 'Gc')
 
-    data_dir = get_ucd_dir(UNICODE_VERSION_MAJOR, UNICODE_VERSION_MINOR,
-        UNICODE_VERSION_UPDATE)
     parser = DerivedParser(data_dir + '/DerivedGeneralCategory.txt',
         exclude=['Cn'])
     parser.parse_all(lambda r, f, s: table.append(r, EnumClass('Gc', f)))
@@ -920,15 +918,26 @@ def make_gc_cpp():
 
     builder_gc_cpp.write()
 
-    # TEST CODE FOR 2-STAGE TABLE
+def _make_gc_cpp_2_stage(data_dir):
+    # Make gc.cpp with 2-stage table data structure.
     prop = Properties('Gc')
-    tst_parser = DerivedParser(data_dir + '/DerivedGeneralCategory.txt')
-    def prop_add(r, f, s):
-        prop.append_range(r, f)
-    tst_parser.parse_all(prop_add)
 
-    tst = select_minimal_table(prop, 'gc_table', 1)
-    # print(tst.to_seshat())
+    parser = DerivedParser(data_dir + '/DerivedGeneralCategory.txt')
+    parser.parse_all(lambda r, f, s: prop.append_range(r, f))
+
+    table = select_minimal_table(prop, 'gc_table', 1)
+
+    (builder_gc_cpp.push_content(version_assert())
+        .push_content(table.to_seshat())
+        .push_content(table.build_prop_func('gc'))
+        .close_ns_all())
+
+    builder_gc_cpp.write()
+
+def make_gc_cpp():
+    data_dir = get_ucd_dir(UNICODE_VERSION_MAJOR, UNICODE_VERSION_MINOR,
+        UNICODE_VERSION_UPDATE)
+    _make_gc_cpp_2_stage(data_dir)
 
 def make_ccc_cpp():
     data_dir = get_ucd_dir(UNICODE_VERSION_MAJOR, UNICODE_VERSION_MINOR,
