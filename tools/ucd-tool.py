@@ -845,7 +845,7 @@ Same as sizeof(INT_TYPE) in C.'''
         blocks_str = ''
         for i, block_str in enumerate(block_str_list):
             blocks_str += '  // Block {}\n'.format(i)
-            blocks_str += '  {\n    ' + block_str + ',\n  },\n'
+            blocks_str += '  {\n    ' + block_str + '\n  },\n'
         stage_2_text = \
             '''static const TwoStageTable<{t}, {index_t}, {n}>::BlockArray stage_2[] = {{
 {blocks}
@@ -859,7 +859,7 @@ Same as sizeof(INT_TYPE) in C.'''
         table_text += '(\n    stage_1, {}, // {}\n    stage_2, {}); // {}'.format(
             'sizeof(stage_1) / sizeof(' + self._index_type() + ')',
             len(self._stage_1),
-            'sizeof(stage_2) / (' + str(self.block_size) + ' * sizeof(' + self.enum_type + ')))',
+            'sizeof(stage_2) / (' + str(self.block_size) + ' * sizeof(' + self.enum_type + '))',
             len(self._stage_2))
 
         return stage_1_text + '\n\n' + stage_2_text + '\n\n' + table_text
