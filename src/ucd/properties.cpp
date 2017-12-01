@@ -153,6 +153,19 @@ bool grapheme_extend(uint32_t cp)
     return false;
 }
 
+bool cased(uint32_t cp)
+{
+    static_assert(UnicodeVersion == (Version { 10, 0, 0 }), "Version error.");
+    // D135 (From The Unicode Standard 3.13 Default Case Algorithms, 10.0.0)
+    // A character C is defined to be cased if and only if C has the
+    // Lowercase or Uppercase property or has a General_Category value of
+    // Titlecase_Letter.
+    if (lowercase(cp) || uppercase(cp) || gc(cp) == Gc::Lt) {
+        return true;
+    }
+    return false;
+}
+
 bool default_ignorable_code_point(uint32_t cp)
 {
     static_assert(UnicodeVersion == (Version { 10, 0, 0 }), "Version error.");

@@ -462,6 +462,8 @@ Gcb gcb(CodePoint cp);
 // Bidi_Control (Bidi_C)
 // Bidi_Mirrored (Bidi_M)
 // Cased (Cased)
+/// \brief  Get the Cased property value.
+bool cased(CodePoint cp);
 // Composition_Exclusion (CE)
 // Case_Ignorable (CI)
 // ! Full_Composition_Exclusion (Comp_Ex) - @normalization_props.h

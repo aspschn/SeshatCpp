@@ -26,6 +26,7 @@ Dt dt(uint32_t cp);
 // Gc gc(uint32_t cp);
 Gcb gcb(uint32_t cp);
 bool grapheme_extend(uint32_t cp);
+bool cased(uint32_t cp);
 bool default_ignorable_code_point(uint32_t cp);
 bool variation_selector(uint32_t cp);
 bool odi(uint32_t cp);

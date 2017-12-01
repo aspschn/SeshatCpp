@@ -105,6 +105,11 @@ bool grapheme_extend(CodePoint cp)
     return implementation::grapheme_extend(cp);
 }
 
+bool cased(CodePoint cp)
+{
+    return implementation::cased(cp);
+}
+
 bool default_ignorable_code_point(CodePoint cp)
 {
     return implementation::default_ignorable_code_point(cp);
