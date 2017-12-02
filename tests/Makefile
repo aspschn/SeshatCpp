@@ -19,6 +19,8 @@ derivation:
 	g++ -std=c++11 -Wall -o derivation derivation.cpp ../lib/libseshat.a -I../include
 seg:
 	g++ -std=c++11 -Wall -o seg seg.cpp ../lib/libseshat.a -I../include $(CXXFLAGS)
+casing:
+	g++ -std=c++11 -Wall -o casing casing.cpp ../lib/libseshat.a -I../include
 
 clean:
 	rm codepoint unicode unicode_name normalization character derivation string seg
