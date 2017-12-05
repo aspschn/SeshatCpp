@@ -10,16 +10,15 @@
 #ifndef _UCD_SCRIPT_H
 #define _UCD_SCRIPT_H
 
-#include <seshat/utils.h> // CodePointRange
 #include <seshat/unicode/properties.h> // enum class Script
 
-#include <map>
+#include <cstdint>
 
 namespace seshat {
 namespace unicode {
 namespace ucd {
 
-extern const std::map<CodePointRange, Script> script_table;
+Script script(uint32_t cp);
 
 } // namespace ucd
 } // namespace unicode

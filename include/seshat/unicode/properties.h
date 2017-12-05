@@ -444,7 +444,8 @@ Version age(CodePoint cp);
 /// \brief  Get the Block property value.
 Block block(CodePoint cp);
 // Script (sc)
-// Script script(uint32_t cp);
+/// \brief  Get the Script property value.
+Script script(CodePoint cp);
 
 // ==============================
 // Enumerated Properties

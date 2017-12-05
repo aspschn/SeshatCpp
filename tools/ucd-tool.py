@@ -983,7 +983,7 @@ def make_dt_cpp():
 
     builder_dt_cpp.write()
 
-def make_script_cpp():
+def _make_script_cpp_ranged():
     def alias(val):
         return property_value_aliases.alias('sc', val)
     table = DataTable('script_table', 'map', 'CodePointRange', 'Script')
@@ -998,6 +998,28 @@ def make_script_cpp():
         .push_content(table.to_seshat()).close_ns_all())
 
     builder_script_cpp.write()
+
+def _make_script_cpp_2_stage():
+    def alias(val):
+        return property_value_aliases.alias('sc', val)
+    prop = Properties('Script')
+
+    data_dir = get_ucd_dir(UNICODE_VERSION_MAJOR, UNICODE_VERSION_MINOR,
+        UNICODE_VERSION_UPDATE)
+    parser = DerivedParser(data_dir + '/Scripts.txt')
+    parser.parse_all(lambda r, f, s: prop.append_range(r, alias(f)))
+
+    table = select_minimal_table(prop, 'script_table', 1)
+
+    (builder_script_cpp.push_content(version_assert())
+        .push_content(table.to_seshat())
+        .push_content(table.build_prop_func('script'))
+        .close_ns_all())
+
+    builder_script_cpp.write()
+
+def make_script_cpp():
+    _make_script_cpp_2_stage()
 
 def make_block_cpp():
     def alias(val):

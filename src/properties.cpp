@@ -26,17 +26,6 @@ namespace implementation {
 #endif // SESHAT_ICU_BACKEND
 } // namespace implementation
 
-/*
-Script script(uint32_t cp)
-{
-    auto found = ucd::script_table.find(CodePointRange(cp, cp));
-
-    if (found != ucd::script_table.end()) {
-        return found->second;
-    }
-    return Script::Zzzz;
-}
-*/
 Version age(CodePoint cp)
 {
     return implementation::age(cp);
@@ -60,6 +49,11 @@ Dt dt(CodePoint cp)
 Block block(CodePoint cp)
 {
     return implementation::block(cp);
+}
+
+Script script(CodePoint cp)
+{
+    return implementation::script(cp);
 }
 
 Gcb gcb(CodePoint cp)
