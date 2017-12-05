@@ -336,6 +336,32 @@ enum class Gcb : uint8_t {
     ZWJ     // ZWJ
 };
 
+/// \brief  Unicode character property Word_Break (WB).
+enum class Wb : uint8_t {
+    CR,     // CR
+    DQ,     // Double_Quote
+    EB,     // E_Base
+    EBG,    // E_Base_GAZ
+    EM,     // E_Modifier
+    EX,     // ExtendNumLet
+    Extend, // Extend
+    FO,     // Format
+    GAZ,    // Glue_After_Zwj
+    HL,     // Hebrew_Letter
+    KA,     // Katakana
+    LE,     // ALetter
+    LF,     // LF
+    MB,     // MidNumLet
+    ML,     // MidLetter
+    MN,     // MidNum
+    NL,     // Newline
+    NU,     // Numeric
+    RI,     // Regional_Indicator
+    SQ,     // Single_Quote
+    XX,     // Other
+    ZWJ     // ZWJ
+};
+
 /*
  * Property determining functions
  */
@@ -452,6 +478,8 @@ Gcb gcb(CodePoint cp);
 // Numeric_Type (nt)
 // Sentence_Break (SB)
 // Word_Break (WB)
+/// \brief  Get the Word_Break property value.
+Wb wb(CodePoint cp);
 
 // ==============================
 // Binary Properties

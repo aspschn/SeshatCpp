@@ -67,6 +67,11 @@ Gcb gcb(CodePoint cp)
     return implementation::gcb(cp);
 }
 
+Wb wb(CodePoint cp)
+{
+    return implementation::wb(cp);
+}
+
 bool lowercase(CodePoint cp)
 {
     return implementation::lowercase(cp);

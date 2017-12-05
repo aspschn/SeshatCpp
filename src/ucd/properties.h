@@ -14,6 +14,7 @@
 #include <seshat/unicode/properties.h>
 
 #include "gc.h"
+#include "wb.h"
 
 namespace seshat {
 namespace unicode {
@@ -25,6 +26,7 @@ uint8_t ccc(uint32_t cp);
 Dt dt(uint32_t cp);
 // Gc gc(uint32_t cp);
 Gcb gcb(uint32_t cp);
+// Wb wb(uint32_t cp);
 bool grapheme_extend(uint32_t cp);
 bool cased(uint32_t cp);
 bool default_ignorable_code_point(uint32_t cp);

@@ -52,6 +52,7 @@ def download_data(uni_v1=UNICODE_VERSION_MAJOR, uni_v2=UNICODE_VERSION_MINOR,
         'PropertyValueAliases.txt': '/',
         'PropList.txt': '/',
         'GraphemeBreakProperty.txt': '/auxiliary/',
+        'WordBreakProperty.txt': '/auxiliary/',
         'DerivedAge.txt': '/',
         'SpecialCasing.txt': '/',
         'CaseFolding.txt': '/',
@@ -643,6 +644,12 @@ builder_case_mapping_cpp = CodeBuilder('case_mapping.cpp')
     .include('"case_mapping.h"', '<seshat/unicode/version.h>')
     .open_ns('seshat').open_ns('unicode').open_ns('ucd'))
 
+builder_wb_cpp = CodeBuilder('wb.cpp')
+(builder_wb_cpp.comment(comment + '''//
+//  Word_Break (WB) table.''')
+    .include('"wb.h"', '<seshat/unicode/version.h>', '<seshat/utils.h>')
+    .open_ns('seshat').open_ns('unicode').open_ns('ucd'))
+
 def parse_unicode_data():
     unicode_data_list = []
     data_dir = get_ucd_dir(UNICODE_VERSION_MAJOR, UNICODE_VERSION_MINOR,
@@ -1026,6 +1033,25 @@ def make_gcb_cpp():
 
     builder_gcb_cpp.write()
 
+def make_wb_cpp():
+    def alias(val):
+        return property_value_aliases.alias('WB', val)
+    prop = Properties('Wb')
+
+    data_dir = get_ucd_dir(UNICODE_VERSION_MAJOR, UNICODE_VERSION_MINOR,
+        UNICODE_VERSION_UPDATE)
+    parser = DerivedParser(data_dir + '/WordBreakProperty.txt')
+    parser.parse_all(lambda r, f, s: prop.append_range(r, alias(f)))
+
+    table = select_minimal_table(prop, 'wb_table', 1)
+
+    (builder_wb_cpp.push_content(version_assert())
+        .push_content(table.to_seshat())
+        .push_content(table.build_prop_func('wb'))
+        .close_ns_all())
+
+    builder_wb_cpp.write()
+
 def make_core_cpp():
     data_dir = get_ucd_dir(UNICODE_VERSION_MAJOR, UNICODE_VERSION_MINOR,
         UNICODE_VERSION_UPDATE)
@@ -1347,6 +1373,7 @@ gen_args = {
     'age': {'desc': 'age.cpp', 'func': make_age_cpp},
     'emoji_data': {'desc': 'emoji/data.cpp', 'func': make_emoji_data_cpp},
     'case_mapping': {'desc': 'case_mapping.cpp', 'func': make_case_mapping},
+    'wb': {'desc': 'wb.cpp', 'func': make_wb_cpp},
 }
 gen_help = 'generate source files\n'
 for gen in gen_args:
