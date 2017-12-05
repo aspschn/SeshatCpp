@@ -3,7 +3,7 @@
 //
 //  Author:     Sophia Lee
 //  Created:    2017. 04. 25. 23:13
-//  Copyright (c) 2016 Sophia Lee. All rights reserved.
+//  Copyright (c) 2017 Sophia Lee. All rights reserved.
 //
 //
 */

@@ -3,7 +3,7 @@
 //
 //  Author:     Sophia Lee
 //  Created:    2017. 04. 07. 21:18
-//  Copyright (c) 2016 Sophia Lee. All rights reserved.
+//  Copyright (c) 2017 Sophia Lee. All rights reserved.
 //
 //  Test for Unicode validate.
 //  Character total can get from extracted/DerivedGeneralCategory.txt

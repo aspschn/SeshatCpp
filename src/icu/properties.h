@@ -3,7 +3,7 @@
 //
 //  Author:     Sophia Lee
 //  Created:    2017. 06. 23. 19:26
-//  Copyright (c) 2016 Sophia Lee. All rights reserved.
+//  Copyright (c) 2017 Sophia Lee. All rights reserved.
 //
 //  Unicode property functions that using ICU API to get properties.
 */

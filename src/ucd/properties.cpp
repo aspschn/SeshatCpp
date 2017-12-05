@@ -1,9 +1,9 @@
 /*
 //  ucd/properties.cpp
 //
-//  Author:     <OWNER>
+//  Author:     Sophia Lee
 //  Created:    2017. 06. 23. 18:54
-//  Copyright (c) 2016 <OWNER>. All rights reserved.
+//  Copyright (c) 2017 Sophia Lee. All rights reserved.
 //
 //
 */

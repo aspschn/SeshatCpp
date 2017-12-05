@@ -1,9 +1,9 @@
 /*
 //  normalization_props.cpp
 //
-//  Author:     <OWNER>
+//  Author:     Sophia Lee
 //  Created:    2017. 05. 04. 18:50
-//  Copyright (c) 2016 <OWNER>. All rights reserved.
+//  Copyright (c) 2017 Sophia Lee. All rights reserved.
 //
 //
 */

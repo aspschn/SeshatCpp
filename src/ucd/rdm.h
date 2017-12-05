@@ -1,9 +1,9 @@
 /*
 //  ucd/rdm.h
 //
-//  Author:     <OWNER>
+//  Author:     Sophia Lee
 //  Created:    2017. 07. 04. 19:57
-//  Copyright (c) 2016 <OWNER>. All rights reserved.
+//  Copyright (c) 2017 Sophia Lee. All rights reserved.
 //
 //  Reversed Decomposition_Mapping table.
 //  Used for composition.
