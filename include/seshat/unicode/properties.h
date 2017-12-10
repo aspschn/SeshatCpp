@@ -494,7 +494,7 @@ Wb wb(CodePoint cp);
 /// \brief  Get the Cased property value.
 bool cased(CodePoint cp);
 // Composition_Exclusion (CE)
-// Case_Ignorable (CI)
+// ! Case_Ignorable (CI) - @casing.h
 // ! Full_Composition_Exclusion (Comp_Ex) - @normalization_props.h
 // Changes_When_Casefolded (CWCF)
 // Changes_When_Casemapped (CWCM)

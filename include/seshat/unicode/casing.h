@@ -18,6 +18,9 @@
 namespace seshat {
 namespace unicode {
 
+/// \brief  Get the Case_Ignorable property value of the code point.
+bool case_ignorable(uint32_t cp);
+
 /// \brief  Get the Uppercase_Mapping (uc) property value of the code point.
 ///
 /// Returns full uppercase mapping for a single code point.

@@ -35,6 +35,25 @@ static const CodePointSequence _str_to_seq(const char *str)
     return seq;
 }
 
+bool case_ignorable(uint32_t cp)
+{
+    // From The Unicode Standard 3.13 (Unicode 10.0.0)
+    //
+    // D136
+    // A character C is defined to be case-ignorable
+    // if C has the value MidLetter (ML), Mid- NumLet (MB),
+    // or Single_Quote (SQ) for the Word_Break property or
+    // its General_Category is one of Nonspacing_Mark (Mn),
+    // Enclosing_Mark (Me), Format (Cf),
+    // Modifier_Letter (Lm), or Modifier_Symbol (Sk).
+    if (wb(cp) == Wb::ML || wb(cp) == Wb::MB ||
+            wb(cp) == Wb::SQ || gc(cp) == Gc::Mn ||
+            gc(cp) == Gc::Me || gc(cp) == Gc::Cf ||
+            gc(cp) == Gc::Lm || gc(cp) == Gc::Sk)
+        return true;
+    return false;
+}
+
 const CodePointSequence uppercase_mapping(uint32_t cp)
 {
     auto found = ucd::sp_upper_table.find(cp);
