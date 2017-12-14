@@ -93,5 +93,70 @@ const CodePointSequence titlecase_mapping(uint32_t cp)
     }
 }
 
+CodePointSequence to_uppercase(const CodePointSequence seq)
+{
+    CodePointSequence mapped;
+
+    for (auto it = seq.begin(); it != seq.end(); ++it) {
+        auto upper = uppercase_mapping(*it);
+        mapped.insert(mapped.end(), upper.begin(), upper.end());
+    }
+
+    return mapped;
+}
+
+// Final sigma check before a character.
+// Refer Table 3-14 in The Unicode Standard 3.13 (Unicode 10.0.0).
+bool _final_sigma_before_c(CodePointSequenceConstIter first,
+        CodePointSequenceConstIter last)
+{
+    bool is_cased = false;
+    auto it = last;
+    for (; it != first || (is_cased = cased(*it)); --it) {
+        if (case_ignorable(*it)) continue;
+        if (!is_cased) break;
+    }
+    if (is_cased)
+        return true;
+    return false;
+}
+
+// Final sigma check after a character.
+// Refer Table 3-14 in The Unicode Standard 3.13 (Unicode 10.0.0).
+bool _final_sigma_after_c(CodePointSequenceConstIter first,
+        CodePointSequenceConstIter last)
+{
+    bool is_cased = false;
+    auto it = first;
+    for (; it != last || (is_cased = cased(*it)); ++it) {
+        if (case_ignorable(*it)) continue;
+        if (!is_cased) break;
+    }
+    if (is_cased)
+        return false;
+    return true;
+}
+
+CodePointSequence to_lowercase(const CodePointSequence seq)
+{
+    CodePointSequence mapped;
+
+    for (auto it = seq.begin(); it != seq.end(); ++it) {
+        if (0x03A3 == *it) {
+            if (_final_sigma_before_c(it, seq.begin()) &&
+                    _final_sigma_after_c(it, seq.end())) {
+                mapped.append(0x03C2);
+            } else {
+                mapped.append(0x03A3);
+            }
+        } else {
+            auto lower = lowercase_mapping(*it);
+            mapped.insert(mapped.end(), lower.begin(), lower.end());
+        }
+    }
+
+    return mapped;
+}
+
 } // namespace unicode
 } // namespace seshat

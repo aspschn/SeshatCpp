@@ -11,6 +11,11 @@
 
 #include <cassert>
 #include <cstdint>
+#include <vector>
+
+#define CAPITAL_SIGMA   0x03A3
+#define SMALL_SIGMA     0x03C3
+#define FINAL_SIGMA     0x03C2
 
 using namespace seshat;
 using namespace seshat::unicode;
@@ -59,6 +64,22 @@ int main()
 
     auto upper_1f69_0399 = uppercase_mapping(capital_1fa9);
     assert(upper_1f69_0399 == (CodePointSequence { 0x1F69, 0x0399 }));
+
+    // String mappings.
+    auto seq = CodePointSequence { 'f', 'o', 'o', ' ', 'b', 'a', 'r', '.' };
+    auto upper = to_uppercase(seq);
+    assert(upper == (CodePointSequence { 'F', 'O', 'O', ' ', 'B', 'A', 'R', '.' }));
+    auto lower = to_lowercase(upper);
+    assert(lower == seq);
+
+    // Final sigma lowercase mapping.
+    seq = CodePointSequence { CAPITAL_SIGMA, 'A', ' ',
+        'A', CAPITAL_SIGMA, ' ',
+        'A', SMALL_SIGMA, '.'};
+    lower = to_lowercase(seq);
+    assert(lower == (CodePointSequence { SMALL_SIGMA, 'a', ' ',
+        'a', FINAL_SIGMA, ' ',
+        'a', FINAL_SIGMA, '.'}));
 
     return 0;
 }

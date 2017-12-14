@@ -39,6 +39,15 @@ const CodePointSequence lowercase_mapping(uint32_t cp);
 /// This function does not contain conditional casing.
 const CodePointSequence titlecase_mapping(uint32_t cp);
 
+/// \brief  Case conversion to uppercase given code point sequence.
+CodePointSequence to_uppercase(const CodePointSequence seq);
+
+/// \brief  Case conversion to lowercase given code point sequence.
+///
+/// This function includes conditional casing which is not language sensitive,
+/// particularly final sigma.
+CodePointSequence to_lowercase(const CodePointSequence seq);
+
 } // namespace unicode
 } // namespace seshat
 
