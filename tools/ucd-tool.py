@@ -243,11 +243,11 @@ v: value type, if table type is `map` or `unordered_map`
             text += ', ' + v_type
         text += '> {} = {{\n    '.format(self.table_name)
         for r in self._data:
-            text_append = '{ ' + r[0].to_seshat()
-            if self.table_type in ('map', 'unordered_map'):
-                text_append += ', ' + r[1].to_seshat()
-            text_append += ' },\n    '
-            text += text_append
+            if self.table_type in ('set', 'unordered_set'):
+                text += r[0].to_seshat() + ',\n    '
+            elif self.table_type in ('map', 'unordered_map'):
+                text += '{{ {}, {} }},\n    '.format(
+                    r[0].to_seshat(), r[1].to_seshat())
         text = text.rstrip().rstrip(',') + '\n};'
         return text
 

@@ -4296,29 +4296,29 @@ const std::unordered_map<uint32_t, const char*> sp_upper_table = {
 
 
 const std::unordered_set<uint32_t> conditional_table = {
-    { 0x03A3 },
-    { 0x0307 },
-    { 0x0049 },
-    { 0x004A },
-    { 0x012E },
-    { 0x00CC },
-    { 0x00CD },
-    { 0x0128 },
-    { 0x0130 },
-    { 0x0069 }
+    0x03A3,
+    0x0307,
+    0x0049,
+    0x004A,
+    0x012E,
+    0x00CC,
+    0x00CD,
+    0x0128,
+    0x0130,
+    0x0069
 };
 
 
 const std::unordered_set<uint32_t> lang_sensitive_table = {
-    { 0x0307 },
-    { 0x0049 },
-    { 0x004A },
-    { 0x012E },
-    { 0x00CC },
-    { 0x00CD },
-    { 0x0128 },
-    { 0x0130 },
-    { 0x0069 }
+    0x0307,
+    0x0049,
+    0x004A,
+    0x012E,
+    0x00CC,
+    0x00CD,
+    0x0128,
+    0x0130,
+    0x0069
 };
 
 } // namespace ucd
