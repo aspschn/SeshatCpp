@@ -42,6 +42,11 @@ public:
     /// \brief  Construct with initializer list of CodePoint.
     String(std::initializer_list<CodePoint> init);
 
+    /// \brief  Construct with null-terminated C character string.
+    ///
+    /// Currently, this constructor works properly only on UTF-8 systems.
+    String(const char *str);
+
     /// \brief  Copy constructor.
     String(const String& origin);
 
@@ -109,6 +114,9 @@ public:
 
     /// \brief  Move assignment operator.
     String& operator=(String&& origin);
+
+    /// \brief  Replaces contents with null-terminated C character string.
+    String& operator=(const char *str);
 
     //==-----------------------------
     // Comparison

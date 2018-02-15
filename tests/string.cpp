@@ -25,10 +25,12 @@ int main()
     String s3 = {
         'T', 'e', 's', 't'
     };
+    String s4 = "UTF-8 テスト"; // count: 9
 
     std::cout << "s1.count(): " << s1.count() << std::endl;
     std::cout << "s2.count(): " << s2.count() << std::endl;
     std::cout << "s3.count(): " << s3.count() << std::endl;
+    std::cout << "s4.count(): " << s4.count() << std::endl;
 
     s2 += String { '!', '!' };
     assert(s2.count() == 6);

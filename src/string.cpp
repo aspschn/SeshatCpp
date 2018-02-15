@@ -38,6 +38,55 @@ String::String(std::initializer_list<CodePoint> init)
 {
 }
 
+// Convert 1 to 4 length UTF-8 characters to a code point.
+// Return value for invalid characters is undefined. Check validity before
+// calling this function.
+uint32_t _code_point_from_utf8(const char *chrs, size_t len)
+{
+    uint32_t cp = 0;
+    const uint8_t *bytes = reinterpret_cast<const uint8_t*>(chrs);
+
+    if (len == 1) {
+        cp = *bytes;
+    } else if (len == 2) {
+        cp |= ((*bytes & 0x1F) << 6) | (*(bytes + 1) & 0x3F);
+    } else if (len == 3) {
+        cp |= ((*bytes & 0x0F) << 12) | ((*(bytes + 1) & 0x3F) << 6)
+            | (*(bytes + 2) & 0x3F);
+    } else if (len == 4) {
+        cp |= ((*bytes & 0x07) << 18) | ((*(bytes + 1) & 0x3F) << 12)
+            | ((*(bytes + 2) & 0x3F) << 6) | (*(bytes + 3) & 0x3F);
+    }
+
+    return cp;
+}
+
+String::String(const char *str)
+    : _chars(decltype(_chars)())
+{
+    for (const char *buf = str; *buf != '\0'; ++buf) {
+        if ((*buf & 0x80) == 0x00) {
+            insert(end(), static_cast<char>(*buf));
+        } else if ((*buf & 0xE0) == 0xC0) {
+            if ((*(buf + 1) & 0xC0) == 0x80) {
+                insert(end(), CodePoint(_code_point_from_utf8(buf, 2)));
+                buf += 1;
+            } // else throw
+        } else if ((*buf & 0xF0) == 0xE0) {
+            if ((*(buf + 1) & 0xC0) == 0x80 && (*(buf + 2) & 0xC0) == 0x80) {
+                insert(end(), CodePoint(_code_point_from_utf8(buf, 3)));
+                buf += 2;
+            } // else throw
+        } else if ((*buf & 0xF8) == 0xF0) {
+            if ((*(buf + 1) & 0xC0) == 0x80 && (*(buf + 2) & 0xC0) == 0x80 &&
+                    (*(buf + 3) & 0xC0) == 0x80) {
+                insert(end(), CodePoint(_code_point_from_utf8(buf, 4)));
+                buf += 3;
+            } // else throw
+        } // else throw
+    }
+}
+
 String::String(const String& origin)
     : _chars(origin._chars)
 {}
