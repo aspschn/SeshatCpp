@@ -119,11 +119,11 @@ if __name__ == '__main__':
             options['SESHAT_IGNORE_ICU_VERSION'] = True
     append_src()
     if options['SESHAT_ICU_BACKEND'] == True:
+        detect_icu()
         append_icu()
     else:
         append_ucd()
     detect_compiler()
-    detect_icu()
     output = makefile_template.format(m_OBJ_LIST=' '.join(obj_list),
             m_CXXFLAGS=options['CXXFLAGS'],
             m_CXX=options['CXX'])
