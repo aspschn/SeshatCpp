@@ -35,10 +35,17 @@ int main()
         0x1F441, 0xFE0F, 0x200D, 0x1F5E8, 0xFE0F
             // eye in speech bubble
     };
+    CodePointSequence s4 = {
+        0x261D, 0x1F3FB,  // index pointing up: light skin tone
+        0x1F469, 0x1F3FF, // woman: dark skin tone
+        0x1F930, 0x1F3FD  // pregnant woman: medium skin tone
+    };
 
     std::cout << "count(0): " << count_graheme(s0) << std::endl;
     std::cout << "count(3): " << count_graheme(s1) << std::endl;
     std::cout << "count(1): " << count_graheme(s2) << std::endl;
     std::cout << "count(3): " << count_graheme(s3) << std::endl;
+    std::cout << "count(3): " << count_graheme(s4) << std::endl;
+
     return 0;
 }

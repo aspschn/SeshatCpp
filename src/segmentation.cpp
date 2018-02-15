@@ -93,6 +93,10 @@ namespace cldr {
 
     bool Gcb::e_base() const
     {
+        return (unicode::gcb(_cp) == unicode::Gcb::EB);
+        // Below code makes bug.
+        // Why these lines added? Where are these from?
+        /*
         if (unicode::gcb(_cp) == unicode::Gcb::EB) {
             // U+1F3C2, U+1F3C7, U+1F3CC, U+1F46A-U+1F46D, U+1F46F, U+1F574,
             // U+1F6CC
@@ -102,6 +106,7 @@ namespace cldr {
                 return true;
         }
         return false;
+        */
     }
 
     bool Gcb::e_modifier() const
