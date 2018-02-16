@@ -17,24 +17,28 @@ options = {
 }
 
 makefile_template = '''OBJ = {m_OBJ_LIST}
+CXX = {m_CXX}
 CXXFLAGS = {m_CXXFLAGS}
+export CXX
 default: $(OBJ)
 \tmkdir -p lib
-\t{m_CXX} -std=c++11 -shared -o lib/libseshat.so $^ -Iinclude -licuuc
+\t$(CXX) -std=c++11 -shared -o lib/libseshat.so $^ -Iinclude -licuuc
+\t$(MAKE) -C tools/
 
 static: $(OBJ)
 \tmkdir -p lib
 \tar rcs lib/libseshat.a $^
 
 src/%.o: src/%.cpp
-\t{m_CXX} -std=c++11 $(CXXFLAGS) -c -Iinclude -o $@ $<
+\t$(CXX) -std=c++11 $(CXXFLAGS) -c -Iinclude -o $@ $<
 
 clean:
-\trm src/*.o
-\trm src/ucd/*.o
-\trm src/emoji/*.o
-\trm src/icu/*.o
-\trm -r lib
+\trm -f src/*.o
+\trm -f src/ucd/*.o
+\trm -f src/emoji/*.o
+\trm -f src/icu/*.o
+\trm -rf lib
+\t$(MAKE) -C tools/ -f Makefile clean
 '''
 obj_list = []
 
