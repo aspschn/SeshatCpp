@@ -1,6 +1,7 @@
 Seshat
 =========
 ![logo](https://raw.githubusercontent.com/hardboiled65/Seshat/master/docs/seshat-logo.png)
+
 A Modern C++ Unicode Library.
 
 Introduction
@@ -23,6 +24,7 @@ $ ./configure.py
 $ make
 $ sudo cp lib/libseshat.so /usr/local/lib/libseshat.so
 $ sudo cp -r include/seshat /usr/local/include/
+```
 
 Usage
 ---------
