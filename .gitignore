@@ -8,5 +8,5 @@ src/ucd/*.o
 src/emoji/*.o
 src/icu/*.o
 lib/
-Makefile
+/Makefile
 docs/html
