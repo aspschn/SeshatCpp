@@ -383,7 +383,7 @@ enum class Wb : uint8_t {
 // kCompatibilityVariant (cjkCompatibilityVariant)
 // Decomposition_Mapping (dm)
 // FC_NFKC_Closure (FC_NFKC)
-// Lowercase_Mapping (lc)
+// ! Lowercase_Mapping (lc) - @casing.h
 // NFKC_Casefold (NFKC_CF)
 // Simple_Case_Folding  (scf) ; sfc
 // Simple_Lowercase_Mapping (slc)
@@ -401,8 +401,8 @@ CodePoint simple_titlecase_mapping(CodePoint cp);
 ///
 /// If there is no mapping for the code point, it returns code point it self.
 CodePoint simple_uppercase_mapping(CodePoint cp);
-// Titlecase_Mapping (tc)
-// Uppercase_Mapping (uc)
+// ! Titlecase_Mapping (tc) - @casing.h
+// ! Uppercase_Mapping (uc) - @casing.h
 
 // ==============================
 // Miscellaneous Properties
