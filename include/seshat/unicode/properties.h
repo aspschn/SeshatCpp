@@ -381,7 +381,7 @@ enum class Wb : uint8_t {
 //
 // Case_Folding (cf)
 // kCompatibilityVariant (cjkCompatibilityVariant)
-// Decomposition_Mapping (dm)
+// ! Decomposition_Mapping (dm) - @dm.h
 // FC_NFKC_Closure (FC_NFKC)
 // ! Lowercase_Mapping (lc) - @casing.h
 // NFKC_Casefold (NFKC_CF)
