@@ -1,3 +1,16 @@
+/*
+//  main.cpp
+//
+//  Author:     Sophia Lee
+//  Created:    2018. 03. 22. 17:53
+//  Copyright (c) 2018 Sophia Lee. All rights reserved.
+//
+//
+*/
+#define CATCH_CONFIG_MAIN
+#include <catch.hpp>
+
+#if 0
 #include <seshat/codepoint.h>
 #include <seshat/character.h>
 
@@ -34,3 +47,4 @@ int main()
 
     return 0;
 }
+#endif

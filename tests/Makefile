@@ -1,8 +1,15 @@
+CXX = clang++
 CXX_FILES = ../src/codepoint.cpp ../src/gc.cpp ../src/name.cpp ../src/utils.cpp ../src/naming_rule.cpp ../src/hangul.cpp
-CXXFLAGS = -licuuc
+CXXFLAGS = -std=c++11 -Ithirdparty/catch
+OBJ = main.o \
+	codepoint.o
+THIRDPARTY_DIR = thirdparty
+THIRDPARTY_LIBS = $(THIRDPARTY_DIR)/tinyxml/libtinyxml2.a
 
-default:
-	echo "codepoint, unicode unicode_name"
+default: all
+
+all: $(OBJ)
+	$(CXX) $(CXXFLAGS) $^ -o seshat-test -lseshat
 codepoint:
 	g++ -std=c++11 -o codepoint codepoint.cpp ../lib/libseshat.a -I../include
 character:
@@ -22,5 +29,9 @@ seg:
 casing:
 	g++ -std=c++11 -Wall -o casing casing.cpp ../lib/libseshat.a -I../include
 
+$(THIRDPARTY_DIR)/tinyxml2/libtinyxml2.a:
+	$(CXX) -c $(THIRDPARTY_DIR)/tinyxml2/tinyxml2.cpp -o $(THIRDPARTY_DIR)/tinyxml2/tinyxml2.o
+	ar rcs $(THIRDPARTY_DIR)/tinyxml2/libtinyxml2.a $(THIRDPARTY_DIR)/tinyxml2/tinyxml2.o
+
 clean:
-	rm codepoint unicode unicode_name normalization character derivation string seg
+	rm -f codepoint unicode unicode_name normalization character derivation string seg
