@@ -17,7 +17,9 @@ options = {
 }
 
 makefile_template = '''OBJ = {m_OBJ_LIST}
+ifndef CXX
 CXX = {m_CXX}
+endif
 CXXFLAGS = {m_CXXFLAGS}
 export CXX
 default: $(OBJ)
