@@ -27,6 +27,9 @@ default: $(OBJ)
 \t$(CXX) -std=c++11 -shared -o lib/libseshat.so $^ -Iinclude
 \t$(MAKE) -C tools/
 
+test:
+\t$(MAKE) -C tests/
+
 static: $(OBJ)
 \tmkdir -p lib
 \tar rcs lib/libseshat.a $^
@@ -41,6 +44,7 @@ clean:
 \trm -f src/icu/*.o
 \trm -rf lib
 \t$(MAKE) -C tools/ -f Makefile clean
+\t$(MAKE) -C tests/ -f Makefile clean
 '''
 obj_list = []
 
