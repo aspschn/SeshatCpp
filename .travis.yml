@@ -1,0 +1,46 @@
+sudo: required
+services:
+  - docker
+
+language: cpp
+addons:
+  apt:
+    packages:
+      - python3
+
+env:
+  matrix:
+    - CXX=g++ CXX_VERSION="5"
+    # g++ 5 and 6 are couldn't be installed.
+    # - CXX=g++ CXX_VERSION="6"
+    # - CXX=g++ CXX_VERSION="7"
+    - CXX=clang++ CXX_VERSION="3.8"
+    - CXX=clang++ CXX_VERSION="3.9"
+    - CXX=clang++ CXX_VERSION="4"
+    - CXX=clang++ CXX_VERSION="5"
+
+before_install:
+  - docker pull ubuntu:xenial
+  - docker run -d --name xenial -v $PWD:/travis ubuntu:xenial tail -f /dev/null
+  - docker ps
+
+install:
+  - docker exec -t xenial bash -c "export CXX=$CXX;
+    export CXX_VERSION=$CXX_VERSION;
+    apt-get update;
+    apt-get install -y python3;
+    apt-get install -y build-essential;
+    add-apt-repository -y ppa:ubuntu-toolchain-r/test;
+    if [[ \"$CXX\" == \"clang++\" ]]; then
+      add-apt-repository llvm-toolchain-xenial-$CXX_VERSION;
+    fi;
+    apt-get update;
+    if [[ \"$CXX\" == \"clang++\" ]]; then
+      apt-get install -y clang-$CXX_VERSION;
+    elif [[ \"$CXX\" == \"g++\" ]]; then
+      apt-get install -y g++-$CXX_VERSION;
+    fi"
+
+script:
+  - docker exec -t xenial bash -c "cd /travis;
+    ./configure.py && make;"
