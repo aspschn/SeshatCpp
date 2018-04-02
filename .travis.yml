@@ -43,4 +43,4 @@ install:
 
 script:
   - docker exec -t xenial bash -c "cd /travis;
-    ./configure.py && make;"
+    ./configure.py && make && make test;"
