@@ -24,7 +24,7 @@ CXXFLAGS = {m_CXXFLAGS}
 export CXX
 default: $(OBJ)
 \tmkdir -p lib
-\t$(CXX) -std=c++11 -shared -o lib/libseshat.so $^ -Iinclude -licuuc
+\t$(CXX) -std=c++11 -shared -o lib/libseshat.so $^ -Iinclude
 \t$(MAKE) -C tools/
 
 static: $(OBJ)
