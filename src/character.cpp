@@ -122,7 +122,7 @@ bool Character::operator==(const Character& other) const
 
 bool Character::operator!=(const Character& other) const
 {
-    return *this != other;
+    return !(*this == other);
 }
 
 } // namespace seshat
