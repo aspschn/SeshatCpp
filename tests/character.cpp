@@ -3,28 +3,103 @@
 //
 //  Author:     Sophia Lee
 //  Created:    2017. 05. 16. 14:59
-//  Copyright (c) 2017 Sophia Lee. All rights reserved.
+//  Copyright (c) 2017-2018 Sophia Lee. All rights reserved.
 //
 //  Test of Character
 */
+#include <catch.hpp>
+
 #include <seshat/character.h>
 
-#include <cassert>
-#include <iostream>
+#include <utility>
 
-int main()
+using seshat::Character;
+using seshat::CodePoint;
+using seshat::CodePointSequence;
+using seshat::SurrogateIncluded;
+using seshat::NotASingleCharacter;
+
+using namespace Catch;
+
+TEST_CASE("Character")
 {
-    using seshat::Character;
-    using seshat::CodePoint;
-    using seshat::CodePointSequence;
-    using seshat::SurrogateIncluded;
-    using seshat::NotASingleCharacter;
-
-    Character ch1 = Character('a');
-    Character ch2 = Character(CodePoint(0xAC01)); // '각'
-    Character ch3 = Character(CodePointSequence {
+    Character ch_1 = Character('a');
+    Character ch_2 = Character(CodePoint(0xAC01)); // '각'
+    Character ch_3 = Character(CodePointSequence {
         0x1100, 0x1161, 0x11A8
     }); // Decomposed Hangul Syllable '각'
+
+    SECTION("constructor")
+    {
+        SECTION("Copy constructor")
+        {
+            Character ch_cpy(ch_1);
+
+            REQUIRE(ch_1 == ch_cpy);
+        }
+        SECTION("Move constructor")
+        {
+            Character ch = Character(CodePoint(0xAC00));
+            Character ch_new(std::move(ch));
+            REQUIRE(ch.size() == 0);
+            // TODO: Moved source Character should not be copy/movable.
+        }
+        SECTION("throw SurrogateIncluded")
+        {
+            REQUIRE_THROWS_AS(Character(CodePoint(0xD800)), SurrogateIncluded);
+            REQUIRE_THROWS_WITH(Character(CodePoint(0xD800)),
+                    StartsWith("SurrogateIncluded"));
+        }
+        SECTION("throw NotASingleCharacter")
+        {
+            // Empty sequence should throws NotASingleCharacter exception.
+            REQUIRE_THROWS_AS(Character(CodePointSequence {}),
+                    NotASingleCharacter);
+
+            REQUIRE_THROWS_AS(
+                    Character(CodePointSequence { 0x1100, 0x1161, 0x1100 }),
+                    NotASingleCharacter);
+            REQUIRE_THROWS_WITH(
+                    Character(CodePointSequence { 0x1100, 0x1161, 0x1100 }),
+                    StartsWith("NotASingleCharacter"));
+        }
+        // TODO: Surrogate with multiple or zero characters, which is prior?
+    }
+    SECTION("element access")
+    {
+        SECTION("size")
+        {
+            REQUIRE(ch_1.size() == 1);
+            REQUIRE(ch_2.size() == 1);
+            REQUIRE(ch_3.size() == 3);
+        }
+        SECTION("sequence")
+        {
+            REQUIRE(
+                ch_3.sequence() == CodePointSequence { 0x1100, 0x1161, 0x11A8 }
+            );
+        }
+        SECTION("to_utf8")
+        {
+            REQUIRE(ch_2.to_utf8() == u8"각");
+        }
+    }
+    SECTION("modify")
+    {
+        Character ch('Z');
+        ch = ch_1;
+        REQUIRE(ch == Character('a'));
+    }
+    SECTION("comparison")
+    {
+        REQUIRE(ch_1 != ch_2);
+    }
+}
+
+#if 0
+int main()
+{
+
 
     // size()
     assert(ch1.size() == 1);
@@ -69,3 +144,4 @@ int main()
 
     return 0;
 }
+#endif

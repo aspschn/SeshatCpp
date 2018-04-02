@@ -2,7 +2,8 @@ CXX = clang++
 CXX_FILES = ../src/codepoint.cpp ../src/gc.cpp ../src/name.cpp ../src/utils.cpp ../src/naming_rule.cpp ../src/hangul.cpp
 CXXFLAGS = -std=c++11 -Ithirdparty/catch
 OBJ = main.o \
-	codepoint.o
+	codepoint.o \
+	character.o
 THIRDPARTY_DIR = thirdparty
 THIRDPARTY_LIBS = $(THIRDPARTY_DIR)/tinyxml/libtinyxml2.a
 
