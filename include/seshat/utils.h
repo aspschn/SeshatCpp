@@ -159,6 +159,9 @@ static const char HEX_CHAR[16] = {
 /// Behavior for illegal code point that over 0x10FFFF is undefined.
 std::string code_point_to_string(uint32_t cp);
 
+/// \brief  Parse std::string to make unsigned integer type.
+uint32_t code_point_from_string(std::string str);
+
 } // namespace seshat
 
 #endif /* _SESHAT_UTILS_H */

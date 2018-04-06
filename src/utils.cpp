@@ -41,4 +41,10 @@ std::string code_point_to_string(uint32_t cp)
     return code_str;
 }
 
+uint32_t code_point_from_string(std::string str)
+{
+    uint32_t ret = strtoul(str.c_str(), NULL, 16);
+    return ret;
+}
+
 } // namespace seshat

@@ -2,7 +2,8 @@ CXX_FILES = ../src/codepoint.cpp ../src/gc.cpp ../src/name.cpp ../src/utils.cpp 
 CXXFLAGS = -std=c++11 -I../include -Ithirdparty/catch
 OBJ = main.o \
 	codepoint.o \
-	character.o
+	character.o \
+	utils.o
 THIRDPARTY_DIR = thirdparty
 THIRDPARTY_LIBS = $(THIRDPARTY_DIR)/tinyxml/libtinyxml2.a
 
