@@ -12,13 +12,13 @@
 #       "properties": [{
 #           "seshat_enum": "Gc",
 #           "seshat_function": "gc",
-#           "alias": "gc",
+#           "abbr": "gc",
 #           "full": "General_Category",
 #           "icu_u_property": "UCHAR_GENERAL_CATEGORY"
 #           "icu_enum": "UCharCategory",
 #           "property_values": [{
 #               "seshat_enum": "Cc",
-#               "alias": "Cc",
+#               "abbr": "Cc",
 #               "full": "Control",
 #               "alt": ["cntrl"],
 #               "icu_enum": "U_CONTROL_CHAR"
@@ -27,7 +27,7 @@
 #   }
 import pprint
 
-# Unicode alias: Seshat enum class mappings.
+# Unicode abbreviated alias: Seshat enum class mappings.
 # Not explicitly here means not in Seshat or not implemented yet.
 _alias_seshat_enum_pair = {
     ## ==============================
@@ -61,14 +61,14 @@ _alias_seshat_enum_pair = {
 }
 
 # Seshat function coverage list.
-# Seshat uses property function name as snake_cased aliased
+# Seshat uses property function name as snake_cased abbreviated
 # Unicode property name, and some functions use full name
 # for convenient.
 # Below list contains implemented Seshat function for each property.
 # Not explicitly here means not implemented yet.
-# The key is alias and the value is object of status.
-# 'full': Boolean. If True, then Seshat using full property name for
-#         that function. False for alias property name.
+# The key is abbreviated alias and the value is object of status.
+# 'full': Boolean. If True, then Seshat using full(long) property name for
+#         that function. False for abbreviated property name.
 _seshat_function_coverage = {
     ## ==============================
     ## String Properties
@@ -140,8 +140,8 @@ def read_files():
 class Aliases:
     def __init__(self):
         self._data = []
-    def append(self, alias, full, others):
-        self._data.append({'alias': alias, 'full': full, 'alt': others})
+    def append(self, abbr, full, others):
+        self._data.append({'abbr': abbr, 'full': full, 'alt': others})
 
     @property
     def data(self):
@@ -183,27 +183,27 @@ data = read_files()
 aliases = parse_aliases(data['property_aliases'])
 value_aliases = parse_value_aliases(data['property_value_aliases'])
 for prop in aliases.data:
-    alias = prop['alias']
+    abbr = prop['abbr']
     seshat_function = None
     # Get Seshat function name.
-    naming = _seshat_function_coverage.get(alias, None)
+    naming = _seshat_function_coverage.get(abbr, None)
     if naming != None:
-        seshat_function = prop['alias'].lower() if naming['full'] == False else prop['full'].lower()
+        seshat_function = prop['abbr'].lower() if naming['full'] == False else prop['full'].lower()
     # Get property values.
     property_values = []
-    values = value_aliases[alias] if (alias in value_aliases.keys()) else Aliases()
+    values = value_aliases[abbr] if (abbr in value_aliases.keys()) else Aliases()
     for val in values.data:
         property_values.append({
-            'seshat_enum': val['alias'] if _alias_seshat_enum_pair.get(alias, None) != None else None,
-            'alias': val['alias'],
+            'seshat_enum': val['abbr'] if _alias_seshat_enum_pair.get(abbr, None) != None else None,
+            'abbr': val['abbr'],
             'full': val['full'],
             'alt': val['alt'],
             'icu_enum': None,
         })
     properties['properties'].append({
-        'seshat_enum': _alias_seshat_enum_pair.get(alias, None),
+        'seshat_enum': _alias_seshat_enum_pair.get(abbr, None),
         'seshat_function': seshat_function,
-        'alias': prop['alias'],
+        'abbr': prop['abbr'],
         'full': prop['full'],
         'icu_u_property': None,
         'icu_enum': None,
