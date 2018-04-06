@@ -45,7 +45,7 @@ _alias_seshat_enum_pair = {
     ## ==============================
     ## Catalog Properties
     ## ==============================
-    'bkl': 'Block',
+    'blk': 'Block',
     'sc': 'Script',
     ## ==============================
     ## Enumerated Properties
