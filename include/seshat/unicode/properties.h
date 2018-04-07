@@ -20,11 +20,10 @@
 
 #include <cstdint>
 
-namespace seshat {
-namespace unicode {
-
+/// \enum   Gc
 /// \brief  Unicode character property General_Category (gc).
-enum class Gc : uint8_t {
+SESHAT_UNICODE_PROPERTY_ENUM(Gc, uint8_t) {
+// enum class Gc : uint8_t {
     // C - Other
     Cc, Cf, Cn, Co, Cs,
     // L - Letter
@@ -41,11 +40,14 @@ enum class Gc : uint8_t {
     // Z - Separator
     Zl, Zp, Zs,
 };
+SESHAT_UNICODE_PROPERTY_ENUM_END
 
+/// \enum   Dt
 /// \brief  Unicode character property Decomposition_Type (dt).
 ///
 /// Aliases from PropertyValueAliases.txt
-enum class Dt : uint8_t {
+SESHAT_UNICODE_PROPERTY_ENUM(Dt, uint8_t) {
+// enum class Dt : uint8_t {
     Can,    // Canonical
     Com,    // Compat
     Enc,    // Circle
@@ -65,9 +67,12 @@ enum class Dt : uint8_t {
     Vert,   // Vertical
     Wide    // Wide
 };
+SESHAT_UNICODE_PROPERTY_ENUM_END
 
+/// \enum   Script
 /// \brief  Unicode character property Script (sc).
-enum class Script : uint8_t {
+SESHAT_UNICODE_PROPERTY_ENUM(Script, uint8_t) {
+// enum class Script : uint8_t {
     Adlm, Aghb, // Adlam // Caucasian_Albanian
     Ahom, Arab, // Ahom // Arabic
     Armi, Armn, // Imperial_Aramaic // Armenian
@@ -144,6 +149,9 @@ enum class Script : uint8_t {
     // Other values
     Zinh, Zyyy, Zzzz // Inherited ; Qaai // Common // Unknown
 };
+SESHAT_UNICODE_PROPERTY_ENUM_END
+namespace seshat {
+namespace unicode {
 static_assert(
     /* if */ (UnicodeVersion == (Version { 9, 0, 0 })) ?
         (static_cast<int>(Script::Zzzz) + 1 == 139)
@@ -152,9 +160,13 @@ static_assert(
     : /* else */
         false,
     "The number of Script property values do not match.");
+}
+}
 
+/// \enum   Block
 /// \brief  Unicode character property Block (blk).
-enum class Block : uint16_t {
+SESHAT_UNICODE_PROPERTY_ENUM(Block, uint16_t) {
+// enum class Block : uint16_t {
     // A
     Adlam, Aegean_Numbers, Ahom, Alchemical, Alphabetic_PF,
     Anatolian_Hieroglyphs,
@@ -305,6 +317,9 @@ enum class Block : uint16_t {
     // Default value
     NB // None block
 };
+SESHAT_UNICODE_PROPERTY_ENUM_END
+namespace seshat {
+namespace unicode {
 static_assert(
     /* if */ (UnicodeVersion == (Version { 9, 0, 0 })) ?
         (static_cast<int>(Block::NB) + 1 == 274)
@@ -313,9 +328,13 @@ static_assert(
     : /* else */
         false,
     "The number of Block property values do not match.");
+}
+}
 
+/// \enum   Gcb
 /// \brief  Unicode character property Grapheme_Cluster_Break (GCB).
-enum class Gcb : uint8_t {
+SESHAT_UNICODE_PROPERTY_ENUM(Gcb, uint8_t) {
+// enum class Gcb : uint8_t {
     CN,     // Control
     CR,     // CR
     EB,     // E_Base
@@ -335,9 +354,12 @@ enum class Gcb : uint8_t {
     XX,     // Other
     ZWJ     // ZWJ
 };
+SESHAT_UNICODE_PROPERTY_ENUM_END
 
+/// \enum   Wb
 /// \brief  Unicode character property Word_Break (WB).
-enum class Wb : uint8_t {
+SESHAT_UNICODE_PROPERTY_ENUM(Wb, uint8_t) {
+// enum class Wb : uint8_t {
     CR,     // CR
     DQ,     // Double_Quote
     EB,     // E_Base
@@ -361,6 +383,10 @@ enum class Wb : uint8_t {
     XX,     // Other
     ZWJ     // ZWJ
 };
+SESHAT_UNICODE_PROPERTY_ENUM_END
+
+namespace seshat {
+namespace unicode {
 
 /*
  * Property determining functions

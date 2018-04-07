@@ -3,7 +3,7 @@
 //
 //  Author:     Sophia Lee
 //  Created:    2017. 04. 17. 11:29
-//  Copyright (c) 2017 Sophia Lee. All rights reserved.
+//  Copyright (c) 2017-2018 Sophia Lee. All rights reserved.
 //
 
 /// \file
@@ -14,6 +14,7 @@
 #include <seshat/codepoint.h>
 
 #include <cstdint>
+#include <functional>
 #include <string>
 
 namespace seshat {
@@ -126,5 +127,18 @@ uint32_t compose(uint32_t first, uint32_t last);
 } // namespace hangul
 } // namespace unicode
 } // namespace seshat
+
+namespace std {
+template <>
+struct hash<seshat::unicode::hangul::HangulSyllableType> {
+    using Underlying =
+        std::underlying_type<seshat::unicode::hangul::HangulSyllableType>::type;
+    size_t operator()(const seshat::unicode::hangul::HangulSyllableType& val)
+    const
+    {
+        return std::hash<Underlying>()(static_cast<Underlying>(val));
+    }
+};
+} // namespace std
 
 #endif /* _UNICODE_HANGUL_H */

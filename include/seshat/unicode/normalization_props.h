@@ -3,7 +3,7 @@
 //
 //  Author:     Sophia Lee
 //  Created:    2017. 04. 24. 14:59
-//  Copyright (c) 2017 Sophia Lee. All rights reserved.
+//  Copyright (c) 2017-2018 Sophia Lee. All rights reserved.
 //
 
 /// \file
@@ -12,20 +12,24 @@
 #define _UNICODE_NORMALIZATION_PROPS_H
 
 #include <seshat/codepoint.h>
+#include <seshat/utils.h>
 
 #include <cstdint>
 #include <map>
 #include <utility>
 
-namespace seshat {
-namespace unicode {
-
+/// \enum   QcValue
 /// \brief  Quick check result values.
-enum class QcValue {
+SESHAT_UNICODE_PROPERTY_ENUM(QcValue, uint8_t) {
+// enum class QcValue {
     No,
     Yes,
     Maybe
 };
+SESHAT_UNICODE_PROPERTY_ENUM_END
+
+namespace seshat {
+namespace unicode {
 
 /// \brief  Get the Unicode property Full_Composition_Exclusion (comp_ex).
 bool comp_ex(CodePoint cp);

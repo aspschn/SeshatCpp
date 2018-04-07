@@ -3,7 +3,7 @@
 //
 //  Author:     Sophia Lee
 //  Created:    2017. 04. 14. 16:03
-//  Copyright (c) 2017 Sophia Lee. All rights reserved.
+//  Copyright (c) 2017-2018 Sophia Lee. All rights reserved.
 //
 
 /// \file
@@ -16,6 +16,38 @@
 #include <utility>
 
 namespace seshat {
+
+/// \brief  Macro that defining enum class with hash.
+///
+/// Should be defined outside of namespace because this macro contains
+/// namespaces.
+/// Should use with
+/// \link SESHAT_UNICODE_PROPERTY_ENUM_END \endlink macro pair.
+#define SESHAT_UNICODE_PROPERTY_ENUM(NAME, TYPE) \
+    namespace seshat { \
+    namespace unicode { \
+    enum class NAME : TYPE; \
+    } \
+    } \
+    namespace std { \
+    template <> \
+    struct hash<seshat::unicode::NAME> { \
+        using Underlying = std::underlying_type<seshat::unicode::NAME>::type; \
+        size_t operator()(const seshat::unicode::NAME& val) const \
+        { \
+            return std::hash<Underlying>()(static_cast<Underlying>(val)); \
+        } \
+    }; \
+    } \
+    namespace seshat { \
+    namespace unicode { \
+    enum class NAME : TYPE
+
+/// \brief  This macro should follows with
+///         \link SESHAT_UNICODE_PROPERTY_ENUM \endlink macro.
+#define SESHAT_UNICODE_PROPERTY_ENUM_END \
+    } \
+    }
 
 /// \brief  Template class for range.
 ///
