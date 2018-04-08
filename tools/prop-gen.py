@@ -193,8 +193,15 @@ for prop in aliases.data:
     property_values = []
     values = value_aliases[abbr] if (abbr in value_aliases.keys()) else Aliases()
     for val in values.data:
+        # There are not used properties in 'gc'.
+        if prop['abbr'] == 'gc' and val['abbr'] in ('C', 'L', 'LC', 'M', 'N', 'P', 'S', 'Z'):
+            continue
+        seshat_enum = val['abbr'] if _alias_seshat_enum_pair.get(abbr, None) != None else None
+        # QcValue exceptionally using full name for enum members.
+        if prop['abbr'] in ('NFC_QC', 'NFD_QC', 'NFKC_QC', 'NFKD_QC'):
+            seshat_enum = val['full']
         property_values.append({
-            'seshat_enum': val['abbr'] if _alias_seshat_enum_pair.get(abbr, None) != None else None,
+            'seshat_enum': seshat_enum,
             'abbr': val['abbr'],
             'full': val['full'],
             'alt': val['alt'],
