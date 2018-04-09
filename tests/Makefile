@@ -7,14 +7,19 @@ OBJ = main.o \
 	utils.o
 THIRDPARTY_DIR = thirdparty
 THIRDPARTY_LIBS = $(THIRDPARTY_DIR)/tinyxml2/libtinyxml2.a
+UCD_XML = ucd.nounihan.flat.xml
 
 default: all
 
 all: $(OBJ) $(THIRDPARTY_LIBS)
 	$(CXX) $(CXXFLAGS) $(THIRDPARTY_LIBS) $^ -o seshat-test -L../lib -lseshat -Wl,-rpath=../lib
 
-# properties.o: $(THIRDPARTY_LIBS)
-#	$(CXX) $(CXXFLAGS) -c properties.cpp $(THIRDPARTY_LIBS)
+properties.o: $(UCD_XML)
+	$(CXX) $(CXXFLAGS) -c properties.cpp
+
+$(UCD_XML):
+	wget https://www.unicode.org/Public/10.0.0/ucdxml/ucd.nounihan.flat.zip
+	unzip ucd.nounihan.flat.zip
 
 codepoint:
 	g++ -std=c++11 -o codepoint codepoint.cpp ../lib/libseshat.a -I../include
@@ -39,6 +44,10 @@ $(THIRDPARTY_DIR)/tinyxml2/libtinyxml2.a:
 	$(CXX) -c $(THIRDPARTY_DIR)/tinyxml2/tinyxml2.cpp -o $(THIRDPARTY_DIR)/tinyxml2/tinyxml2.o
 	ar rcs $(THIRDPARTY_DIR)/tinyxml2/libtinyxml2.a $(THIRDPARTY_DIR)/tinyxml2/tinyxml2.o
 
+cleanall: clean
+	rm -f ucd.nounihan.flat.zip $(UCD_XML)
+
 clean:
 	rm -f codepoint unicode unicode_name normalization character derivation string seg *.o seshat-test
+	rm -f $(THIRDPARTY_DIR)/tinyxml2/*.o
 	rm -f $(THIRDPARTY_LIBS)
