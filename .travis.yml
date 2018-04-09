@@ -29,6 +29,7 @@ install:
     export CXX_VERSION=$CXX_VERSION;
     apt-get update;
     apt-get install -y python3;
+    apt-get install -y wget;
     apt-get install -y unzip;
     apt-get install -y build-essential;
     add-apt-repository -y ppa:ubuntu-toolchain-r/test;
