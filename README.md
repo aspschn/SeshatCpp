@@ -22,6 +22,10 @@ Seshat requires below tools to build from the source.
 * Python 3.x
 * g++ 5.4.0+ or clang 3.8.0+
 
+For building test, requires
+* wget
+* unzip
+
 And for more detail configurations,
 * wget
 
