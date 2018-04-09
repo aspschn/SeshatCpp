@@ -1,16 +1,26 @@
 CXX_FILES = ../src/codepoint.cpp ../src/gc.cpp ../src/name.cpp ../src/utils.cpp ../src/naming_rule.cpp ../src/hangul.cpp
-CXXFLAGS = -std=c++11 -I../include -Ithirdparty/catch
+CXXFLAGS = -std=c++11 -I../include -Ithirdparty -Ithirdparty/catch
 OBJ = main.o \
 	codepoint.o \
 	character.o \
+	properties.o \
 	utils.o
 THIRDPARTY_DIR = thirdparty
-THIRDPARTY_LIBS = $(THIRDPARTY_DIR)/tinyxml/libtinyxml2.a
+THIRDPARTY_LIBS = $(THIRDPARTY_DIR)/tinyxml2/libtinyxml2.a
+UCD_XML = ucd.nounihan.flat.xml
 
 default: all
 
-all: $(OBJ)
-	$(CXX) $(CXXFLAGS) $^ -o seshat-test -L../lib -lseshat -Wl,-rpath=../lib
+all: $(OBJ) $(THIRDPARTY_LIBS)
+	$(CXX) $(CXXFLAGS) $(THIRDPARTY_LIBS) $^ -o seshat-test -L../lib -lseshat -Wl,-rpath=../lib
+
+properties.o: $(UCD_XML)
+	$(CXX) $(CXXFLAGS) -c properties.cpp
+
+$(UCD_XML):
+	wget https://www.unicode.org/Public/10.0.0/ucdxml/ucd.nounihan.flat.zip
+	unzip ucd.nounihan.flat.zip
+
 codepoint:
 	g++ -std=c++11 -o codepoint codepoint.cpp ../lib/libseshat.a -I../include
 character:
@@ -34,5 +44,10 @@ $(THIRDPARTY_DIR)/tinyxml2/libtinyxml2.a:
 	$(CXX) -c $(THIRDPARTY_DIR)/tinyxml2/tinyxml2.cpp -o $(THIRDPARTY_DIR)/tinyxml2/tinyxml2.o
 	ar rcs $(THIRDPARTY_DIR)/tinyxml2/libtinyxml2.a $(THIRDPARTY_DIR)/tinyxml2/tinyxml2.o
 
+cleanall: clean
+	rm -f ucd.nounihan.flat.zip $(UCD_XML)
+
 clean:
 	rm -f codepoint unicode unicode_name normalization character derivation string seg *.o seshat-test
+	rm -f $(THIRDPARTY_DIR)/tinyxml2/*.o
+	rm -f $(THIRDPARTY_LIBS)
