@@ -617,8 +617,9 @@ builder_core_cpp = CodeBuilder('core.cpp')
     .include('"core.h"', '<seshat/unicode/version.h>')
     .open_ns('seshat').open_ns('unicode').open_ns('ucd'))
 
+builder_gcb_cpp_old = CodeBuilder('gcb.cpp')
 builder_gcb_cpp = CodeBuilder('gcb.cpp')
-(builder_gcb_cpp.comment(comment + '''//
+(builder_gcb_cpp_old.comment(comment + '''//
 //  Grapheme_Cluster_Break (GCB) table.
 //
 //  The following property values are not included in this table because
@@ -630,6 +631,10 @@ builder_gcb_cpp = CodeBuilder('gcb.cpp')
 //  - L, V, T, LV, LVT: Hangul_Syllable_Type
 //  - E_Modifier (EM): Emoji_Modifier = Yes''')
     .include('"gcb.h"', '<seshat/unicode/version.h>')
+    .open_ns('seshat').open_ns('unicode').open_ns('ucd'))
+(builder_gcb_cpp.comment(comment + '''//
+// Grapheme_Cluster_Break (GCB) table.''')
+    .include('"gcb.h"', '<seshat/unicode/version.h>', '<seshat/utils.h>')
     .open_ns('seshat').open_ns('unicode').open_ns('ucd'))
 
 builder_age_cpp = CodeBuilder('age.cpp')
@@ -871,14 +876,28 @@ Same as sizeof(INT_TYPE) in C.'''
 
         return stage_1_text + '\n\n' + stage_2_text + '\n\n' + table_text
 
-def select_minimal_table(prop, varname, enum_bytes):
+def select_minimal_table(prop, varname, enum_bytes, default_value=None):
     tables = {64: None, 128: None, 256: None, 512: None}
     for bsize in tables.keys():
         tst = TwoStageTable(varname, prop.enum_type, enum_bytes=enum_bytes,
             block_size=bsize)
+        cur_code = 0 # from 0 to 0x10FFFF
         for ranges in sorted(prop._table, key=lambda x: x[0]):
+            # print('{:04X}-{:04X}: {}'.format(ranges[0]._from, ranges[0]._to, ranges[1]))
+            # Add as default value for implicit ranges.
+            if cur_code not in range(ranges[0]._from, ranges[0]._to + 1):
+                for i in range(cur_code, ranges[0]._from):
+                    tst.add_char(i, default_value)
+                cur_code = ranges[0]._from
+            # Add each characters in range to the table.
             for i in range(ranges[0]._from, ranges[0]._to + 1):
+                # print('i: {:04X}, cur_code: {:04X}'.format(i, cur_code))
                 tst.add_char(i, ranges[1])
+                cur_code += 1
+        # Add as default value for remained implicit ranges.
+        if cur_code <= 0x10FFFF:
+            for i in range(cur_code, 0x10FFFF + 1):
+                tst.add_char(i, default_value)
         tables[bsize] = tst
         print(' * {}: Block size: '.format(prop.enum_type) + str(tst.block_size))
         print('Stage-1: {} items, {} bytes'.format(len(tst._stage_1), tst.stage_1_bytes()))
@@ -1009,7 +1028,7 @@ def _make_script_cpp_2_stage():
     parser = DerivedParser(data_dir + '/Scripts.txt')
     parser.parse_all(lambda r, f, s: prop.append_range(r, alias(f)))
 
-    table = select_minimal_table(prop, 'script_table', 1)
+    table = select_minimal_table(prop, 'script_table', 2, default_value='Zzzz')
 
     (builder_script_cpp.push_content(version_assert())
         .push_content(table.to_seshat())
@@ -1037,7 +1056,7 @@ def make_block_cpp():
 
     builder_block_cpp.write()
 
-def make_gcb_cpp():
+def _make_gcb_cpp_ranged():
     def alias(val):
         return property_value_aliases.alias('GCB', val)
     table = DataTable('gcb_table', 'map', 'CodePointRange', 'Gcb')
@@ -1055,6 +1074,28 @@ def make_gcb_cpp():
 
     builder_gcb_cpp.write()
 
+def _make_gcb_cpp_2_stage():
+    def alias(val):
+        return property_value_aliases.alias('GCB', val)
+    prop = Properties('Gcb')
+
+    data_dir = get_ucd_dir(UNICODE_VERSION_MAJOR, UNICODE_VERSION_MINOR,
+        UNICODE_VERSION_UPDATE)
+    parser = DerivedParser(data_dir + '/GraphemeBreakProperty.txt')
+    parser.parse_all(lambda r, f, s: prop.append_range(r, alias(f)))
+
+    table = select_minimal_table(prop, 'gcb_table', 1, default_value='XX')
+
+    (builder_gcb_cpp.push_content(version_assert())
+        .push_content(table.to_seshat())
+        .push_content(table.build_prop_func('gcb'))
+        .close_ns_all())
+
+    builder_gcb_cpp.write()
+
+def make_gcb_cpp():
+    _make_gcb_cpp_2_stage()
+
 def make_wb_cpp():
     def alias(val):
         return property_value_aliases.alias('WB', val)
@@ -1065,7 +1106,7 @@ def make_wb_cpp():
     parser = DerivedParser(data_dir + '/WordBreakProperty.txt')
     parser.parse_all(lambda r, f, s: prop.append_range(r, alias(f)))
 
-    table = select_minimal_table(prop, 'wb_table', 1)
+    table = select_minimal_table(prop, 'wb_table', 1, default_value='XX')
 
     (builder_wb_cpp.push_content(version_assert())
         .push_content(table.to_seshat())

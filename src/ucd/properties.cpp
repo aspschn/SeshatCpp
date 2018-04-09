@@ -82,6 +82,7 @@ Gc gc(uint32_t cp)
 }
 */
 
+/*
 Gcb gcb(uint32_t cp)
 {
     static_assert(UnicodeVersion == (Version { 10, 0, 0 }), "Version error.");
@@ -142,6 +143,7 @@ Gcb gcb(uint32_t cp)
     }
     return Gcb::XX; // Other
 }
+*/
 
 bool grapheme_extend(uint32_t cp)
 {
