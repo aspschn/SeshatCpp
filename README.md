@@ -59,4 +59,7 @@ Add later.
 
 License
 ---------
+All logo images are copyright [Frybits Inc.](https://github.com/frybitsinc)
+and should not be used out of this project without permission.
+
 Seshat is developed under MIT License. For the detail, see the LICENSE file.
