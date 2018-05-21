@@ -3,7 +3,7 @@
 //
 //  Author:     Sophia Lee
 //  Created:    2017. 06. 23. 18:54
-//  Copyright (c) 2017 Sophia Lee. All rights reserved.
+//  Copyright (c) 2017-2018 Sophia Lee. All rights reserved.
 //
 //
 */
@@ -239,6 +239,168 @@ bool other_uppercase(uint32_t cp)
 {
     auto found = ucd::oupper_table.find(CodePointRange(cp, cp));
     return (found != ucd::oupper_table.end()) ? true : false;
+}
+
+bool dash(uint32_t cp)
+{
+    auto found = ucd::dash_table.find(CodePointRange(cp, cp));
+    return (found != ucd::dash_table.end()) ? true : false;
+}
+
+bool hyphen(uint32_t cp)
+{
+    auto found = ucd::hyphen_table.find(CodePointRange(cp, cp));
+    return (found != ucd::hyphen_table.end()) ? true : false;
+}
+
+bool bidi_control(uint32_t cp)
+{
+    auto found = ucd::bidi_control_table.find(CodePointRange(cp, cp));
+    return (found != ucd::bidi_control_table.end()) ? true : false;
+}
+
+bool join_control(uint32_t cp)
+{
+    auto found = ucd::join_control_table.find(CodePointRange(cp, cp));
+    return (found != ucd::join_control_table.end()) ? true : false;
+}
+
+bool quotation_mark(uint32_t cp)
+{
+    auto found = ucd::qmark_table.find(CodePointRange(cp, cp));
+    return (found != ucd::qmark_table.end()) ? true : false;
+}
+
+bool terminal_punctuation(uint32_t cp)
+{
+    auto found = ucd::term_table.find(CodePointRange(cp, cp));
+    return (found != ucd::term_table.end()) ? true : false;
+}
+
+bool other_math(uint32_t cp)
+{
+    auto found = ucd::omath_table.find(CodePointRange(cp, cp));
+    return (found != ucd::omath_table.end()) ? true : false;
+}
+
+bool hex_digit(uint32_t cp)
+{
+    auto found = ucd::hex_table.find(CodePointRange(cp, cp));
+    return (found != ucd::hex_table.end()) ? true : false;
+}
+
+bool ascii_hex_digit(uint32_t cp)
+{
+    auto found = ucd::ahex_table.find(CodePointRange(cp, cp));
+    return (found != ucd::ahex_table.end()) ? true : false;
+}
+
+bool oalpha(uint32_t cp)
+{
+    auto found = ucd::oalpha_table.find(CodePointRange(cp, cp));
+    return (found != ucd::oalpha_table.end()) ? true : false;
+}
+
+bool ideographic(uint32_t cp)
+{
+    auto found = ucd::ideographic_table.find(CodePointRange(cp, cp));
+    return (found != ucd::ideographic_table.end()) ? true : false;
+}
+
+bool diacritic(uint32_t cp)
+{
+    auto found = ucd::diacritic_table.find(CodePointRange(cp, cp));
+    return (found != ucd::diacritic_table.end()) ? true : false;
+}
+
+bool extender(uint32_t cp)
+{
+    auto found = ucd::extender_table.find(CodePointRange(cp, cp));
+    return (found != ucd::extender_table.end()) ? true : false;
+}
+
+bool nchar(uint32_t cp)
+{
+    auto found = ucd::nchar_table.find(CodePointRange(cp, cp));
+    return (found != ucd::nchar_table.end()) ? true : false;
+}
+
+bool ids_binary_operator(uint32_t cp)
+{
+    auto found = ucd::idsb_table.find(CodePointRange(cp, cp));
+    return (found != ucd::idsb_table.end()) ? true : false;
+}
+
+bool ids_trinary_operator(uint32_t cp)
+{
+    auto found = ucd::idst_table.find(CodePointRange(cp, cp));
+    return (found != ucd::idst_table.end()) ? true : false;
+}
+
+bool radical(uint32_t cp)
+{
+    auto found = ucd::radical_table.find(CodePointRange(cp, cp));
+    return (found != ucd::radical_table.end()) ? true : false;
+}
+
+bool unified_ideograph(uint32_t cp)
+{
+    auto found = ucd::uideo_table.find(CodePointRange(cp, cp));
+    return (found != ucd::uideo_table.end()) ? true : false;
+}
+
+bool deprecated(uint32_t cp)
+{
+    auto found = ucd::deprecated_table.find(CodePointRange(cp, cp));
+    return (found != ucd::deprecated_table.end()) ? true : false;
+}
+
+bool soft_dotted(uint32_t cp)
+{
+    auto found = ucd::soft_dotted_table.find(CodePointRange(cp, cp));
+    return (found != ucd::soft_dotted_table.end()) ? true : false;
+}
+
+bool logical_order_exception(uint32_t cp)
+{
+    auto found = ucd::loe_table.find(CodePointRange(cp, cp));
+    return (found != ucd::loe_table.end()) ? true : false;
+}
+
+bool oids(uint32_t cp)
+{
+    auto found = ucd::oids_table.find(CodePointRange(cp, cp));
+    return (found != ucd::oids_table.end()) ? true : false;
+}
+
+bool oidc(uint32_t cp)
+{
+    auto found = ucd::oidc_table.find(CodePointRange(cp, cp));
+    return (found != ucd::oidc_table.end()) ? true : false;
+}
+
+bool sentence_terminal(uint32_t cp)
+{
+    auto found = ucd::sterm_table.find(CodePointRange(cp, cp));
+    return (found != ucd::sterm_table.end()) ? true : false;
+}
+
+bool pattern_white_space(uint32_t cp)
+{
+    auto found = ucd::pat_ws_table.find(CodePointRange(cp, cp));
+    return (found != ucd::pat_ws_table.end()) ? true : false;
+}
+
+bool pattern_syntax(uint32_t cp)
+{
+    auto found = ucd::pat_syn_table.find(CodePointRange(cp, cp));
+    return (found != ucd::pat_syn_table.end()) ? true : false;
+}
+
+bool regional_indicator(uint32_t cp)
+{
+    auto found = ucd::ri_table.find(CodePointRange(cp, cp));
+    return (found != ucd::ri_table.end()) ? true : false;
 }
 
 bool lowercase(uint32_t cp)

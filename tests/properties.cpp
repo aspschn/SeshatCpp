@@ -152,7 +152,14 @@ bool check_properties(const CodePoint& cp, const XMLElement *elem)
         print_error(cp, cp_sc.c_str(), "sc", elem->Attribute("sc"));
         return false;
     }
-    // Bidi_Class (bc)     Unimplemented       
+    // Bidi_Class (bc) - bidi_class() @properties.h
+    /*
+    std::string cp_bc = property_value_name(bidi_class(cp)).alt[0];
+    if (cp_bc != elem->Attribute("bc")) {
+        print_error(cp, cp_bc.c_str(), "bc", elem->Attribute("bc"));
+        return false;
+    }
+    */
     // Bidi_Paired_Bracket_Type (bpt)  Unimplemented       
     // Canonical_Combining_Class (ccc)     Done    ccc()   properties.h
     // Decomposition_Type (dt)     Done    dt()    properties.h
@@ -210,11 +217,47 @@ bool check_properties(const CodePoint& cp, const XMLElement *elem)
     // Sentence_Break (SB)     Unimplemented       
     // Vertical_Orientation (vo)   Unimplemented       
     // Word_Break (WB)     Done    wb()    properties.h
-    // ASCII_Hex_Digit (AHex)  Unimplemented       
-    // Alphabetic (Alpha)  Unimplemented       
+    #if 0
+    std::string cp_wb = property_value_name(wb(cp)).abbr;
+    if (cp_wb != elem->Attribute("WB")) {
+        print_error(cp, cp_wb.c_str(), "WB", elem->Attribute("WB"));
+        return false;
+    }
+    #endif
+    // ASCII_Hex_Digit (AHex) - ascii_hex_digit() @properties.h
+    std::string cp_ahex = property_value_name(ascii_hex_digit(cp)).abbr;
+    if (cp_ahex != elem->Attribute("AHex")) {
+        print_error(cp, cp_ahex.c_str(), "AHex", elem->Attribute("AHex"));
+        return false;
+    }
+    // Alphabetic (Alpha) - alphabetic() @properties.h
+    /*
+    std::string cp_alpha = property_value_name(alphabetic(cp)).abbr;
+    if (cp_alpha != elem->Attribute("Alpha")) {
+        print_error(cp, cp_alpha.c_str(), "Alpha", elem->Attribute("Alpha"));
+        return false;
+    }
+    */
     // Bidi_Control (Bidi_C)   Unimplemented       
-    // Bidi_Mirrored (Bidi_M)  Unimplemented       
-    // Cased (Cased)   Done    cased()     properties.h
+    std::string cp_bidi_c = property_value_name(bidi_control(cp)).abbr;
+    if (cp_bidi_c != elem->Attribute("Bidi_C")) {
+        print_error(cp, cp_bidi_c.c_str(), "Bidi_C", elem->Attribute("Bidi_C"));
+        return false;
+    }
+    // Bidi_Mirrored (Bidi_M)
+    /*
+    std::string cp_bidi_m = property_value_name(bidi_mirrored(cp)).abbr;
+    if (cp_bidi_m != elem->Attribute("Bidi_M")) {
+        print_error(cp, cp_bidi_m.c_str(), "Bidi_M", elem->Attribute("Bidi_M"));
+        return false;
+    }
+    */
+    // Cased (Cased) - cased() @properties.h
+    std::string cp_cased = property_value_name(cased(cp)).abbr;
+    if (cp_cased != elem->Attribute("Cased")) {
+        print_error(cp, cp_cased.c_str(), "Cased", elem->Attribute("Cased"));
+        return false;
+    }
     // Composition_Exclusion (CE)  Unimplemented       
     // Case_Ignorable (CI)     Done    case_ignorable()    casing.h
     // Full_Composition_Exclusion (Comp_Ex)    Done    comp_ex()   normalization_props.h
@@ -224,47 +267,192 @@ bool check_properties(const CodePoint& cp, const XMLElement *elem)
     // Changes_When_Lowercased (CWL)   Unimplemented       
     // Changes_When_Titlecased (CWT)   Unimplemented       
     // Changes_When_Uppercased (CWU)   Unimplemented       
-    // Dash (Dash)     Unimplemented       
-    // Deprecated (Dep)    Unimplemented       
-    // Default_Ignorable_Code_Point (DI)   Done    default_ignorable_code_point()  properties.h
-    // Diacritic (Dia)     Unimplemented       
-    // Extender (Ext)  Unimplemented       
+    // Dash (Dash) - dash() @properties.h
+    std::string cp_dash = property_value_name(dash(cp)).abbr;
+    if (cp_dash != elem->Attribute("Dash")) {
+        print_error(cp, cp_dash.c_str(), "Dash", elem->Attribute("Dash"));
+        return false;
+    }
+    // Deprecated (Dep) - deprecated @properties.h
+    std::string cp_dep = property_value_name(deprecated(cp)).abbr;
+    if (cp_dep != elem->Attribute("Dep")) {
+        print_error(cp, cp_dep.c_str(), "Dep", elem->Attribute("Dep"));
+        return false;
+    }
+    // Default_Ignorable_Code_Point (DI) - default_ignorable_code_point() @properties.h
+    std::string cp_di = property_value_name(default_ignorable_code_point(cp)).abbr;
+    if (cp_di != elem->Attribute("DI")) {
+        print_error(cp, cp_di.c_str(), "DI", elem->Attribute("DI"));
+        return false;
+    }
+    // Diacritic (Dia) - diacritic() @properties.h
+    std::string cp_dia = property_value_name(diacritic(cp)).abbr;
+    if (cp_dia != elem->Attribute("Dia")) {
+        print_error(cp, cp_dia.c_str(), "Dia", elem->Attribute("Dia"));
+        return false;
+    }
+    // Extender (Ext) - extender() @properties.h
+    std::string cp_ext = property_value_name(extender(cp)).abbr;
+    if (cp_ext != elem->Attribute("Ext")) {
+        print_error(cp, cp_ext.c_str(), "Ext", elem->Attribute("Ext"));
+        return false;
+    }
     // Grapheme_Base (Gr_Base)     Unimplemented       
     // Grapheme_Extend (Gr_Ext)    Done    grapheme_extend()   properties.h
     // Grapheme_Link (Gr_Link)     Unimplemented       
-    // Hex_Digit (Hex)     Unimplemented       
-    // Hyphen (Hyphen)     Unimplemented       
+    // Hex_Digit (Hex) - hex_digit() @properties.h
+    std::string cp_hex = property_value_name(hex_digit(cp)).abbr;
+    if (cp_hex != elem->Attribute("Hex")) {
+        print_error(cp, cp_hex.c_str(), "Hex", elem->Attribute("Hex"));
+        return false;
+    }
+    // Hyphen (Hyphen) - hyphen() @properties.h
+    std::string cp_hyphen = property_value_name(hyphen(cp)).abbr;
+    if (cp_hyphen != elem->Attribute("Hyphen")) {
+        print_error(cp, cp_hyphen.c_str(), "Hyphen", elem->Attribute("Hyphen"));
+        return false;
+    }
     // ID_Continue (IDC)   Unimplemented       
     // Ideographic (Ideo)  Unimplemented       
+    std::string cp_ideo = property_value_name(ideographic(cp)).abbr;
+    if (cp_ideo != elem->Attribute("Ideo")) {
+        print_error(cp, cp_ideo.c_str(), "Ideo", elem->Attribute("Ideo"));
+        return false;
+    }
     // ID_Start (IDS)  Unimplemented       
-    // IDS_Binary_Operator (IDSB)  Unimplemented       
-    // IDS_Trinary_Operator (IDST)     Unimplemented       
-    // Join_Control (Join_C)   Unimplemented       
-    // Logical_Order_Exception (LOE)   Unimplemented       
+    // IDS_Binary_Operator (IDSB) - idsb() @properties.h
+    std::string cp_idsb = property_value_name(ids_binary_operator(cp)).abbr;
+    if (cp_idsb != elem->Attribute("IDSB")) {
+        print_error(cp, cp_idsb.c_str(), "IDSB", elem->Attribute("IDSB"));
+        return false;
+    }
+    // IDS_Trinary_Operator (IDST) - idst() @properties.h
+    std::string cp_idst = property_value_name(ids_trinary_operator(cp)).abbr;
+    if (cp_idst != elem->Attribute("IDST")) {
+        print_error(cp, cp_idst.c_str(), "IDST", elem->Attribute("IDST"));
+        return false;
+    }
+    // Join_Control (Join_C) - join_control() @properties.h
+    std::string cp_join_c = property_value_name(join_control(cp)).abbr;
+    if (cp_join_c != elem->Attribute("Join_C")) {
+        print_error(cp, cp_join_c.c_str(), "Join_C", elem->Attribute("Join_C"));
+        return false;
+    }
+    // Logical_Order_Exception (LOE) - loe() @properties.h
+    std::string cp_loe = property_value_name(logical_order_exception(cp)).abbr;
+    if (cp_loe != elem->Attribute("LOE")) {
+        print_error(cp, cp_loe.c_str(), "LOE", elem->Attribute("LOE"));
+        return false;
+    }
     // Lowercase (Lower)   Done    lowercase()     properties.h
     // Math (Math)     Unimplemented       
-    // Noncharacter_Code_Point (NChar)     Unimplemented       
+    // Noncharacter_Code_Point (NChar) - nchar() @properties.h
+    std::string cp_nchar = property_value_name(nchar(cp)).abbr;
+    if (cp_nchar != elem->Attribute("NChar")) {
+        print_error(cp, cp_nchar.c_str(), "NChar", elem->Attribute("NChar"));
+        return false;
+    }
     // Other_Alphabetic (OAlpha)   Unimplemented       
+    std::string cp_oalpha = property_value_name(oalpha(cp)).abbr;
+    if (cp_oalpha != elem->Attribute("OAlpha")) {
+        print_error(cp, cp_oalpha.c_str(), "OAlpha", elem->Attribute("OAlpha"));
+        return false;
+    }
     // Other_Default_Ignorable_Code_Point (ODI)    Done    odi()   properties.h
     // Other_Grapheme_Extend (OGr_Ext)     Done    ogr_ext()   properties.h
     // Other_ID_Continue (OIDC)    Unimplemented       
-    // Other_ID_Start (OIDS)   Unimplemented       
+    std::string cp_oidc = property_value_name(oidc(cp)).abbr;
+    if (cp_oidc != elem->Attribute("OIDC")) {
+        print_error(cp, cp_oidc.c_str(), "OIDC", elem->Attribute("OIDC"));
+        return false;
+    }
+    // Other_ID_Start (OIDS) - oids() @properties.h
+    std::string cp_oids = property_value_name(oids(cp)).abbr;
+    if (cp_oids != elem->Attribute("OIDS")) {
+        print_error(cp, cp_oids.c_str(), "OIDS", elem->Attribute("OIDS"));
+        return false;
+    }
     // Other_Lowercase (OLower)    Done    other_lowercase()   properties.h
     // Other_Math (OMath)  Unimplemented       
+    std::string cp_omath = property_value_name(other_math(cp)).abbr;
+    if (cp_omath != elem->Attribute("OMath")) {
+        print_error(cp, cp_omath.c_str(), "OMath", elem->Attribute("OMath"));
+        return false;
+    }
     // Other_Uppercase (OUpper)    Done    other_uppercase()   properties.h
     // Pattern_Syntax (Pat_Syn)    Unimplemented       
+    std::string cp_pat_syn = property_value_name(pattern_syntax(cp)).abbr;
+    if (cp_pat_syn != elem->Attribute("Pat_Syn")) {
+        print_error(cp, cp_pat_syn.c_str(), "Pat_Syn", elem->Attribute("Pat_Syn"));
+        return false;
+    }
     // Pattern_White_Space (Pat_WS)    Unimplemented       
+    std::string cp_pat_ws = property_value_name(pattern_white_space(cp)).abbr;
+    if (cp_pat_ws != elem->Attribute("Pat_WS")) {
+        print_error(cp, cp_pat_ws.c_str(), "Pat_WS", elem->Attribute("Pat_WS"));
+        return false;
+    }
     // Prepended_Concatenation_Mark (PCM)  Done    prepended_concatenation_mark()  properties.h
+    std::string cp_pcm = property_value_name(prepended_concatenation_mark(cp)).abbr;
+    if (cp_pcm != elem->Attribute("PCM")) {
+        print_error(cp, cp_pcm.c_str(), "PCM", elem->Attribute("PCM"));
+        return false;
+    }
     // Quotation_Mark (QMark)  Unimplemented       
+    std::string cp_qmark = property_value_name(quotation_mark(cp)).abbr;
+    if (cp_qmark != elem->Attribute("QMark")) {
+        print_error(cp, cp_qmark.c_str(), "QMark", elem->Attribute("QMark"));
+        return false;
+    }
     // Radical (Radical)   Unimplemented       
+    std::string cp_radical = property_value_name(radical(cp)).abbr;
+    if (cp_radical != elem->Attribute("Radical")) {
+        print_error(cp, cp_radical.c_str(), "Radical", elem->Attribute("Radical"));
+        return false;
+    }
     // Regional_Indicator (RI)     Unimplemented       
+    std::string cp_ri = property_value_name(regional_indicator(cp)).abbr;
+    if (cp_ri != elem->Attribute("RI")) {
+        print_error(cp, cp_ri.c_str(), "RI", elem->Attribute("RI"));
+        return false;
+    }
     // Soft_Dotted (SD)    Unimplemented       
+    std::string cp_sd = property_value_name(soft_dotted(cp)).abbr;
+    if (cp_sd != elem->Attribute("SD")) {
+        print_error(cp, cp_sd.c_str(), "SD", elem->Attribute("SD"));
+        return false;
+    }
     // Sentence_Terminal (STerm)   Unimplemented       
+    std::string cp_sterm = property_value_name(sentence_terminal(cp)).abbr;
+    if (cp_sterm != elem->Attribute("STerm")) {
+        print_error(cp, cp_sterm.c_str(), "STerm", elem->Attribute("STerm"));
+        return false;
+    }
     // Terminal_Punctuation (Term)     Unimplemented       
+    std::string cp_term = property_value_name(terminal_punctuation(cp)).abbr;
+    if (cp_term != elem->Attribute("Term")) {
+        print_error(cp, cp_term.c_str(), "Term", elem->Attribute("Term"));
+        return false;
+    }
     // Unified_Ideograph (UIdeo)   Unimplemented       
+    std::string cp_uideo = property_value_name(unified_ideograph(cp)).abbr;
+    if (cp_uideo != elem->Attribute("UIdeo")) {
+        print_error(cp, cp_uideo.c_str(), "UIdeo", elem->Attribute("UIdeo"));
+        return false;
+    }
     // Uppercase (Upper)   Done    uppercase()     properties.h
     // Variation_Selector (VS)     Done    variation_selector()    properties.h
+    std::string cp_vs = property_value_name(variation_selector(cp)).abbr;
+    if (cp_vs != elem->Attribute("VS")) {
+        print_error(cp, cp_vs.c_str(), "VS", elem->Attribute("VS"));
+        return false;
+    }
     // White_Space (WSpace)    Done    white_space()   properties.h
+    std::string cp_wspace = property_value_name(white_space(cp)).abbr;
+    if (cp_wspace != elem->Attribute("WSpace")) {
+        print_error(cp, cp_wspace.c_str(), "WSpace", elem->Attribute("WSpace"));
+        return false;
+    }
     // XID_Continue (XIDC)     Unimplemented       
     // XID_Start (XIDS)    Unimplemented       
     // Expands_On_NFC (XO_NFC)     Unimplemented       

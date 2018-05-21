@@ -155,6 +155,7 @@ PropertyValueName property_value_name(const QcValue& val);
 // | Expands_On_NFD (XO_NFD)           | Unimplemented |                               |               |
 // | Expands_On_NFKC (XO_NFKC)         | Unimplemented |                               |               |
 // | Expands_On_NFKD (XO_NFKD)         | Unimplemented |                               |               |
+PropertyValueName property_value_name(bool val);
 
 } // namespace unicode
 } // namespace seshat

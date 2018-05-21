@@ -68,9 +68,9 @@ Unicode coverage
 | Sentence_Break (SB)               | Unimplemented |                               |               |
 | Vertical_Orientation (vo)         | Unimplemented |                               |               |
 | Word_Break (WB)                   | Done          | `wb()`                        | properties.h  |
-| ASCII_Hex_Digit (AHex)            | Unimplemented |                               |               |
+| ASCII_Hex_Digit (AHex)            | Done          | `ascii_hex_digit()`           | properties.h  |
 | Alphabetic (Alpha)                | Unimplemented |                               |               |
-| Bidi_Control (Bidi_C)             | Unimplemented |                               |               |
+| Bidi_Control (Bidi_C)             | Done          | `bidi_control()`              | properties.h  |
 | Bidi_Mirrored (Bidi_M)            | Unimplemented |                               |               |
 | Cased (Cased)                     | Done          | `cased()`                     | properties.h  |
 | Composition_Exclusion (CE)        | Unimplemented |                               |               |
@@ -82,44 +82,44 @@ Unicode coverage
 | Changes_When_Lowercased (CWL)     | Unimplemented |                               |               |
 | Changes_When_Titlecased (CWT)     | Unimplemented |                               |               |
 | Changes_When_Uppercased (CWU)     | Unimplemented |                               |               |
-| Dash (Dash)                       | Unimplemented |                               |               |
-| Deprecated (Dep)                  | Unimplemented |                               |               |
+| Dash (Dash)                       | Done          | `dash()`                      | properties.h  |
+| Deprecated (Dep)                  | Done          | `deprecated()`                | properties.h  |
 | Default_Ignorable_Code_Point (DI) | Done          | `default_ignorable_code_point()` | properties.h |
-| Diacritic (Dia)                   | Unimplemented |                               |               |
-| Extender (Ext)                    | Unimplemented |                               |               |
+| Diacritic (Dia)                   | Done          | `diacritic()`                 |               |
+| Extender (Ext)                    | Done          | `extender()`                  | properties.h  |
 | Grapheme_Base (Gr_Base)           | Unimplemented |                               |               |
 | Grapheme_Extend (Gr_Ext)          | Done          | `grapheme_extend()`           | properties.h  |
 | Grapheme_Link (Gr_Link)           | Unimplemented |                               |               |
-| Hex_Digit (Hex)                   | Unimplemented |                               |               |
-| Hyphen (Hyphen)                   | Unimplemented |                               |               |
+| Hex_Digit (Hex)                   | Done          | `hex_digit()`                 | properties.h  |
+| Hyphen (Hyphen)                   | Done          | `hyphen()`                    | properties.h  |
 | ID_Continue (IDC)                 | Unimplemented |                               |               |
-| Ideographic (Ideo)                | Unimplemented |                               |               |
+| Ideographic (Ideo)                | Done          | `ideographic()`               | properties.h  |
 | ID_Start (IDS)                    | Unimplemented |                               |               |
-| IDS_Binary_Operator (IDSB)        | Unimplemented |                               |               |
-| IDS_Trinary_Operator (IDST)       | Unimplemented |                               |               |
-| Join_Control (Join_C)             | Unimplemented |                               |               |
-| Logical_Order_Exception (LOE)     | Unimplemented |                               |               |
+| IDS_Binary_Operator (IDSB)        | Done          | `ids_binary_operator()`       | properties.h  |
+| IDS_Trinary_Operator (IDST)       | Done          | `ids_trinary_operator()`      | properties.h  |
+| Join_Control (Join_C)             | Done          | `join_control()`              | properties.h  |
+| Logical_Order_Exception (LOE)     | Done          | `logical_order_exception()`   | properties.h  |
 | Lowercase (Lower)                 | Done          | `lowercase()`                 | properties.h  |
 | Math (Math)                       | Unimplemented |                               |               |
-| Noncharacter_Code_Point (NChar)   | Unimplemented |                               |               |
-| Other_Alphabetic (OAlpha)         | Unimplemented |                               |               |
+| Noncharacter_Code_Point (NChar)   | Done          | `nchar()`                     | properties.h  |
+| Other_Alphabetic (OAlpha)         | Done          | `oalpha()`                    | properties.h  |
 | Other_Default_Ignorable_Code_Point (ODI) | Done   | `odi()`                       | properties.h  |
 | Other_Grapheme_Extend (OGr_Ext)   | Done          | `ogr_ext()`                   | properties.h  |
-| Other_ID_Continue (OIDC)          | Unimplemented |                               |               |
-| Other_ID_Start (OIDS)             | Unimplemented |                               |               |
+| Other_ID_Continue (OIDC)          | Done          | `oidc()`                      | properties.h  |
+| Other_ID_Start (OIDS)             | Done          | `oids()`                      | properties.h  |
 | Other_Lowercase (OLower)          | Done          | `other_lowercase()`           | properties.h  |
-| Other_Math (OMath)                | Unimplemented |                               |               |
+| Other_Math (OMath)                | Done          | `other_math()`                | properties.h  |
 | Other_Uppercase (OUpper)          | Done          | `other_uppercase()`           | properties.h  |
-| Pattern_Syntax (Pat_Syn)          | Unimplemented |                               |               |
-| Pattern_White_Space (Pat_WS)      | Unimplemented |                               |               |
+| Pattern_Syntax (Pat_Syn)          | Done          | `pattern_syntax()`            | properties.h  |
+| Pattern_White_Space (Pat_WS)      | Done          | `pattern_white_space()`       | properties.h  |
 | Prepended_Concatenation_Mark (PCM) | Done         | `prepended_concatenation_mark()` | properties.h |
-| Quotation_Mark (QMark)            | Unimplemented |                               |               |
-| Radical (Radical)                 | Unimplemented |                               |               |
-| Regional_Indicator (RI)           | Unimplemented |                               |               |
-| Soft_Dotted (SD)                  | Unimplemented |                               |               |
-| Sentence_Terminal (STerm)         | Unimplemented |                               |               |
-| Terminal_Punctuation (Term)       | Unimplemented |                               |               |
-| Unified_Ideograph (UIdeo)         | Unimplemented |                               |               |
+| Quotation_Mark (QMark)            | Done          | `quotation_mark()`            | properties.h  |
+| Radical (Radical)                 | Done          | `radical()`                   | properties.h  |
+| Regional_Indicator (RI)           | Done          | `regional_indicator()`        | properties.h  |
+| Soft_Dotted (SD)                  | Done          | `soft_dotted()`               | properties.h  |
+| Sentence_Terminal (STerm)         | Done          | `sentence_terminal()`         | properties.h  |
+| Terminal_Punctuation (Term)       | Done          | `terminal_punctuation()`      | properties.h  |
+| Unified_Ideograph (UIdeo)         | Done          | `unified_ideograph()`         | properties.h  |
 | Uppercase (Upper)                 | Done          | `uppercase()`                 | properties.h  |
 | Variation_Selector (VS)           | Done          | `variation_selector()`        | properties.h  |
 | White_Space (WSpace)              | Done          | `white_space()`               | properties.h  |

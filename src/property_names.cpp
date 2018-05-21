@@ -63,5 +63,10 @@ PropertyValueName property_value_name(const QcValue& val)
     return implementation::property_value_name(val);
 }
 
+PropertyValueName property_value_name(bool val)
+{
+    return implementation::property_value_name(val);
+}
+
 } // namespace unicode
 } // namespace seshat

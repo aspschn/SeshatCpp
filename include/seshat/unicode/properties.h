@@ -3,7 +3,7 @@
 //
 //  Author:     Sophia Lee
 //  Created:    2017. 05. 11. 16:30
-//  Copyright (c) 2017 Sophia Lee. All rights reserved.
+//  Copyright (c) 2017-2018 Sophia Lee. All rights reserved.
 //
 
 /// \file
@@ -513,8 +513,12 @@ Wb wb(CodePoint cp);
 // ==============================
 //
 // ASCII_Hex_Digit (AHex)
+/// \brief  Get the ASCII_Hex_Digit (AHex) property value.
+bool ascii_hex_digit(CodePoint cp);
 // Alphabetic (Alpha)
 // Bidi_Control (Bidi_C)
+/// \brief  Get the Bidi_Control property value.
+bool bidi_control(CodePoint cp);
 // Bidi_Mirrored (Bidi_M)
 // Cased (Cased)
 /// \brief  Get the Cased property value.
@@ -529,32 +533,58 @@ bool cased(CodePoint cp);
 // Changes_When_Titlecased (CWT)
 // Changes_When_Uppercased (CWU)
 // Dash (Dash)
+/// \brief  Get the Dash property value.
+bool dash(CodePoint cp);
 // Deprecated (Dep)
+/// \brief  Get the Deprecated (Dep) property value.
+bool deprecated(CodePoint cp);
 // Default_Ignorable_Code_Point (DI)
 /// \brief  Get the Default_Ignorable_Code_Point property value.
 bool default_ignorable_code_point(CodePoint cp);
 // Diacritic (Dia)
+/// \brief  Get the Diacritic (Dia) property value.
+bool diacritic(CodePoint cp);
 // Extender (Ext)
+/// \brief  Get the Extender (Ext) property value.
+bool extender(CodePoint cp);
 // Grapheme_Base (Gr_Base)
 // Grapheme_Extend (Gr_Ext)
 /// \brief  Get the Grapheme_Extend property value.
 bool grapheme_extend(CodePoint cp);
 // Grapheme_Link (Gr_Link)
 // Hex_Digit (Hex)
+/// \brief  Get the Hex_Digit (Hex) property value.
+bool hex_digit(CodePoint cp);
 // Hyphen (Hyphen)
+/// \brief  Get the Hyphen property value.
+bool hyphen(CodePoint cp);
 // ID_Continue (IDC)
 // Ideographic (Ideo)
+/// \brief  Get the Ideographic (Ideo) property value.
+bool ideographic(CodePoint cp);
 // ID_Start (IDS)
 // IDS_Binary_Operator (IDSB)
+/// \brief  Get the IDS_Binary_Operator (IDSB) property value.
+bool ids_binary_operator(CodePoint cp);
 // IDS_Trinary_Operator (IDST)
+/// \brief  Get the IDS_Trinary_Operator (IDST) property value.
+bool ids_trinary_operator(CodePoint cp);
 // Join_Control (Join_C)
+/// \brief  Get the Join_Control (Join_C) property value.
+bool join_control(CodePoint cp);
 // Logical_Order_Exception (LOE)
+/// \brief  Get the Logical_Order_Exception (LOE) property value.
+bool logical_order_exception(CodePoint cp);
 // Lowercase (Lower)
 /// \brief  Get the Lowercase (Lower) property value.
 bool lowercase(CodePoint cp);
 // Math (Math)
 // Noncharacter_Code_Point (NChar)
+/// \brief  Get the Noncharacter_Code_Point (NChar) property value.
+bool nchar(CodePoint cp);
 // Other_Alphabetic (OAlpha)
+/// \brief  Get the Other_Alphabetic (OAlpha) property value.
+bool oalpha(CodePoint cp);
 // Other_Default_Ignorable_Code_Point (ODI)
 /// \brief  Get the Other_Default_Ignorable_Code_Point property value.
 bool odi(CodePoint cp);
@@ -562,25 +592,50 @@ bool odi(CodePoint cp);
 /// \brief  Get the Other_Grapheme_Extend property value.
 bool ogr_ext(CodePoint cp);
 // Other_ID_Continue (OIDC)
+/// \brief  Get the Other_ID_Continue (OIDC) property value.
+bool oidc(CodePoint cp);
 // Other_ID_Start (OIDS)
+/// \brief  Get the Other_ID_Start (OIDS) property value.
+bool oids(CodePoint cp);
 // Other_Lowercase (OLower)
 /// \brief  Get the Other_Lowercase (OLower) property value.
 bool other_lowercase(CodePoint cp);
 // Other_Math (OMath)
+/// \brief  Get the Other_Math (OMath) property value.
+bool other_math(CodePoint cp);
 // Other_Uppercase (OUpper)
 /// \brief  Get the Other_Uppercase (OUpper) property value.
 bool other_uppercase(CodePoint cp);
 // Pattern_Syntax (Pat_Syn)
+/// \brief  Get the Pattern_Syntax (Pat_Syn) property value.
+bool pattern_syntax(CodePoint cp);
 // Pattern_White_Space (Pat_WS)
+/// \brief  Get the Pattern_White_Space (Pat_WS) property value.
+bool pattern_white_space(CodePoint cp);
 // Prepended_Concatenation_Mark (PCM)
 /// \brief  Get the Prepended_Concatenation_Mark property value.
 bool prepended_concatenation_mark(CodePoint cp);
 // Quotation_Mark (QMark)
+/// \brief  Get the Quotation_Mark (QMark) property value.
+bool quotation_mark(CodePoint cp);
+// Regional_Indicator (RI)
+/// \brief  Get the Regional_Indicator (RI) property value.
+bool regional_indicator(CodePoint cp);
 // Radical (Radical)
+/// \brief  Get the Radical property value.
+bool radical(CodePoint cp);
 // Soft_Dotted (SD)
+/// \brief  Get the Soft_Dotted (SD) property value.
+bool soft_dotted(CodePoint cp);
 // Sentence_Terminal (STerm)
+/// \brief  Get the Sentence_Terminal (STerm) property value.
+bool sentence_terminal(CodePoint cp);
 // Terminal_Punctuation (Term)
+/// \brief  Get the Terminal_Punctuation (Term) property value.
+bool terminal_punctuation(CodePoint cp);
 // Unified_Ideograph (UIdeo)
+/// \brief  Get the Unified_Ideograph (UIdeo) property value.
+bool unified_ideograph(CodePoint cp);
 // Uppercase (Upper)
 /// \brief  Get the Uppercase (Upper) property value.
 bool uppercase(CodePoint cp);

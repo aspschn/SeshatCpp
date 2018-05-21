@@ -1121,29 +1121,55 @@ def make_core_cpp():
     parser = DerivedParser(data_dir + '/PropList.txt')
     table_wspace = 'const std::set<CodePointRange> wspace_table = {\n    '
     # table_BIDI_CONTROL
-    # table_DASH
-    # table_HYPHEN
+    table_bidi_control = 'const std::set<CodePointRange> bidi_control_table = {\n    '
+    table_join_control = 'const std::set<CodePointRange> join_control_table = {\n    '
+    table_dash = 'const std::set<CodePointRange> dash_table = {\n    '
+    table_hyphen = 'const std::set<CodePointRange> hyphen_table = {\n    '
     # table_QUOTATION_MARK
+    table_qmark = 'const std::set<CodePointRange> qmark_table = {\n    '
     # table_TERMINAL_PUNCTUATION
+    table_term = 'const std::set<CodePointRange> term_table = {\n    '
     # table_OTHER_MATH
+    table_omath = 'const std::set<CodePointRange> omath_table = {\n    '
     # table_HEX_DIGIT
+    table_hex = 'const std::set<CodePointRange> hex_table = {\n    '
     # table_ASCII_HEX_DIGIT
+    table_ahex = 'const std::set<CodePointRange> ahex_table = {\n    '
     # table_OTHER_ALPHABETIC
+    table_oalpha = 'const std::set<CodePointRange> oalpha_table = {\n    '
     # table_IDEOGRAPHIC
+    table_ideographic = 'const std::set<CodePointRange> ideographic_table = {\n    '
     # table_DIACRITIC
+    table_diacritic = 'const std::set<CodePointRange> diacritic_table = {\n    '
     # table_EXTENDER
+    table_extender = 'const std::set<CodePointRange> extender_table = {\n    '
     table_olower = 'const std::set<CodePointRange> olower_table = {\n    '
     table_oupper = 'const std::set<CodePointRange> oupper_table = {\n    '
     # table_NONCHARACTER_CODE_POINT
+    table_nchar = 'const std::set<CodePointRange> nchar_table = {\n    '
     table_ogr_ext = 'const std::set<CodePointRange> ogr_ext_table = {\n    '
     # table_IDS_BINARY_OPERATOR
+    table_idsb = 'const std::set<CodePointRange> idsb_table = {\n    '
     # table_IDS_TRINARY_OPERATOR
+    table_idst = 'const std::set<CodePointRange> idst_table = {\n    '
     # table_RADICAL
+    table_radical = 'const std::set<CodePointRange> radical_table = {\n    '
     # table_UNIFIED_IDEOGRAPH
+    table_uideo = 'const std::set<CodePointRange> uideo_table = {\n    '
     table_odi = 'const std::set<CodePointRange> odi_table = {\n    '
     # table_DEPRECATED
+    table_deprecated = 'const std::set<CodePointRange> deprecated_table = {\n    '
     # table_SOFT_DOTTED
+    table_soft_dotted = 'const std::set<CodePointRange> soft_dotted_table = {\n    '
     # table_LOGICAL_ORDER_EXCEPTION
+    table_loe = 'const std::set<CodePointRange> loe_table = {\n    '
+    table_oids = 'const std::set<CodePointRange> oids_table = {\n    '
+    table_oidc = 'const std::set<CodePointRange> oidc_table = {\n    '
+    table_sterm = 'const std::set<CodePointRange> sterm_table = {\n    '
+    table_vs = 'const std::set<CodePointRange> vs_table = {\n    '
+    table_pat_ws = 'const std::set<CodePointRange> pat_ws_table = {\n    '
+    table_pat_syn = 'const std::set<CodePointRange> pat_syn_table = {\n    '
+    table_ri = 'const std::set<CodePointRange> ri_table = {\n    '
     table_pcm = 'const std::set<CodePointRange> pcm_table = {\n    '
     for line in parser.txt:
         parser.parse_line(line)
@@ -1161,6 +1187,63 @@ def make_core_cpp():
             table_olower += ('{ ' + parser.range.to_seshat() + ' },\n    ')
         elif parser.first == 'Other_Uppercase':
             table_oupper += ('{ ' + parser.range.to_seshat() + ' },\n    ')
+        elif parser.first == 'Bidi_Control':
+            print('bidi')
+            table_bidi_control += ('{ ' + parser.range.to_seshat() + ' },\n    ')
+        elif parser.first == 'Join_Control':
+            table_join_control += ('{ ' + parser.range.to_seshat() + ' },\n    ')
+        elif parser.first == 'Dash':
+            table_dash += ('{ ' + parser.range.to_seshat() + ' },\n    ')
+        elif parser.first == 'Hyphen':
+            table_hyphen += ('{ ' + parser.range.to_seshat() + ' },\n    ')
+        elif parser.first == 'Quotation_Mark':
+            table_qmark += ('{ ' + parser.range.to_seshat() + ' },\n    ')
+        elif parser.first == 'Terminal_Punctuation':
+            table_term += ('{ ' + parser.range.to_seshat() + ' },\n    ')
+        elif parser.first == 'Other_Math':
+            table_omath += ('{ ' + parser.range.to_seshat() + ' },\n    ')
+        elif parser.first == 'Hex_Digit':
+            table_hex += ('{ ' + parser.range.to_seshat() + ' },\n    ')
+        elif parser.first == 'ASCII_Hex_Digit':
+            table_ahex += ('{ ' + parser.range.to_seshat() + ' },\n    ')
+        elif parser.first == 'Other_Alphabetic':
+            table_oalpha += ('{ ' + parser.range.to_seshat() + ' },\n    ')
+        elif parser.first == 'Ideographic':
+            table_ideographic += ('{ ' + parser.range.to_seshat() + ' },\n    ')
+        elif parser.first == 'Diacritic':
+            table_diacritic += ('{ ' + parser.range.to_seshat() + ' },\n    ')
+        elif parser.first == 'Extender':
+            table_extender += ('{ ' + parser.range.to_seshat() + ' },\n    ')
+        elif parser.first == 'Noncharacter_Code_Point':
+            table_nchar += ('{ ' + parser.range.to_seshat() + ' },\n    ')
+        elif parser.first == 'IDS_Binary_Operator':
+            table_idsb += ('{ ' + parser.range.to_seshat() + ' },\n    ')
+        elif parser.first == 'IDS_Trinary_Operator':
+            table_idst += ('{ ' + parser.range.to_seshat() + ' },\n    ')
+        elif parser.first == 'Radical':
+            table_radical += ('{ ' + parser.range.to_seshat() + ' },\n    ')
+        elif parser.first == 'Unified_Ideograph':
+            table_uideo += ('{ ' + parser.range.to_seshat() + ' },\n    ')
+        elif parser.first == 'Deprecated':
+            table_deprecated += ('{ ' + parser.range.to_seshat() + ' },\n    ')
+        elif parser.first == 'Soft_Dotted':
+            table_soft_dotted += ('{ ' + parser.range.to_seshat() + ' },\n    ')
+        elif parser.first == 'Logical_Order_Exception':
+            table_loe += ('{ ' + parser.range.to_seshat() + ' },\n    ')
+        elif parser.first == 'Other_ID_Start':
+            table_oids += ('{ ' + parser.range.to_seshat() + ' },\n    ')
+        elif parser.first == 'Other_ID_Continue':
+            table_oidc += ('{ ' + parser.range.to_seshat() + ' },\n    ')
+        elif parser.first == 'Sentence_Terminal':
+            table_sterm += ('{ ' + parser.range.to_seshat() + ' },\n    ')
+        elif parser.first == 'Variation_Selector':
+            table_vs += ('{ ' + parser.range.to_seshat() + ' },\n    ')
+        elif parser.first == 'Pattern_White_Space':
+            table_pat_ws += ('{ ' + parser.range.to_seshat() + ' },\n    ')
+        elif parser.first == 'Pattern_Syntax':
+            table_pat_syn += ('{ ' + parser.range.to_seshat() + ' },\n    ')
+        elif parser.first == 'Regional_Indicator':
+            table_ri += ('{ ' + parser.range.to_seshat() + ' },\n    ')
         else:
             pass
     table_wspace = table_wspace.rstrip().rstrip(',') + '\n};'
@@ -1169,6 +1252,34 @@ def make_core_cpp():
     table_pcm = table_pcm.rstrip().rstrip(',') + '\n};'
     table_olower = table_olower.rstrip().rstrip(',') + '\n};'
     table_oupper = table_oupper.rstrip().rstrip(',') + '\n};'
+    table_bidi_control = table_bidi_control.rstrip().rstrip(',') + '\n};'
+    table_join_control = table_join_control.rstrip().rstrip(',') + '\n};'
+    table_dash = table_dash.rstrip().rstrip(',') + '\n};'
+    table_hyphen = table_hyphen.rstrip().rstrip(',') + '\n};'
+    table_qmark = table_qmark.rstrip().rstrip(',') + '\n};'
+    table_term = table_term.rstrip().rstrip(',') + '\n};'
+    table_omath = table_omath.rstrip().rstrip(',') + '\n};'
+    table_hex = table_hex.rstrip().rstrip(',') + '\n};'
+    table_ahex = table_ahex.rstrip().rstrip(',') + '\n};'
+    table_oalpha = table_oalpha.rstrip().rstrip(',') + '\n};'
+    table_ideographic = table_ideographic.rstrip().rstrip(',') + '\n};'
+    table_diacritic = table_diacritic.rstrip().rstrip(',') + '\n};'
+    table_extender = table_extender.rstrip().rstrip(',') + '\n};'
+    table_nchar = table_nchar.rstrip().rstrip(',') + '\n};'
+    table_idsb = table_idsb.rstrip().rstrip(',') + '\n};'
+    table_idst = table_idst.rstrip().rstrip(',') + '\n};'
+    table_radical = table_radical.rstrip().rstrip(',') + '\n};'
+    table_uideo = table_uideo.rstrip().rstrip(',') + '\n};'
+    table_deprecated = table_deprecated.rstrip().rstrip(',') + '\n};'
+    table_soft_dotted = table_soft_dotted.rstrip().rstrip(',') + '\n};'
+    table_loe = table_loe.rstrip().rstrip(',') + '\n};'
+    table_oids = table_oids.rstrip().rstrip(',') + '\n};'
+    table_oidc = table_oidc.rstrip().rstrip(',') + '\n};'
+    table_sterm = table_sterm.rstrip().rstrip(',') + '\n};'
+    table_vs = table_vs.rstrip().rstrip(',') + '\n};'
+    table_pat_ws = table_pat_ws.rstrip().rstrip(',') + '\n};'
+    table_pat_syn = table_pat_syn.rstrip().rstrip(',') + '\n};'
+    table_ri = table_ri.rstrip().rstrip(',') + '\n};'
 
     (builder_core_cpp.push_content(version_assert())
         .push_content(table_wspace)
@@ -1177,6 +1288,34 @@ def make_core_cpp():
         .push_content(table_pcm)
         .push_content(table_olower)
         .push_content(table_oupper)
+        .push_content(table_bidi_control)
+        .push_content(table_join_control)
+        .push_content(table_dash)
+        .push_content(table_hyphen)
+        .push_content(table_qmark)
+        .push_content(table_term)
+        .push_content(table_omath)
+        .push_content(table_hex)
+        .push_content(table_ahex)
+        .push_content(table_oalpha)
+        .push_content(table_ideographic)
+        .push_content(table_diacritic)
+        .push_content(table_extender)
+        .push_content(table_nchar)
+        .push_content(table_idsb)
+        .push_content(table_idst)
+        .push_content(table_radical)
+        .push_content(table_uideo)
+        .push_content(table_deprecated)
+        .push_content(table_soft_dotted)
+        .push_content(table_loe)
+        .push_content(table_oids)
+        .push_content(table_oidc)
+        .push_content(table_sterm)
+        .push_content(table_vs)
+        .push_content(table_pat_ws)
+        .push_content(table_pat_syn)
+        .push_content(table_ri)
         .close_ns_all())
 
     builder_core_cpp.write()
