@@ -125,6 +125,7 @@ _seshat_function_coverage = {
     'Join_C': {'full': True, },
     'LOE': {'full': True, },
     'Lower': {'full': True, },
+    'Math': {'full': True, },
     'NChar': {'full': False, },
     'OAlpha': {'full': True, },
     'ODI': {'full': False, },

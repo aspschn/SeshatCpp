@@ -100,7 +100,7 @@ Unicode coverage
 | Join_Control (Join_C)             | Done          | `join_control()`              | properties.h  |
 | Logical_Order_Exception (LOE)     | Done          | `logical_order_exception()`   | properties.h  |
 | Lowercase (Lower)                 | Done          | `lowercase()`                 | properties.h  |
-| Math (Math)                       | Unimplemented |                               |               |
+| Math (Math)                       | Done          | `math()`                      | properties.h  |
 | Noncharacter_Code_Point (NChar)   | Done          | `nchar()`                     | properties.h  |
 | Other_Alphabetic (OAlpha)         | Done          | `oalpha()`                    | properties.h  |
 | Other_Default_Ignorable_Code_Point (ODI) | Done   | `odi()`                       | properties.h  |

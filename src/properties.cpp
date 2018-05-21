@@ -179,6 +179,11 @@ bool logical_order_exception(CodePoint cp)
     return implementation::logical_order_exception(cp);
 }
 
+bool math(CodePoint cp)
+{
+    return implementation::math(cp);
+}
+
 bool nchar(CodePoint cp)
 {
     return implementation::nchar(cp);

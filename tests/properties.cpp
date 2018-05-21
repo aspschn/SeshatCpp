@@ -345,7 +345,12 @@ bool check_properties(const CodePoint& cp, const XMLElement *elem)
         return false;
     }
     // Lowercase (Lower)   Done    lowercase()     properties.h
-    // Math (Math)     Unimplemented       
+    // Math (Math) - math() @properties.h
+    std::string cp_math = property_value_name(math(cp)).abbr;
+    if (cp_math != elem->Attribute("Math")) {
+        print_error(cp, cp_math.c_str(), "Math", elem->Attribute("Math"));
+        return false;
+    }
     // Noncharacter_Code_Point (NChar) - nchar() @properties.h
     std::string cp_nchar = property_value_name(nchar(cp)).abbr;
     if (cp_nchar != elem->Attribute("NChar")) {

@@ -579,6 +579,8 @@ bool logical_order_exception(CodePoint cp);
 /// \brief  Get the Lowercase (Lower) property value.
 bool lowercase(CodePoint cp);
 // Math (Math)
+/// \brief  Get the Math property value.
+bool math(CodePoint cp);
 // Noncharacter_Code_Point (NChar)
 /// \brief  Get the Noncharacter_Code_Point (NChar) property value.
 bool nchar(CodePoint cp);

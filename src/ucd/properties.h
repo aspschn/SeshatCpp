@@ -55,6 +55,7 @@ bool oalpha(uint32_t cp);
 bool ideographic(uint32_t cp);
 bool diacritic(uint32_t cp);
 bool extender(uint32_t cp);
+bool math(uint32_t cp);
 bool nchar(uint32_t cp);
 bool ids_binary_operator(uint32_t cp);
 bool ids_trinary_operator(uint32_t cp);

@@ -319,6 +319,15 @@ bool extender(uint32_t cp)
     return (found != ucd::extender_table.end()) ? true : false;
 }
 
+bool math(uint32_t cp)
+{
+    static_assert(UnicodeVersion == (Version { 10, 0, 0 }), "Version error.");
+    // From DerivedCoreProperties.txt (Unicode 10.0.0)
+    // # Derived Property: Math
+    // #  Generated from: Sm + Other_Math
+    return gc(cp) == Gc::Sm || other_math(cp);
+}
+
 bool nchar(uint32_t cp)
 {
     auto found = ucd::nchar_table.find(CodePointRange(cp, cp));
