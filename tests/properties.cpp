@@ -231,13 +231,11 @@ bool check_properties(const CodePoint& cp, const XMLElement *elem)
         return false;
     }
     // Alphabetic (Alpha) - alphabetic() @properties.h
-    /*
     std::string cp_alpha = property_value_name(alphabetic(cp)).abbr;
     if (cp_alpha != elem->Attribute("Alpha")) {
         print_error(cp, cp_alpha.c_str(), "Alpha", elem->Attribute("Alpha"));
         return false;
     }
-    */
     // Bidi_Control (Bidi_C)   Unimplemented       
     std::string cp_bidi_c = property_value_name(bidi_control(cp)).abbr;
     if (cp_bidi_c != elem->Attribute("Bidi_C")) {
@@ -312,14 +310,24 @@ bool check_properties(const CodePoint& cp, const XMLElement *elem)
         print_error(cp, cp_hyphen.c_str(), "Hyphen", elem->Attribute("Hyphen"));
         return false;
     }
-    // ID_Continue (IDC)   Unimplemented       
+    // ID_Continue (IDC) - id_continue() @properties.h
+    std::string cp_idc = property_value_name(id_continue(cp)).abbr;
+    if (cp_idc != elem->Attribute("IDC")) {
+        print_error(cp, cp_idc.c_str(), "IDC", elem->Attribute("IDC"));
+        return false;
+    }
     // Ideographic (Ideo)  Unimplemented       
     std::string cp_ideo = property_value_name(ideographic(cp)).abbr;
     if (cp_ideo != elem->Attribute("Ideo")) {
         print_error(cp, cp_ideo.c_str(), "Ideo", elem->Attribute("Ideo"));
         return false;
     }
-    // ID_Start (IDS)  Unimplemented       
+    // ID_Start (IDS) - id_start() @properties.h
+    std::string cp_ids = property_value_name(id_start(cp)).abbr;
+    if (cp_ids != elem->Attribute("IDS")) {
+        print_error(cp, cp_ids.c_str(), "IDS", elem->Attribute("IDS"));
+        return false;
+    }
     // IDS_Binary_Operator (IDSB) - idsb() @properties.h
     std::string cp_idsb = property_value_name(ids_binary_operator(cp)).abbr;
     if (cp_idsb != elem->Attribute("IDSB")) {

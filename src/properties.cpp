@@ -71,6 +71,11 @@ bool ascii_hex_digit(CodePoint cp)
     return implementation::ascii_hex_digit(cp);
 }
 
+bool alphabetic(CodePoint cp)
+{
+    return implementation::alphabetic(cp);
+}
+
 bool bidi_control(CodePoint cp)
 {
     return implementation::bidi_control(cp);
@@ -154,9 +159,19 @@ bool hyphen(CodePoint cp)
     return implementation::hyphen(cp);
 }
 
+bool id_continue(CodePoint cp)
+{
+    return implementation::id_continue(cp);
+}
+
 bool ideographic(CodePoint cp)
 {
     return implementation::ideographic(cp);
+}
+
+bool id_start(CodePoint cp)
+{
+    return implementation::id_start(cp);
 }
 
 bool ids_binary_operator(CodePoint cp)

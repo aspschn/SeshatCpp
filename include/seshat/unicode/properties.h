@@ -516,6 +516,8 @@ Wb wb(CodePoint cp);
 /// \brief  Get the ASCII_Hex_Digit (AHex) property value.
 bool ascii_hex_digit(CodePoint cp);
 // Alphabetic (Alpha)
+/// \brief  Get the Alphabetic (Alpha) property value.
+bool alphabetic(CodePoint cp);
 // Bidi_Control (Bidi_C)
 /// \brief  Get the Bidi_Control property value.
 bool bidi_control(CodePoint cp);
@@ -559,10 +561,14 @@ bool hex_digit(CodePoint cp);
 /// \brief  Get the Hyphen property value.
 bool hyphen(CodePoint cp);
 // ID_Continue (IDC)
+/// \brief  Get the ID_Continue (IDC) property value.
+bool id_continue(CodePoint cp);
 // Ideographic (Ideo)
 /// \brief  Get the Ideographic (Ideo) property value.
 bool ideographic(CodePoint cp);
 // ID_Start (IDS)
+/// \brief  Get the ID_Start (IDS) property value.
+bool id_start(CodePoint cp);
 // IDS_Binary_Operator (IDSB)
 /// \brief  Get the IDS_Binary_Operator (IDSB) property value.
 bool ids_binary_operator(CodePoint cp);

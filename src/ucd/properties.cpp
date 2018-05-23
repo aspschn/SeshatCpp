@@ -301,6 +301,18 @@ bool oalpha(uint32_t cp)
     return (found != ucd::oalpha_table.end()) ? true : false;
 }
 
+bool alphabetic(uint32_t cp)
+{
+    static_assert(UnicodeVersion == (Version { 10, 0, 0 }), "Version error.");
+    // From DerivedCoreProperties.txt (Unicode 10.0.0)
+    // # Derived Property: Alphabetic
+    // #  Generated from: Uppercase + Lowercase + Lt + Lm + Lo + Nl + Other_Alphabetic
+    auto cp_gc = gc(cp);
+    return uppercase(cp) || lowercase(cp) || (cp_gc == Gc::Lt) ||
+        (cp_gc == Gc::Lm) || (cp_gc == Gc::Lo) || (cp_gc == Gc::Nl) ||
+        oalpha(cp);
+}
+
 bool ideographic(uint32_t cp)
 {
     auto found = ucd::ideographic_table.find(CodePointRange(cp, cp));
@@ -386,6 +398,54 @@ bool oidc(uint32_t cp)
 {
     auto found = ucd::oidc_table.find(CodePointRange(cp, cp));
     return (found != ucd::oidc_table.end()) ? true : false;
+}
+
+bool id_start(uint32_t cp)
+{
+    static_assert(UnicodeVersion == (Version { 10, 0, 0 }), "Version error.");
+    // From DerivedCoreProperties.txt (Unicode 10.0.0)
+    // # Derived Property: ID_Start
+    // #  Characters that can start an identifier.
+    // #  Generated from:
+    // #      Lu + Ll + Lt + Lm + Lo + Nl
+    // #    + Other_ID_Start
+    // #    - Pattern_Syntax
+    // #    - Pattern_White_Space
+    // #  NOTE: See UAX #31 for more information
+    auto cp_gc = gc(cp);
+    return ((cp_gc == Gc::Lu) ||
+        (cp_gc == Gc::Ll) ||
+        (cp_gc == Gc::Lt) ||
+        (cp_gc == Gc::Lm) ||
+        (cp_gc == Gc::Lo) ||
+        (cp_gc == Gc::Nl) ||
+        oids(cp)) &&
+        (!pattern_syntax(cp)) &&
+        (!pattern_white_space(cp));
+}
+
+bool id_continue(uint32_t cp)
+{
+    static_assert(UnicodeVersion == (Version { 10, 0, 0 }), "Version error.");
+    // From DerivedCoreProperties.txt (Unicode 10.0.0)
+    // # Derived Property: ID_Continue
+    // #  Characters that can continue an identifier.
+    // #  Generated from:
+    // #      ID_Start
+    // #    + Mn + Mc + Nd + Pc
+    // #    + Other_ID_Continue
+    // #    - Pattern_Syntax
+    // #    - Pattern_White_Space
+    // #  NOTE: See UAX #31 for more information
+    auto cp_gc = gc(cp);
+    return (id_start(cp) ||
+        (cp_gc == Gc::Mn) ||
+        (cp_gc == Gc::Mc) ||
+        (cp_gc == Gc::Nd) ||
+        (cp_gc == Gc::Pc) ||
+        oidc(cp)) &&
+        (!pattern_syntax(cp)) &&
+        (!pattern_white_space(cp));
 }
 
 bool sentence_terminal(uint32_t cp)
