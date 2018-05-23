@@ -107,6 +107,7 @@ _seshat_function_coverage = {
     ## Binary Properties
     ## ==============================
     'AHex': {'full': True, },
+    'Alpha': {'full': True, },
     'Bidi_C': {'full': True, },
     'Cased': {'full': False, },
     'CI': {'full': True, },
@@ -119,7 +120,9 @@ _seshat_function_coverage = {
     'Gr_Ext': {'full': True, },
     'Hex': {'full': True, },
     'Hyphen': {'full': True, },
+    'IDC': {'full': True, },
     'Ideo': {'full': True, },
+    'IDS': {'full': True, },
     'IDSB': {'full': True, },
     'IDST': {'full': True, },
     'Join_C': {'full': True, },

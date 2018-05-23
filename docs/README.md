@@ -69,7 +69,7 @@ Unicode coverage
 | Vertical_Orientation (vo)         | Unimplemented |                               |               |
 | Word_Break (WB)                   | Done          | `wb()`                        | properties.h  |
 | ASCII_Hex_Digit (AHex)            | Done          | `ascii_hex_digit()`           | properties.h  |
-| Alphabetic (Alpha)                | Unimplemented |                               |               |
+| Alphabetic (Alpha)                | Done          | `alphabetic()`                | properties.h  |
 | Bidi_Control (Bidi_C)             | Done          | `bidi_control()`              | properties.h  |
 | Bidi_Mirrored (Bidi_M)            | Unimplemented |                               |               |
 | Cased (Cased)                     | Done          | `cased()`                     | properties.h  |
@@ -92,9 +92,9 @@ Unicode coverage
 | Grapheme_Link (Gr_Link)           | Unimplemented |                               |               |
 | Hex_Digit (Hex)                   | Done          | `hex_digit()`                 | properties.h  |
 | Hyphen (Hyphen)                   | Done          | `hyphen()`                    | properties.h  |
-| ID_Continue (IDC)                 | Unimplemented |                               |               |
+| ID_Continue (IDC)                 | Done          | `id_continue()`               | properties.h  |
 | Ideographic (Ideo)                | Done          | `ideographic()`               | properties.h  |
-| ID_Start (IDS)                    | Unimplemented |                               |               |
+| ID_Start (IDS)                    | Done          | `id_start()`                  | properties.h  |
 | IDS_Binary_Operator (IDSB)        | Done          | `ids_binary_operator()`       | properties.h  |
 | IDS_Trinary_Operator (IDST)       | Done          | `ids_trinary_operator()`      | properties.h  |
 | Join_Control (Join_C)             | Done          | `join_control()`              | properties.h  |
