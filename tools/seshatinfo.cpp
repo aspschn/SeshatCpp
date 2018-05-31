@@ -7,7 +7,7 @@
 //
 //  Prints Seshat library informations.
 */
-#include <seshat/unicode/version.h>
+#include <seshat/info.h>
 
 #include <ctime>
 #include <cstdlib>
@@ -18,8 +18,9 @@
 #include <unordered_map>
 
 using namespace seshat;
-using namespace seshat::unicode;
+// using namespace seshat::unicode;
 
+#if 0
 namespace seshat {
     std::string version_to_string(const Version &ver, size_t max=3)
     {
@@ -58,30 +59,21 @@ namespace seshat {
         return out;
     }
 }
+#endif
 
 int main(int argc, char *argv[])
 {
     std::unordered_map<std::string, std::string> info;
 
-    info["seshat.version"] = "unknown";
-    info["seshat.icubackend"] =
+    info["seshat.version"] = get_seshat_version();
+    info["seshat.icubackend"] = is_icu_backend() ? "true" : "false";
 #ifdef SESHAT_ICU_BACKEND
-        "true";
     info["icu.version"] = "unknown";
-#else
-        "false";
 #endif
-    info["unicode.version"] = version_to_string(UnicodeVersion, 3);
-    info["unicode.emoji"] = version_to_string(emoji::EmojiVersion, 2);
-    info["build.compiler"] =
-#if defined(__GNUC__) && !defined(__clang__)
-        "gcc";
-#elif defined(__clang__)
-        "clang";
-#else
-        "unknown";
-#endif
-    info["build.date"] = buildtime();
+    info["unicode.version"] = get_unicode_version();
+    info["unicode.emoji"] = get_emoji_version();
+    info["build.compiler"] = get_compiler_name();
+    info["build.date"] = get_build_date();
 
     // Print informations.
     std::cout << "seshat.version=" << info["seshat.version"] << "\n"

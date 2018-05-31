@@ -13,6 +13,7 @@ UNICODE_VERSION = "10.0"
 options = {
     'SESHAT_ICU_BACKEND': False,
     'SESHAT_IGNORE_ICU_VERSION': False,
+    'SESHAT_INFO_FLAGS': '-DSESHAT_BUILD_DATE=\\"`date -u +%Y-%m-%dT%H:%M:%SZ`\\"',
     'CXXFLAGS': '-Wall -fPIC',
 }
 
@@ -21,6 +22,7 @@ ifndef CXX
 CXX = {m_CXX}
 endif
 CXXFLAGS = {m_CXXFLAGS}
+SESHAT_INFO_FLAGS = {m_SESHAT_INFO_FLAGS}
 export CXX
 default: $(OBJ)
 \tmkdir -p lib
@@ -33,6 +35,9 @@ test:
 static: $(OBJ)
 \tmkdir -p lib
 \tar rcs lib/libseshat.a $^
+
+src/info.o: src/info.cpp
+\t$(CXX) -std=c++11 $(CXXFLAGS) $(SESHAT_INFO_FLAGS) -c -Iinclude -o $@ $<
 
 src/%.o: src/%.cpp
 \t$(CXX) -std=c++11 $(CXXFLAGS) -c -Iinclude -o $@ $<
@@ -136,7 +141,8 @@ if __name__ == '__main__':
     detect_compiler()
     output = makefile_template.format(m_OBJ_LIST=' '.join(obj_list),
             m_CXXFLAGS=options['CXXFLAGS'],
-            m_CXX=options['CXX'])
+            m_CXX=options['CXX'],
+            m_SESHAT_INFO_FLAGS=options['SESHAT_INFO_FLAGS'])
     f = open('Makefile', 'w')
     f.write(output)
     f.close()
