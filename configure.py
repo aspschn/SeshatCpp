@@ -19,9 +19,7 @@ options = {
 }
 
 makefile_template = '''OBJ = {m_OBJ_LIST}
-ifndef CXX
 CXX = {m_CXX}
-endif
 CXXFLAGS = {m_CXXFLAGS}
 SESHAT_INFO_FLAGS = {m_SESHAT_INFO_FLAGS}
 export CXX
@@ -93,7 +91,12 @@ def detect_platform():
 
 # Detect compiler
 def detect_compiler():
-    if shutil.which('clang++') != None:
+    # Get CXX environment variable.
+    cxx_env = os.getenv('CXX')
+    if cxx_env != None:
+        print('CXX environment variable is set as "{}".'.format(cxx_env))
+        cxx = cxx_env
+    elif shutil.which('clang++') != None:
         cxx = 'clang++'
     elif shutil.which('g++') != None:
         cxx = 'g++'
