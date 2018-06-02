@@ -11,9 +11,8 @@ addons:
 env:
   matrix:
     - MATRIX_EVAL="CXX=g++ && CXX_VERSION=5"
-    # g++ 5 and 6 are couldn't be installed.
-    # - CXX=g++ CXX_VERSION="6"
-    # - CXX=g++ CXX_VERSION="7"
+    - MATRIX_EVAL="CXX=g++ && CXX_VERSION=6"
+    - MATRIX_EVAL="CXX=g++ && CXX_VERSION=7"
     - MATRIX_EVAL="CXX=clang++ && CXX_VERSION=3.8"
     - MATRIX_EVAL="CXX=clang++ && CXX_VERSION=3.9"
     - MATRIX_EVAL="CXX=clang++ && CXX_VERSION=4.0"
@@ -35,9 +34,9 @@ install:
     apt-get install -y wget;
     apt-get install -y unzip;
     apt-get install -y build-essential;
+    apt-get install -y software-properties-common;
     add-apt-repository -y ppa:ubuntu-toolchain-r/test;
     if [[ \"$CXX\" == \"clang++\" ]]; then
-      apt-get install -y software-properties-common;
       add-apt-repository llvm-toolchain-xenial-$CXX_VERSION;
     fi;
     apt-get update;
