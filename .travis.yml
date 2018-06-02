@@ -21,6 +21,8 @@ env:
 
 before_install:
   - eval "${MATRIX_EVAL}"
+  - echo $CXX
+  - echo $CXX_VERSION
   - docker pull ubuntu:xenial
   - docker run -d --name xenial -v $PWD:/travis ubuntu:xenial tail -f /dev/null
   - docker ps
@@ -29,6 +31,7 @@ install:
   - docker exec -t xenial bash -c "export CXX=$CXX;
     export CXX_VERSION=$CXX_VERSION;
     apt-get update;
+    apt-get install -y software-properties-common;
     apt-get install -y python3;
     apt-get install -y wget;
     apt-get install -y unzip;
