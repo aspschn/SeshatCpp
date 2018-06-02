@@ -3,6 +3,7 @@
 # This is not a part of autotools.
 import sys
 import os
+import platform
 import shutil
 import xml.etree.ElementTree
 import subprocess
@@ -14,7 +15,7 @@ options = {
     'SESHAT_ICU_BACKEND': False,
     'SESHAT_IGNORE_ICU_VERSION': False,
     'SESHAT_INFO_FLAGS': '-DSESHAT_BUILD_DATE=\\"`date -u +%Y-%m-%dT%H:%M:%SZ`\\"',
-    'CXXFLAGS': '-Wall -fPIC',
+    'CXXFLAGS': '-Wall',
 }
 
 makefile_template = '''OBJ = {m_OBJ_LIST}
@@ -73,6 +74,23 @@ def append_icu():
     obj_list.append('src/ucd/dm.o')
     obj_list.append('src/emoji/data.o')
 
+# Detect platform
+def detect_platform():
+    # Get OS is 32bit or 64bit.
+    # Note that platform.architecture() is not about OS but python interpreter.
+    arch = platform.architecture()[0]
+    os_bit = 0
+    if arch == '64bit':
+        os_bit = 64
+    else:
+        os_bit = 32
+
+    if os_bit == 64:
+        # Exception for cygwin
+        if sys.platform == 'cygwin':
+            return
+        options['CXXFLAGS'] += ' -fPIC'
+
 # Detect compiler
 def detect_compiler():
     if shutil.which('clang++') != None:
@@ -83,7 +101,6 @@ def detect_compiler():
         print('It seems any C++ compiler installed in this system.')
         exit(1)
     options['CXX'] = cxx
-    print('CXX={}'.format(options['CXX']))
 
 # Detect ICU version
 def detect_icu():
@@ -113,6 +130,11 @@ def detect_icu():
         print('icuinfo: command not found.')
         exit(1)
 
+# Print options
+def print_options():
+    for k, v in options.items():
+        print('{}={}'.format(k, v))
+
 def print_help():
     print('Usage: ./configure.py [--help] <arguments>')
     print('Arguments')
@@ -138,7 +160,9 @@ if __name__ == '__main__':
         append_icu()
     else:
         append_ucd()
+    detect_platform()
     detect_compiler()
+    print_options()
     output = makefile_template.format(m_OBJ_LIST=' '.join(obj_list),
             m_CXXFLAGS=options['CXXFLAGS'],
             m_CXX=options['CXX'],
