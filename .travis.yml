@@ -49,4 +49,7 @@ install:
 
 script:
   - docker exec -t xenial bash -c "cd /travis;
+    export CXX=$CXX-$CXX_VERSION;
+    export CXX_VERSION=$CXX_VERSION;
+    echo $CXX;
     ./configure.py && make && make test;"
