@@ -10,16 +10,17 @@ addons:
 
 env:
   matrix:
-    - CXX=g++ CXX_VERSION="5"
+    - MATRIX_EVAL="CXX=g++ && CXX_VERSION=5"
     # g++ 5 and 6 are couldn't be installed.
     # - CXX=g++ CXX_VERSION="6"
     # - CXX=g++ CXX_VERSION="7"
-    - CXX=clang++ CXX_VERSION="3.8"
-    - CXX=clang++ CXX_VERSION="3.9"
-    - CXX=clang++ CXX_VERSION="4"
-    - CXX=clang++ CXX_VERSION="5"
+    - MATRIX_EVAL="CXX=clang++ && CXX_VERSION=3.8"
+    - MATRIX_EVAL="CXX=clang++ && CXX_VERSION=3.9"
+    - MATRIX_EVAL="CXX=clang++ && CXX_VERSION=4"
+    - MATRIX_EVAL="CXX=clang++ && CXX_VERSION=5"
 
 before_install:
+  - eval "${MATRIX_EVAL}"
   - docker pull ubuntu:xenial
   - docker run -d --name xenial -v $PWD:/travis ubuntu:xenial tail -f /dev/null
   - docker ps
