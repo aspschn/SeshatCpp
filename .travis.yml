@@ -10,16 +10,19 @@ addons:
 
 env:
   matrix:
-    - CXX=g++ CXX_VERSION="5"
+    - MATRIX_EVAL="CXX=g++ && CXX_VERSION=5"
     # g++ 5 and 6 are couldn't be installed.
     # - CXX=g++ CXX_VERSION="6"
     # - CXX=g++ CXX_VERSION="7"
-    - CXX=clang++ CXX_VERSION="3.8"
-    - CXX=clang++ CXX_VERSION="3.9"
-    - CXX=clang++ CXX_VERSION="4"
-    - CXX=clang++ CXX_VERSION="5"
+    - MATRIX_EVAL="CXX=clang++ && CXX_VERSION=3.8"
+    - MATRIX_EVAL="CXX=clang++ && CXX_VERSION=3.9"
+    - MATRIX_EVAL="CXX=clang++ && CXX_VERSION=4.0"
+    - MATRIX_EVAL="CXX=clang++ && CXX_VERSION=5.0"
 
 before_install:
+  - eval "${MATRIX_EVAL}"
+  - echo $CXX
+  - echo $CXX_VERSION
   - docker pull ubuntu:xenial
   - docker run -d --name xenial -v $PWD:/travis ubuntu:xenial tail -f /dev/null
   - docker ps
@@ -34,6 +37,7 @@ install:
     apt-get install -y build-essential;
     add-apt-repository -y ppa:ubuntu-toolchain-r/test;
     if [[ \"$CXX\" == \"clang++\" ]]; then
+      apt-get install -y software-properties-common;
       add-apt-repository llvm-toolchain-xenial-$CXX_VERSION;
     fi;
     apt-get update;
@@ -45,4 +49,6 @@ install:
 
 script:
   - docker exec -t xenial bash -c "cd /travis;
+    export CXX=$CXX-$CXX_VERSION;
+    export CXX_VERSION=$CXX_VERSION;
     ./configure.py && make && make test;"
