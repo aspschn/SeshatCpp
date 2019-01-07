@@ -19,6 +19,7 @@ properties.o: $(UCD_XML)
 
 $(UCD_XML):
 	wget https://www.unicode.org/Public/10.0.0/ucdxml/ucd.nounihan.flat.zip
+	export PATH=$$PATH:$$PWD/../tools/bin; \
 	unzip ucd.nounihan.flat.zip
 
 codepoint:
