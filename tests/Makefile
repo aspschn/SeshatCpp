@@ -7,6 +7,7 @@ OBJ = main.o \
 	utils.o
 THIRDPARTY_DIR = thirdparty
 THIRDPARTY_LIBS = $(THIRDPARTY_DIR)/tinyxml2/libtinyxml2.a
+UCD_XML_ZIP = ucd.nounihan.flat.zip
 UCD_XML = ucd.nounihan.flat.xml
 
 default: all
@@ -17,8 +18,10 @@ all: $(OBJ) $(THIRDPARTY_LIBS)
 properties.o: $(UCD_XML)
 	$(CXX) $(CXXFLAGS) -c properties.cpp
 
-$(UCD_XML):
-	wget https://www.unicode.org/Public/10.0.0/ucdxml/ucd.nounihan.flat.zip
+$(UCD_XML_ZIP):
+	wget https://www.unicode.org/Public/10.0.0/ucdxml/ucd.nounihan.flat.zip -O $(UCD_XML_ZIP)
+
+$(UCD_XML): $(UCD_XML_ZIP)
 	export PATH=$$PATH:$$PWD/../tools/bin; \
 	unzip ucd.nounihan.flat.zip
 
