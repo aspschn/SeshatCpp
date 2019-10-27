@@ -88,6 +88,10 @@ public:
 
     /// \brief  Returns true if the character not same as other.
     bool operator!=(const Character& other) const;
+
+    /// \brief  TEST!
+    static void test_function() const
+    {}
 };
 
 /// \brief  Thrown if the argument of Character constructor have Surrogates.

@@ -1,0 +1,4 @@
+{
+    type: 'namespace',
+    identifier: 'seshat',
+}
