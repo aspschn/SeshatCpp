@@ -4,6 +4,7 @@
 //  Author:     Sophia Lee
 //  Created:    2017. 05. 24. 12:52
 //  Copyright (c) 2017 Sophia Lee. All rights reserved.
+//                2019 Gene Ryu. All rights reserved.
 //
 
 /// \file
@@ -18,6 +19,30 @@
 #include <string>
 #include <vector>
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+/*=================*/
+/* C               */
+/*=================*/
+struct sh_string {
+    sh_character *characters;
+    size_t len;
+    size_t capacity;
+};
+typedef struct sh_string sh_string;
+
+sh_string* sh_string_new();
+sh_string* sh_string_from_c_string(const char *c_cst, size_t len);
+void sh_string_push(sh_string *str, const sh_character *ch);
+void sh_string_copy(sh_string *str, const sh_string *other);
+void sh_string_free(sh_string *str);
+
+#ifdef __cplusplus
+};
+#endif
+
+#ifdef __cplusplus
 namespace seshat {
 
 /// \brief  A natural string that consists with zero or more characters.
@@ -140,5 +165,6 @@ public:
 };
 
 } // namespace seshat
+#endif /* __cplusplus */
 
 #endif /* _SESHAT_STRING_H */

@@ -4,6 +4,7 @@
 //  Author:     Sophia Lee
 //  Created:    2017. 03. 14. 13:02
 //  Copyright (c) 2017 Sophia Lee. All rights reserved.
+//                2019 Gene Ryu. All rights reserved.
 //
 
 /// \file
@@ -18,6 +19,24 @@
 #include <string>
 #include <vector>
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+/*========================*/
+/* C                      */
+/*========================*/
+
+typedef uint32_t sh_code_point;
+
+
+#ifdef __cplusplus
+};
+#endif
+
+#ifdef __cplusplus
+//=========================
+// C++
+//=========================
 namespace seshat {
 
 /// \brief  Class to present Unicode code point.
@@ -280,5 +299,5 @@ private:
 };
 
 } // namespace seshat
-
+#endif // __cplusplus
 #endif /* _CODEPOINT_H */

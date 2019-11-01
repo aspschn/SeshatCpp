@@ -4,6 +4,7 @@
 //  Author:     Sophia Lee
 //  Created:    2017. 03. 14. 13:26
 //  Copyright (c) 2017 Sophia Lee. All rights reserved.
+//                2019 Gene Ryu. All rights reserved.
 //
 
 /// \file
@@ -16,6 +17,31 @@
 #include <exception>
 #include <vector>
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+/*========================*/
+/* C                      */
+/*========================*/
+
+struct sh_character {
+    sh_code_point *code_points;
+    size_t len;
+};
+typedef struct sh_character sh_character;
+
+void sh_character_init(sh_character *ch);
+void sh_character_push(sh_character *ch, sh_code_point cp);
+void sh_character_clear(sh_character *ch);
+
+#ifdef __cplusplus
+};
+#endif
+
+#ifdef __cplusplus
+//=======================
+// C++
+//=======================
 namespace seshat {
 
 /// \brief  A class can contains one grapheme cluster.
@@ -116,5 +142,6 @@ public:
 };
 
 } // namespace seshat
+#endif /* __cplusplus */
 
 #endif /* _CHARACTER_H */
