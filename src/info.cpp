@@ -3,7 +3,7 @@
 //
 //  Author:     Sophia Lee
 //  Created:    2018. 05. 31. 21:41
-//  Copyright (c) 2018 Sophia Lee. All rights reserved.
+//  Copyright (c) 2018-2019 Yujeonja. All rights reserved.
 //
 //
 */
@@ -22,7 +22,7 @@ namespace seshat {
 
 std::string get_seshat_version()
 {
-    return "unknown";
+    return "0.1.0";
 }
 
 std::string get_unicode_version()
