@@ -6,6 +6,8 @@ Seshat
 
 A Modern C++ Unicode Library.
 
+***This repository is no longer maintained. We have moved to Rust.***
+
 Demo
 -----
 [Seshat Web Demo](https://seshat-demo.herokuapp.com)
